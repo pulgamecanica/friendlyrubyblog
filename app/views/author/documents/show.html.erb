@@ -34,7 +34,7 @@
       <% when CodeBlock %>
         <pre class="bg-gray-900 text-gray-100 p-3 rounded text-sm overflow-x-auto"><%= block.data["code"] %></pre>
       <% when RichTextBlock %>
-        <div class="prose max-w-none"><%= block.data["html"]&.html_safe %></div>
+        <div class="prose max-w-none"><%= safe_html(block.data["html"]) %></div>
       <% else %>
         <p class="text-gray-500 italic">Unsupported block</p>
       <% end %>
