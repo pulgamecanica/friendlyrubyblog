@@ -4,3 +4,7 @@
 require_relative "config/application"
 
 Rails.application.load_tasks
+
+task :lsphere do
+  sh 'lsphere -o app/assets/images --svg --ignore "node_modules .* tmp" && rm app/assets/images/circle.html && rm  app/assets/images/circle.json'
+end
