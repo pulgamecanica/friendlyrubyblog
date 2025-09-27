@@ -30,7 +30,7 @@
     <% end %>
     <% if comment.website.present? %>
       <div class="text-xs">
-        <%= link_to comment.website, comment.website, rel: "nofollow noopener", target: "_blank",
+        <%= link_to safe_html(comment.website), safe_html(comment.website), rel: "nofollow noopener", target: "_blank",
               class: "text-indigo-600 hover:underline" %>
       </div>
     <% end %>
