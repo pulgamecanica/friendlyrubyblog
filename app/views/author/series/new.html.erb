@@ -1,0 +1,8 @@
+<% content_for :title, "New Series · Author" %>
+
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-semibold">New Series</h1>
+  <%= link_to "Back", author_series_index_path, class: "text-sm text-gray-600 hover:underline" %>
+</div>
+
+<%= render "form", series: @series %>

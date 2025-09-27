@@ -1,0 +1,26 @@
+<%= form_with model: [:author, series], class: "space-y-4" do |f| %>
+  <div>
+    <%= f.label :title, class: "block text-sm font-medium" %>
+    <%= f.text_field :title, class: "w-full rounded border px-3 py-2" %>
+  </div>
+
+  <!-- If you prefer FriendlyId to auto-generate, remove this field -->
+  <div>
+    <%= f.label :slug, class: "block text-sm font-medium" %>
+    <%= f.text_field :slug, placeholder: "optional", class: "w-full rounded border px-3 py-2" %>
+    <p class="text-xs text-gray-500 mt-1">Leave blank to auto-generate from title.</p>
+  </div>
+
+  <div>
+    <%= f.label :description, class: "block text-sm font-medium" %>
+    <%= f.text_area :description, rows: 5, class: "w-full rounded border px-3 py-2" %>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <%= f.submit(series.persisted? ? "Save Changes" : "Create Series",
+          class: "rounded bg-indigo-600 text-white px-4 py-2 hover:bg-indigo-700") %>
+    <%= link_to "Cancel",
+          series.persisted? ? author_series_index_path : author_series_index_path,
+          class: "text-sm text-gray-600 hover:underline" %>
+  </div>
+<% end %>

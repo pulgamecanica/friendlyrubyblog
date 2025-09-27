@@ -1,0 +1,30 @@
+<% content_for :title, "Series · Author" %>
+
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-semibold">Series</h1>
+  <%= link_to "New Series", new_author_series_path,
+        class: "px-3 py-1.5 rounded bg-indigo-600 text-white text-sm hover:bg-indigo-700" %>
+</div>
+
+<table class="w-full text-sm border rounded-lg overflow-hidden bg-white">
+  <thead class="bg-gray-50 text-gray-600">
+    <tr>
+      <th class="text-left px-4 py-2">Title</th>
+      <th class="text-left px-4 py-2">Slug</th>
+      <th class="text-left px-4 py-2">Updated</th>
+      <th class="px-4 py-2"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @series.each do |s| %>
+      <tr class="border-t">
+        <td class="px-4 py-2"><%= s.title %></td>
+        <td class="px-4 py-2 text-gray-500"><%= s.slug %></td>
+        <td class="px-4 py-2 text-gray-500"><%= l s.updated_at, format: :short %></td>
+        <td class="px-4 py-2 text-right">
+          <%= link_to "Edit", edit_author_series_path(s), class: "text-indigo-600 hover:underline" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

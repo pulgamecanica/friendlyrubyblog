@@ -1,0 +1,32 @@
+<% content_for :title, "Comments · Author" %>
+
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-semibold">Comments</h1>
+  <div class="text-sm text-gray-600">
+    Total: <%= Comment.count %>
+  </div>
+</div>
+
+<div class="mb-4 flex gap-2 text-sm">
+  <%= link_to "All", author_comments_path, class: "px-2 py-1 rounded border bg-white hover:bg-gray-50" %>
+  <%= link_to "Visible", author_comments_path(status: "visible"), class: "px-2 py-1 rounded border bg-white hover:bg-gray-50" %>
+  <%= link_to "Pending", author_comments_path(status: "pending"), class: "px-2 py-1 rounded border bg-white hover:bg-gray-50" %>
+  <%= link_to "Hidden", author_comments_path(status: "hidden"), class: "px-2 py-1 rounded border bg-white hover:bg-gray-50" %>
+</div>
+
+<div class="overflow-hidden rounded-lg border bg-white">
+  <table class="w-full text-sm">
+    <thead class="bg-gray-50 text-gray-600">
+      <tr>
+        <th class="px-4 py-2 text-left">Comment</th>
+        <th class="px-4 py-2 text-left">On</th>
+        <th class="px-4 py-2 text-left">By</th>
+        <th class="px-4 py-2 text-left">Status</th>
+        <th class="px-4 py-2 text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody id="comments">
+      <%= render partial: "row", collection: @comments, as: :comment %>
+    </tbody>
+  </table>
+</div>

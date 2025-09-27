@@ -1,20 +1,26 @@
 class Author::CommentsController < Author::BaseController
   def index
-    @comments = Comment.order(created_at: :desc).limit(200)
+    scope = Comment.order(created_at: :desc)
+    scope = scope.where(status: params[:status]) if params[:status].present?
+    @comments = scope.limit(200)
   end
 
   def update
-    comment = Comment.find(params[:id])
-    if comment.update(comment_params)
-      redirect_back fallback_location: author_comments_path, notice: "Comment updated"
-    else
-      redirect_back fallback_location: author_comments_path, alert: comment.errors.full_messages.to_sentence
+    @comment = Comment.find(params[:id])
+    @comment.update!(comment_params)
+    respond_to do |f|
+      f.turbo_stream
+      f.html { redirect_back fallback_location: author_comments_path, notice: "Updated" }
     end
   end
 
   def destroy
-    Comment.find(params[:id]).destroy
-    redirect_back fallback_location: author_comments_path, notice: "Comment deleted"
+    @comment = Comment.find(params[:id])
+    @comment.destroy
+    respond_to do |f|
+      f.turbo_stream
+      f.html { redirect_back fallback_location: author_comments_path, notice: "Deleted" }
+    end
   end
 
   private

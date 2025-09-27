@@ -4,7 +4,7 @@ class Public::DocumentsController < Public::BaseController
   end
 
   def show
-    @document = Document.published.friendly.find(params[:id])
+    @document = Document.friendly.find(params[:id])
     @blocks   = @document.blocks
   end
 end

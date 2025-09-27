@@ -63,3 +63,7 @@ gem "rspec-rails", "~> 8.0"
 gem "simplecov", "~> 0.22.0"
 gem "paper_trail", "~> 16.0"
 gem "friendly_id", "~> 5.5"
+
+gem "commonmarker", "~> 2.4"
+
+gem "sanitize", "~> 7.0"

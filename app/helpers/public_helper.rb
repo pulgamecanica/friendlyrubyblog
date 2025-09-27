@@ -7,8 +7,7 @@ module PublicHelper
   def render_block(block)
     case block
     when MarkdownBlock
-      html = Commonmarker.to_html(block.data["markdown"].to_s)
-      html = safe_html(html)
+      html = Commonmarker.to_html(block.data["markdown"].to_s, plugins: { syntax_highlighter: { theme: "InspiredGitHub" } })
       sanitized = Sanitize.fragment(html, Sanitize::Config::RELAXED)
       content_tag(:div, sanitized.html_safe, class: "prose prose-neutral max-w-none")
     when CodeBlock

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_26_231859) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_27_113023) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -40,6 +40,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_26_231859) do
     t.jsonb "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "comments_count", default: 0, null: false
+    t.integer "likes_count", default: 0, null: false
     t.index ["data"], name: "index_blocks_on_data", using: :gin
     t.index ["document_id", "position"], name: "index_blocks_on_document_id_and_position"
     t.index ["document_id"], name: "index_blocks_on_document_id"
@@ -91,6 +93,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_26_231859) do
     t.string "facet_languages", default: [], null: false, array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "comments_count", default: 0, null: false
+    t.integer "likes_count", default: 0, null: false
     t.index ["author_id"], name: "index_documents_on_author_id"
     t.index ["facet_languages"], name: "index_documents_on_facet_languages", using: :gin
     t.index ["search_vector"], name: "index_documents_on_search_vector", using: :gin

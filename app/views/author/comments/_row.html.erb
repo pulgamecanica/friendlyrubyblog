@@ -1,0 +1,63 @@
+<% target = comment.commentable %>
+
+<tr id="<%= dom_id(comment) %>" class="border-t align-top">
+  <td class="px-4 py-3">
+    <p class="text-gray-800"><%= simple_format(comment.body_markdown) %></p>
+    <p class="mt-1 text-xs text-gray-500">
+      <%= l comment.created_at, format: :short %> · IP# <%= comment.ip_hash&.first(8) %>
+    </p>
+  </td>
+
+  <td class="px-4 py-3">
+    <% if target.is_a?(Document) %>
+      Document:
+      <%= link_to target.title, edit_author_document_path(target),
+            class: "text-indigo-600 hover:underline" %>
+    <% else %>
+      Block in:
+      <%= link_to target.document.title, edit_author_document_path(target.document),
+            class: "text-indigo-600 hover:underline" %>
+      <span class="ml-1 text-xs text-gray-500">
+        (pos <%= target.position %>, <%= target.type.demodulize %>)
+      </span>
+    <% end %>
+  </td>
+
+  <td class="px-4 py-3">
+    <div class="text-gray-800"><%= comment.name.presence || "Anonymous" %></div>
+    <% if comment.email.present? %>
+      <div class="text-xs text-gray-500"><%= comment.email %></div>
+    <% end %>
+    <% if comment.website.present? %>
+      <div class="text-xs">
+        <%= link_to comment.website, comment.website, rel: "nofollow noopener", target: "_blank",
+              class: "text-indigo-600 hover:underline" %>
+      </div>
+    <% end %>
+  </td>
+
+  <td class="px-4 py-3">
+    <% badge_classes = { "visible"=>"bg-green-100 text-green-800",
+                         "pending"=>"bg-yellow-100 text-yellow-800",
+                         "hidden"=>"bg-gray-200 text-gray-700" }[comment.status] || "bg-gray-200 text-gray-700" %>
+    <span class="inline-block rounded px-2 py-0.5 text-xs <%= badge_classes %>">
+      <%= comment.status %>
+    </span>
+
+    <div class="mt-2">
+      <%= form_with model: [:author, comment], method: :patch,
+            data: { turbo_stream: true } do |f| %>
+        <%= f.select :status,
+              options_for_select([%w[visible visible], %w[pending pending], %w[hidden hidden]], comment.status),
+              {}, class: "rounded border px-2 py-1 text-xs" %>
+        <%= f.submit "Update", class: "ml-2 rounded bg-indigo-600 text-white px-2 py-1 text-xs hover:bg-indigo-700" %>
+      <% end %>
+    </div>
+  </td>
+
+  <td class="px-4 py-3 text-right">
+    <%= button_to "Delete", author_comment_path(comment), method: :delete,
+          form: { data: { turbo_confirm: "Delete this comment?" } },
+          class: "text-sm text-red-600 hover:underline" %>
+  </td>
+</tr>

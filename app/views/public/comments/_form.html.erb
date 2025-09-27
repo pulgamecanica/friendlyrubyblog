@@ -1,4 +1,4 @@
-<%= form_with url: public_document_comments_path(document), method: :post, class: "space-y-3" do |f| %>
+<%= form_with scope: :comment, url: public_document_comments_path(document), method: :post, class: "space-y-3" do |f| %>
   <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
     <%= f.text_field :name,    placeholder: "Name (optional)", class: "w-full rounded border px-3 py-2" %>
     <%= f.email_field :email,  placeholder: "Email (optional)", class: "w-full rounded border px-3 py-2" %>

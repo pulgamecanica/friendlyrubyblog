@@ -1,1 +1,34 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Optional: anchor styles for headings with <a class="anchor"> */
+.prose .anchor {
+  position: relative;
+  margin-right: 0.25rem;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity .15s ease;
+}
+.prose h1:hover .anchor,
+.prose h2:hover .anchor,
+.prose h3:hover .anchor,
+.prose h4:hover .anchor,
+.prose h5:hover .anchor,
+.prose h6:hover .anchor { opacity: 1; }
+.prose .anchor::before {
+  position: absolute;
+  left: -1.5rem;
+  content: "#";
+  display: inline-block;
+  color: rgb(115 115 115); /* neutral-500 */
+}
+
+/* Optional: nicer code blocks */
+.prose pre {
+  background: rgb(17 24 39);      /* gray-900 */
+  color: #fff;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+}
+.prose code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: .875rem; }
