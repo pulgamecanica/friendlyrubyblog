@@ -1,0 +1,38 @@
+<% data = block.data.to_h %>
+
+<%= form_with model: [:author, document, block.becomes(Block)],
+              data: { turbo_frame: dom_id(block) },
+              class: "space-y-3" do |f| %>
+
+  <% case block.type
+     when "MarkdownBlock" %>
+    <div data-controller="markdown-preview">
+      <%= f.text_area :data_markdown, value: data["markdown"], rows: 6,
+          class: "w-full rounded border px-3 py-2 font-mono",
+          data: { action: "input->markdown-preview#update", "markdown-preview-target": "input" } %>
+
+      <div data-markdown-preview-target="preview"
+          class="mt-2 p-2 border rounded bg-gray-50 text-sm font-mono"></div>
+    </div>
+
+  <% when "CodeBlock" %>
+    <%= f.text_field :data_language, value: data["language"],
+        class: "w-full rounded border px-3 py-2",
+        placeholder: "Language (e.g., ruby)" %>
+    <%= f.text_area :data_code, value: data["code"], rows: 6,
+        class: "w-full rounded border px-3 py-2 font-mono",
+        placeholder: "Code snippet..." %>
+
+  <% when "RichTextBlock" %>
+    <%= f.text_area :data_html, value: data["html"], rows: 6,
+        class: "w-full rounded border px-3 py-2",
+        placeholder: "Rich text HTML..." %>
+  <% end %>
+
+  <div class="flex items-center gap-3">
+    <%= f.hidden_field :type %>
+    <%= f.hidden_field :position, value: block.position || document.blocks.count %>
+    <%= f.submit block.persisted? ? "Update Block" : "Add Block",
+          class: "rounded bg-indigo-600 text-white px-4 py-2 hover:bg-indigo-700" %>
+  </div>
+<% end %>

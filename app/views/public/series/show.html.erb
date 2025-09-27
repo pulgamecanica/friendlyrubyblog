@@ -1,0 +1,14 @@
+<% content_for :title, "#{@series.title} · Series" %>
+
+<header class="mb-8">
+  <h1 class="text-3xl font-bold tracking-tight"><%= @series.title %></h1>
+  <% if @series.description.present? %>
+    <p class="mt-2 text-gray-600 max-w-3xl"><%= @series.description %></p>
+  <% end %>
+</header>
+
+<div class="grid gap-4">
+  <% @documents.each do |doc| %>
+    <%= render partial: "public/documents/card", locals: { doc: doc } %>
+  <% end %>
+</div>

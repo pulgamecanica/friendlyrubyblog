@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Author · Friendlyrubyblog" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="min-h-screen bg-gray-100">
+    <header class="bg-white border-b">
+      <div class="mx-auto max-w-6xl flex items-center justify-between px-6 py-4">
+        <%= link_to "Author Dashboard", author_root_path, class: "font-semibold tracking-tight" %>
+
+        <nav class="space-x-4 text-sm">
+          <%= link_to "Documents", author_documents_path, class: "hover:underline" %>
+          <%= link_to "Series", author_series_index_path, class: "hover:underline" %>
+          <%= link_to "Comments", author_comments_path, class: "hover:underline" %>
+          <%= link_to "Logout", destroy_author_session_path, method: :delete, class: "text-red-600 hover:underline" %>
+        </nav>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-6xl px-6 py-8">
+      <%= yield %>
+    </main>
+  </body>
+</html>

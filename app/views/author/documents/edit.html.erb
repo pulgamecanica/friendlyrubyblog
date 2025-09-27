@@ -1,0 +1,33 @@
+<% content_for :title, "Editing · #{@document.title}" %>
+
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-semibold">Edit Document</h1>
+  <div class="space-x-2">
+    <%= link_to "Preview", public_document_path(@document), target: "_blank",
+                class: "text-sm text-indigo-600 hover:underline" %>
+    <%= link_to "Back", author_documents_path, class: "text-sm text-gray-600 hover:underline" %>
+  </div>
+</div>
+
+<div class="grid md:grid-cols-3 gap-6">
+  <!-- Metadata -->
+  <turbo-frame id="document_metadata">
+    <%= render "form", document: @document %>
+  </turbo-frame>
+
+  <!-- Blocks -->
+  <div class="md:col-span-2 space-y-6">
+    <h2 class="text-lg font-semibold mb-3">Blocks</h2>
+
+    <div id="blocks">
+      <%= turbo_frame_tag "blocks" do %>
+        <%= render partial: "author/blocks/block", collection: @blocks, as: :block %>
+      <% end %>
+    </div>
+
+    <!-- New Block Form -->
+    <turbo-frame id="new_block">
+      <%= render "author/blocks/form", document: @document, block: Block.new(type: "MarkdownBlock") %>
+    </turbo-frame>
+  </div>
+</div>

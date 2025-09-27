@@ -1,0 +1,2 @@
+class RichTextBlock < Block
+end

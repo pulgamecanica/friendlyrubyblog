@@ -1,0 +1,75 @@
+<% content_for :title, "#{@document.title} · Friendlyrubyblog" %>
+
+<article class="mx-auto max-w-3xl">
+  <!-- Header -->
+  <header class="mb-8">
+    <% if @document.series %>
+      <div class="mb-3 text-sm">
+        <%= link_to public_series_path(@document.series), class: "text-indigo-700 hover:underline" do %>
+          <span class="font-medium"><%= @document.series.title %></span>
+        <% end %>
+        <% if @document.series_position %>
+          <span class="text-gray-500"> · Part <%= @document.series_position %></span>
+        <% end %>
+      </div>
+    <% end %>
+
+    <h1 class="text-3xl font-bold tracking-tight"><%= @document.title %></h1>
+    <div class="mt-2 text-sm text-gray-600">
+      <% if @document.published_at %>
+        Published <%= format_date(@document.published_at) %>
+      <% end %>
+      <% if @document.tags.any? %>
+        <span> · </span>
+        <% @document.tags.each do |t| %>
+          <%= link_to t.title, public_tag_path(t), class: "mr-2 hover:underline" %>
+        <% end %>
+      <% end %>
+    </div>
+  </header>
+
+  <!-- Body -->
+  <section class="space-y-8">
+    <% @blocks.each do |block| %>
+      <%= render_block(block) %>
+    <% end %>
+  </section>
+
+  <!-- Reactions -->
+  <section class="mt-10 flex items-center gap-4">
+    <%= button_to "Like", public_document_like_path(@document),
+          method: :post,
+          class: "px-3 py-1.5 rounded border bg-white hover:bg-gray-50 text-sm" %>
+
+    <%= button_to "Unlike", public_document_like_path(@document),
+          method: :delete,
+          class: "px-3 py-1.5 rounded border bg-white hover:bg-gray-50 text-sm" %>
+
+    <span class="text-sm text-gray-600">Likes: <%= @document.likes.count %></span>
+  </section>
+
+  <!-- Comments -->
+  <section class="mt-12">
+    <h2 class="text-xl font-semibold mb-4">Comments</h2>
+
+    <% if @document.comments.visible.any? %>
+      <ul class="space-y-6">
+        <% @document.comments.visible.order(created_at: :asc).each do |c| %>
+          <li class="border rounded-lg p-4 bg-white">
+            <p class="text-sm text-gray-600 mb-2">
+              <strong><%= c.name.presence || "Anonymous" %></strong>
+              <span class="ml-2 text-gray-400"><%= format_date(c.created_at) %></span>
+            </p>
+            <div class="prose prose-sm max-w-none"><%= simple_format(c.body_markdown) %></div>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-sm text-gray-500">Be the first to comment.</p>
+    <% end %>
+
+    <div class="mt-6">
+      <%= render "public/comments/form", document: @document %>
+    </div>
+  </section>
+</article>

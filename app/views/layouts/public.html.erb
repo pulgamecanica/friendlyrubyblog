@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Friendlyrubyblog" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="min-h-screen bg-gray-50 text-gray-900">
+    <!-- Top nav -->
+    <header class="border-b bg-white/70 backdrop-blur">
+      <div class="mx-auto max-w-5xl px-4 py-4 flex items-center justify-between">
+        <%= link_to "FriendlyRubyBlog", root_path, class: "font-semibold tracking-tight" %>
+        <nav class="flex items-center gap-4 text-sm text-gray-600">
+          <%= link_to "Articles", public_documents_path, class: "hover:text-gray-900" %>
+          <%= link_to "Series",   public_series_index_path, class: "hover:text-gray-900" %>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Flash -->
+    <div class="mx-auto max-w-3xl px-4">
+      <% if notice.present? %>
+        <p class="mt-4 rounded-md bg-green-50 text-green-700 px-4 py-2 text-sm"><%= notice %></p>
+      <% end %>
+      <% if alert.present? %>
+        <p class="mt-4 rounded-md bg-red-50 text-red-700 px-4 py-2 text-sm"><%= alert %></p>
+      <% end %>
+    </div>
+
+    <!-- Main -->
+    <main class="mx-auto max-w-5xl px-4 py-10">
+      <%= yield %>
+    </main>
+
+    <footer class="mt-10 border-t py-8 text-center text-xs text-gray-500">
+      © <%= Time.current.year %> FriendlyRubyBlog
+    </footer>
+  </body>
+</html>

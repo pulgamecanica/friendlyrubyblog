@@ -1,0 +1,50 @@
+<% content_for :title, "Dashboard · Author" %>
+
+<h2 class="text-2xl font-semibold mb-6">Dashboard</h2>
+
+<div class="grid md:grid-cols-3 gap-6">
+  <!-- Recent Documents -->
+  <section class="bg-white rounded-lg shadow p-4">
+    <h3 class="text-lg font-semibold mb-3">Recent Documents</h3>
+    <ul class="space-y-2 text-sm">
+      <% @recent_documents.each do |doc| %>
+        <li>
+          <%= link_to doc.title, edit_author_document_path(doc), class: "text-indigo-600 hover:underline" %>
+          <span class="text-gray-500">· <%= doc.published? ? "Published" : "Draft" %></span>
+        </li>
+      <% end %>
+    </ul>
+    <div class="mt-3">
+      <%= link_to "All documents →", author_documents_path, class: "text-xs text-gray-600 hover:underline" %>
+    </div>
+  </section>
+
+  <!-- Recent Series -->
+  <section class="bg-white rounded-lg shadow p-4">
+    <h3 class="text-lg font-semibold mb-3">Recent Series</h3>
+    <ul class="space-y-2 text-sm">
+      <% @recent_series.each do |s| %>
+        <li><%= link_to s.title, edit_author_series_path(s), class: "text-indigo-600 hover:underline" %></li>
+      <% end %>
+    </ul>
+    <div class="mt-3">
+      <%= link_to "All series →", author_series_index_path, class: "text-xs text-gray-600 hover:underline" %>
+    </div>
+  </section>
+
+  <!-- Recent Comments -->
+  <section class="bg-white rounded-lg shadow p-4">
+    <h3 class="text-lg font-semibold mb-3">Recent Comments</h3>
+    <ul class="space-y-3 text-sm">
+      <% @recent_comments.each do |c| %>
+        <li>
+          <p class="line-clamp-2 text-gray-700"><%= c.body_markdown %></p>
+          <span class="text-gray-400">on <%= link_to c.commentable.title, edit_author_document_path(c.commentable), class: "hover:underline" %></span>
+        </li>
+      <% end %>
+    </ul>
+    <div class="mt-3">
+      <%= link_to "All comments →", author_comments_path, class: "text-xs text-gray-600 hover:underline" %>
+    </div>
+  </section>
+</div>

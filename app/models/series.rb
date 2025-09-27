@@ -7,6 +7,15 @@ class Series < ApplicationRecord
   validates :title, :slug, presence: true
   validates :slug, uniqueness: true
 
+
+  DEFAULT_SLUG  = "uncategorized".freeze
+  DEFAULT_TITLE = "Uncategorized".freeze
+
+  def self.uncategorized!
+    find_by(slug: DEFAULT_SLUG) ||
+      create!(title: DEFAULT_TITLE, description: nil)
+  end
+
   def should_generate_new_friendly_id?
     title_changed? || super
   end

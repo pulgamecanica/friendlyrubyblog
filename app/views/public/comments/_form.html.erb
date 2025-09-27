@@ -1,0 +1,9 @@
+<%= form_with url: public_document_comments_path(document), method: :post, class: "space-y-3" do |f| %>
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+    <%= f.text_field :name,    placeholder: "Name (optional)", class: "w-full rounded border px-3 py-2" %>
+    <%= f.email_field :email,  placeholder: "Email (optional)", class: "w-full rounded border px-3 py-2" %>
+    <%= f.url_field :website,  placeholder: "Website (optional)", class: "w-full rounded border px-3 py-2" %>
+  </div>
+  <%= f.text_area :body_markdown, rows: 5, placeholder: "Write your comment…", class: "w-full rounded border px-3 py-2" %>
+  <%= f.submit "Post comment", class: "rounded bg-indigo-600 text-white px-4 py-2 hover:bg-indigo-700" %>
+<% end %>

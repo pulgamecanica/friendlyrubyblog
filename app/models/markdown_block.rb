@@ -1,0 +1,2 @@
+class MarkdownBlock < Block
+end

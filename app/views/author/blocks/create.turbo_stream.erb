@@ -1,0 +1,9 @@
+<%= turbo_stream.append "blocks" do %>
+  <%= render "author/blocks/block", block: @block %>
+<% end %>
+
+<%= turbo_stream.update "new_block" do %>
+  <%= render "author/blocks/form",
+        document: @document,
+        block: Block.new(type: "MarkdownBlock", position: @document.blocks.count) %>
+<% end %>
