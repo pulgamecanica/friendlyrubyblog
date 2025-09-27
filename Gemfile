@@ -60,10 +60,18 @@ gem "pg_search", "~> 2.3"
 
 gem "devise", "~> 4.9"
 gem "rspec-rails", "~> 8.0"
-gem "simplecov", "~> 0.22.0"
+gem "simplecov", "~> 0.22.0", require: false, group: :test
 gem "paper_trail", "~> 16.0"
 gem "friendly_id", "~> 5.5"
 
 gem "commonmarker", "~> 2.4"
 
 gem "sanitize", "~> 7.0"
+
+gem "factory_bot_rails", "~> 6.5"
+
+gem "shoulda-matchers", "~> 6.5"
+
+gem "faker", "~> 3.5"
+gem "capybara", "~> 3.40"
+gem "cuprite", "~> 0.17"

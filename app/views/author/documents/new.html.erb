@@ -5,6 +5,4 @@
   <%= link_to "Back", author_documents_path, class: "text-sm text-gray-600 hover:underline" %>
 </div>
 
-<turbo-frame id="document_metadata">
-  <%= render "form", document: @document %>
-</turbo-frame>
+<%= render "form", document: @document %>

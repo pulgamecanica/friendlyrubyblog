@@ -11,6 +11,8 @@ class Public::LikesController < Public::BaseController
 
   def destroy
     target = find_target!
+    Like.destroy_by(likable: target, actor_hash: current_actor_hash)
+    # vs
     Like.where(likable: target, actor_hash: current_actor_hash).delete_all
     respond_like(target, :ok)
   end

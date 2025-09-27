@@ -20,10 +20,30 @@ class Document < ApplicationRecord
   validates :slug, uniqueness: true
   validates :kind, inclusion: { in: %w[post note page] }
 
+  after_commit :reindex_search!, on: [ :create, :update ]
+
   scope :published, -> { where(published: true) }
 
   def should_generate_new_friendly_id?
     title_changed? || super
+  end
+
+  def reindex_search!
+    parts = []
+    langs = []
+
+    blocks.find_each do |b|
+      # plain_text and languages are tiny helpers on Block subclasses
+      parts << (b.respond_to?(:plain_text) ? b.plain_text.to_s : "")
+      if b.respond_to?(:languages)
+        langs.concat(Array(b.languages).compact.map(&:downcase))
+      end
+    end
+
+    update_columns(
+      search_text: parts.join("\n\n").squish,
+      facet_languages: langs.compact.map(&:downcase).uniq.sort
+    )
   end
 
   private
