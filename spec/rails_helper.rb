@@ -97,3 +97,14 @@ Capybara.register_driver(:cuprite) { |app| Capybara::Cuprite::Driver.new(app) }
 RSpec.configure do |config|
   config.before(type: :system) { driven_by :cuprite }
 end
+
+# Devise setup
+RSpec.configure do |config|
+  # For request specs:
+  config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include Devise::Test::ControllerHelpers, type: :controller
+
+  # (optional but handy when you ever use login_as)
+  config.include Warden::Test::Helpers
+  config.after(:each) { Warden.test_reset! }
+end

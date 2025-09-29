@@ -266,6 +266,7 @@ export default class extends Controller {
   }
 
   collapsedValueChanged() {
+    this.updateToolbar()
     this.updateLayout()
   }
 

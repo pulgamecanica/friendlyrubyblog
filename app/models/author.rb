@@ -5,11 +5,10 @@ class Author < ApplicationRecord
          :validatable, :trackable
 
   has_many :documents, dependent: :nullify
-  has_many :comments,  dependent: :nullify
 
   validates :email, presence: true, uniqueness: true
 
   def name
-    display_name.presence || email.split("@").first
+    email.split("@").first
   end
 end

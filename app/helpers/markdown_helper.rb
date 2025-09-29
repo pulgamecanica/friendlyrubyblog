@@ -20,13 +20,7 @@ module MarkdownHelper
     # Already UTF-8
     return s if s.encoding == Encoding::UTF_8
 
-    # ASCII-compatible encodings (US-ASCII, ASCII-8BIT) -> clean encode to UTF-8
-    if s.encoding.ascii_compatible?
-      return s.encode(Encoding::UTF_8)
-    end
-
-    # Fallback for odd cases: replace invalid/undef bytes
-    s.encode(Encoding::UTF_8, invalid: :replace, undef: :replace, replace: "")
+    s.encode(Encoding::UTF_8)
   end
 
   def safe_html(html)

@@ -26,7 +26,6 @@ Rails.application.routes.draw do
     end
 
     resources :blocks, only: [] do
-      resources :comments, only: [ :create ]
       resource  :like,     only: [ :create, :destroy ]
     end
   end

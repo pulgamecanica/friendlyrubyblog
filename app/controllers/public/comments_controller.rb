@@ -21,18 +21,16 @@ class Public::CommentsController < Public::BaseController
   def find_target!
     if params[:document_id]
       Document.friendly.find(params[:document_id])
-    elsif params[:block_id]
-      Block.find(params[:block_id])
     else
       raise ActiveRecord::RecordNotFound
     end
   end
 
   def fallback_path_for(target)
-    target.is_a?(Document) ? public_document_path(target) : public_document_path(target.document)
+    public_document_path(target)
   end
 
   def comment_params
-    params.require(:comment).permit(:name, :email, :website, :body_markdown, :parent_id, :block_line_start, :block_line_end)
+    params.require(:comment).permit(:name, :email, :website, :body_markdown, :parent_id)
   end
 end
