@@ -39,7 +39,11 @@ Rails.application.routes.draw do
         patch :publish
         patch :unpublish
       end
-      resources :blocks, only: [ :create, :update, :destroy ]
+      resources :blocks, only: [ :create, :update, :destroy ] do
+        collection do
+          post :preview
+        end
+      end
     end
     resources :comments, only: [ :index, :update, :destroy ]
   end

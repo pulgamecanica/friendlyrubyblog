@@ -7,10 +7,10 @@
     <!-- Main Content Column -->
     <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
 
-      <!-- Normal Mode: Rendered Content (shown by default) -->
+      <!-- Normal Mode: Rendered Content -->
       <div data-block-editor-target="content"
            data-action="click->block-editor#handleContentClick"
-           class="relative cursor-pointer hover:bg-gray-50 transition-colors h-full">
+           class="relative cursor-pointer hover:bg-gray-50 transition-colors">
 
         <div class="p-4">
           <% if block.is_a?(MarkdownBlock) %>
@@ -28,55 +28,56 @@
 
         <!-- Fade overlay for collapsed state -->
         <div data-block-editor-target="fadeOverlay"
-             class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none transition-opacity duration-300"
-             style="opacity: 0;"></div>
+             class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white to-transparent opacity-0 transition-opacity"
+             style="display: none;"></div>
       </div>
 
-      <!-- Edit Mode: Editor Interface (hidden by default) -->
+      <!-- Edit Mode: Editor Interface -->
       <div data-block-editor-target="editor"
            class="p-4"
            style="display: none;">
 
         <% if block.is_a?(MarkdownBlock) %>
           <!-- Markdown Editor -->
-          <%= form_with model: [:author, block.document, block.becomes(Block)],
-                        data: { turbo_frame: dom_id(block) },
-                        class: "space-y-4" do |f| %>
+          <div class="grid grid-cols-1 gap-4">
 
-            <!-- Editor Container (layout changes based on preview settings) -->
-            <div data-block-editor-target="editorContainer" class="grid grid-cols-1 gap-4">
+            <!-- Textarea -->
+            <div>
+              <%= form_with model: [:author, block.document, block.becomes(Block)],
+                            data: { turbo_frame: dom_id(block) },
+                            class: "space-y-3" do |f| %>
 
-              <!-- Textarea -->
-              <div data-block-editor-target="textareaContainer">
                 <%= f.text_area :data_markdown,
                     value: block.data["markdown"],
                     data: {
                       block_editor_target: "textarea",
                       action: "input->block-editor#renderPreview input->block-editor#autoResize"
                     },
-                    class: "w-full border border-gray-300 rounded-lg overflow-hidden p-3 font-mono text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+                    class: "w-full border border-gray-300 rounded-lg p-3 font-mono text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
                     placeholder: "Write your markdown here...",
                     rows: 8 %>
-              </div>
 
-              <!-- Preview (positioned dynamically) -->
-              <div data-block-editor-target="preview"
-                   class="border border-gray-200 rounded-lg bg-gray-50">
-                <div class="p-3 border-b border-gray-200 text-xs font-medium text-gray-600 uppercase tracking-wider">
-                  Preview
+                <%= f.hidden_field :type %>
+                <%= f.hidden_field :position %>
+
+                <div class="flex justify-end">
+                  <%= f.submit "Update Block",
+                      class: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500" %>
                 </div>
-                <div class="p-4 prose prose-neutral max-w-none">
-                  <%= safe_html(text_to_markdown(block.data["markdown"].to_s)) %>
-                </div>
-              </div>
+              <% end %>
             </div>
 
-            <%= f.hidden_field :type %>
-            <%= f.hidden_field :position %>
-
-            <!-- Hidden submit button (triggered from toolbar) -->
-            <%= f.submit "Update Block", style: "display: none;", data: { block_editor_target: "hiddenSubmit" } %>
-          <% end %>
+            <!-- Preview -->
+            <div data-block-editor-target="preview"
+                 class="border border-gray-200 rounded-lg bg-gray-50">
+              <div class="p-3 border-b border-gray-200 text-xs font-medium text-gray-600 uppercase tracking-wider">
+                Preview
+              </div>
+              <div class="p-4 prose prose-neutral max-w-none">
+                <%= safe_html(text_to_markdown(block.data["markdown"].to_s)) %>
+              </div>
+            </div>
+          </div>
 
         <% elsif block.is_a?(CodeBlock) %>
           <!-- Code Editor -->
@@ -130,25 +131,29 @@
 
     <!-- Sticky Toolbar Column -->
     <div data-block-editor-target="toolbar"
-         class="sticky top-20 h-fit flex flex-col gap-3">
+         class="sticky top-20 h-fit">
 
       <!-- Block Info -->
-      <div class="bg-white rounded-lg border border-gray-200 p-4">
-        <div class="text-xs font-medium text-gray-500 uppercase tracking-wider">
+      <div class="bg-white rounded-lg border border-gray-200 p-3 mb-3">
+        <div class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
           <%= block.type.demodulize %>
         </div>
-        <div class="text-xs text-gray-400 mt-1">
+        <div class="text-sm text-gray-700">
           Position <%= block.position %>
         </div>
       </div>
 
       <!-- Normal Mode Tools -->
       <div data-block-editor-target="normalTools"
-           class="bg-white rounded-lg border border-gray-200 p-4 space-y-3 flex flex-col">
+           class="bg-white rounded-lg border border-gray-200 p-3 mb-3 space-y-2">
+
+        <div class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
+          View
+        </div>
 
         <button data-block-editor-target="collapseBtn"
                 data-action="click->block-editor#toggleCollapse"
-                class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded hover:bg-gray-50 transition-colors">
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
           Collapse
         </button>
 
@@ -156,45 +161,35 @@
             author_document_block_path(block.document, block),
             method: :delete,
             form: { data: { turbo_confirm: "Delete this block?" } },
-            class: "w-full px-2 py-1.5 text-xs border border-red-300 text-red-700 rounded hover:bg-red-50 transition-colors" %>
+            class: "w-full px-3 py-2 text-sm border border-red-300 text-red-700 rounded-lg hover:bg-red-50 transition-colors" %>
       </div>
 
       <!-- Edit Mode Tools -->
       <div data-block-editor-target="editTools"
-           class="bg-white rounded-lg border border-gray-200 p-4 pt-2 flex flex-col gap-2"
+           class="bg-white rounded-lg border border-gray-200 p-3 mb-3 space-y-2"
            style="display: none;">
+
+        <div class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
+          Edit
+        </div>
+
         <% if block.is_a?(MarkdownBlock) %>
-          <div class="text-xs text-center text-gray-400">Markdown Preview</div>
+          <button data-block-editor-target="previewBtn"
+                  data-action="click->block-editor#togglePreview"
+                  class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+            Hide Preview
+          </button>
 
-          <div class="flex flex-row gap-1 pb-2 border-b border-gray-300">
-            <button data-block-editor-target="previewBtn"
-                    data-action="click->block-editor#togglePreview"
-                    class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded hover:bg-gray-50 transition-colors">
-              Preview
-            </button>
-
-            <button data-block-editor-target="layoutBtn"
-                    data-action="click->block-editor#toggleLayout"
-                    class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded hover:bg-gray-50 transition-colors">
-              Layout
-            </button>
-          </div>
+          <button data-block-editor-target="layoutBtn"
+                  data-action="click->block-editor#toggleLayout"
+                  class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+            Stack Below
+          </button>
         <% end %>
+
         <button data-action="click->block-editor#exitEditMode"
-                class="w-full px-2 py-2 text-xs bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors">
-          Close
-        </button>
-      </div>
-
-      <!-- Update Button (Edit Mode Only) -->
-      <div data-block-editor-target="updateButton"
-           class="bg-white rounded-lg border border-gray-200 p-4"
-           style="display: none;">
-
-        <button data-block-editor-target="submitButton"
-                data-action="click->block-editor#submitForm"
-                class="w-full px-3 py-2 text-xs bg-green-600 text-white rounded hover:bg-green-700 font-medium transition-colors">
-          Update Block
+                class="w-full px-3 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+          Done Editing
         </button>
       </div>
     </div>

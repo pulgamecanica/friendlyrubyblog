@@ -36,6 +36,12 @@ class Author::BlocksController < Author::BaseController
     end
   end
 
+  def preview
+    markdown = params[:markdown].to_s
+    html = helpers.text_to_markdown(markdown)
+    render html: helpers.safe_html(html)
+  end
+
   private
 
   def set_document = @document = Document.friendly.find(params[:document_id])
