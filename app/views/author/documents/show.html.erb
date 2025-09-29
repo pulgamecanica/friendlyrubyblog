@@ -1,43 +1,45 @@
 <% content_for :title, "#{@document.title} · Author" %>
 
-<div class="flex items-center justify-between mb-6">
-  <h1 class="text-2xl font-semibold"><%= @document.title %></h1>
-  <div class="space-x-2">
-    <%= link_to "Edit", edit_author_document_path(@document),
-                class: "px-3 py-1.5 rounded bg-indigo-600 text-white text-sm hover:bg-indigo-700" %>
-    <%= link_to "Public view", public_document_path(@document), target: "_blank",
-                class: "px-3 py-1.5 rounded border text-sm hover:bg-gray-50" %>
-  </div>
-</div>
-
-<p class="text-gray-600 mb-4"><%= @document.description %></p>
-
-<div class="text-sm text-gray-500 mb-8">
-  <% if @document.published? %>
-    Published at <%= @document.published_at&.strftime("%b %-d, %Y") %>
-  <% else %>
-    <em>Draft</em>
-  <% end %>
-  <% if @document.series %>
-    · Series: <%= link_to @document.series.title, author_series_path(@document.series), class: "underline" %>
-  <% end %>
-</div>
-
-<section class="space-y-6">
-  <% @document.blocks.order(:position).each do |block| %>
-    <div class="rounded-lg border bg-white p-4">
-      <p class="text-xs text-gray-400 mb-2"><%= block.type.demodulize %></p>
-      <%# Naive rendering — later you can reuse your Public helper’s render_block %>
-      <% case block %>
-      <% when MarkdownBlock %>
-        <pre class="whitespace-pre-wrap text-sm"><%= block.data["markdown"] %></pre>
-      <% when CodeBlock %>
-        <pre class="bg-gray-900 text-gray-100 p-3 rounded text-sm overflow-x-auto"><%= block.data["code"] %></pre>
-      <% when RichTextBlock %>
-        <div class="prose max-w-none"><%= safe_html(block.data["html"]) %></div>
-      <% else %>
-        <p class="text-gray-500 italic">Unsupported block</p>
-      <% end %>
+<div class="mx-auto max-w-6xl py-4">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-semibold"><%= @document.title %></h1>
+    <div class="space-x-2">
+      <%= link_to "Edit", edit_author_document_path(@document),
+                  class: "px-3 py-1.5 rounded bg-indigo-600 text-white text-sm hover:bg-indigo-700" %>
+      <%= link_to "Public view", public_document_path(@document), target: "_blank",
+                  class: "px-3 py-1.5 rounded border text-sm hover:bg-gray-50" %>
     </div>
-  <% end %>
-</section>
+  </div>
+
+  <p class="text-gray-600 mb-4"><%= @document.description %></p>
+
+  <div class="text-sm text-gray-500 mb-8">
+    <% if @document.published? %>
+      Published at <%= @document.published_at&.strftime("%b %-d, %Y") %>
+    <% else %>
+      <em>Draft</em>
+    <% end %>
+    <% if @document.series %>
+      · Series: <%= link_to @document.series.title, author_series_path(@document.series), class: "underline" %>
+    <% end %>
+  </div>
+
+  <section class="space-y-6">
+    <% @document.blocks.order(:position).each do |block| %>
+      <div class="rounded-lg border bg-white p-4">
+        <p class="text-xs text-gray-400 mb-2"><%= block.type.demodulize %></p>
+        <%# Naive rendering — later you can reuse your Public helper’s render_block %>
+        <% case block %>
+        <% when MarkdownBlock %>
+          <pre class="whitespace-pre-wrap text-sm"><%= block.data["markdown"] %></pre>
+        <% when CodeBlock %>
+          <pre class="bg-gray-900 text-gray-100 p-3 rounded text-sm overflow-x-auto"><%= block.data["code"] %></pre>
+        <% when RichTextBlock %>
+          <div class="prose max-w-none"><%= safe_html(block.data["html"]) %></div>
+        <% else %>
+          <p class="text-gray-500 italic">Unsupported block</p>
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+</div>
