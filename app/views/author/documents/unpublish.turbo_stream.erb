@@ -1,0 +1,7 @@
+<%= turbo_stream.replace "document_status" do %>
+  <%= render "status_frame", document: @document %>
+<% end %>
+
+<%= turbo_stream.replace "document_title" do %>
+  <%= render "title_frame", document: @document %>
+<% end %>

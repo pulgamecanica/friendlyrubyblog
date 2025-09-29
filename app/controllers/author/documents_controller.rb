@@ -31,9 +31,15 @@ class Author::DocumentsController < Author::BaseController
 
   def update
     if @document.update(doc_params)
-      redirect_to edit_author_document_path(@document), notice: "Document updated"
+      respond_to do |format|
+        format.turbo_stream # renders update.turbo_stream.erb
+        format.html { redirect_to edit_author_document_path(@document), notice: "Document updated" }
+      end
     else
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("document_metadata", partial: "form", locals: { document: @document }) }
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -44,12 +50,18 @@ class Author::DocumentsController < Author::BaseController
 
   def publish
     @document.update!(published: true, published_at: Time.current)
-    redirect_to author_documents_path, notice: "Published"
+    respond_to do |format|
+      format.turbo_stream # renders publish.turbo_stream.erb
+      format.html { redirect_to author_documents_path, notice: "Published" }
+    end
   end
 
   def unpublish
     @document.update!(published: false)
-    redirect_to author_documents_path, notice: "Unpublished"
+    respond_to do |format|
+      format.turbo_stream # renders unpublish.turbo_stream.erb
+      format.html { redirect_to author_documents_path, notice: "Unpublished" }
+    end
   end
 
   private
@@ -58,7 +70,7 @@ class Author::DocumentsController < Author::BaseController
 
   def doc_params
     params.require(:document).permit(
-      :kind, :title, :description, :published, :published_at,
+      :kind, :title, :description,
       :series_id, :series_position, tag_ids: []
     )
   end

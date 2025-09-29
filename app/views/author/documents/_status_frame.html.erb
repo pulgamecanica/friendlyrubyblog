@@ -1,0 +1,27 @@
+<turbo-frame id="document_status">
+  <div class="flex items-center space-x-2">
+    <% if document.published? %>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg>
+        Published
+      </span>
+      <%= button_to "Unpublish", unpublish_author_document_path(document),
+          method: :patch,
+          class: "text-sm text-gray-600 hover:text-gray-800",
+          form: { data: { turbo_frame: "document_status" } } %>
+    <% else %>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+        </svg>
+        Draft
+      </span>
+      <%= button_to "Publish", publish_author_document_path(document),
+          method: :patch,
+          class: "px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700",
+          form: { data: { turbo_frame: "document_status" } } %>
+    <% end %>
+  </div>
+</turbo-frame>

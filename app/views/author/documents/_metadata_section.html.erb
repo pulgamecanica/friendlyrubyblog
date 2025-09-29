@@ -1,0 +1,37 @@
+<div class="bg-white border-b" data-controller="collapsible" data-collapsible-expanded-value="false">
+  <!-- Collapsed View Header -->
+  <div class="px-6 py-4 cursor-pointer hover:bg-gray-50"
+       data-action="click->collapsible#toggle"
+       data-collapsible-target="toggle">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <!-- Chevron Icon -->
+        <svg class="w-5 h-5 text-gray-400 transition-transform duration-200"
+             data-collapsible-target="icon"
+             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+
+        <h2 class="text-lg font-medium text-gray-900">Document Settings</h2>
+      </div>
+
+      <!-- Collapsed Summary -->
+      <div id="metadata_summary" class="text-sm text-gray-600 flex items-center space-x-4">
+        <span>Kind: <span class="font-medium"><%= @document.kind.capitalize %></span></span>
+        <% if @document.series %>
+          <span>Series: <span class="font-medium"><%= @document.series.title %></span></span>
+        <% end %>
+        <% if @document.tags.any? %>
+          <span>Tags: <span class="font-medium"><%= @document.tags.count %></span></span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Expanded Content -->
+  <div class="border-t" data-collapsible-target="content" style="display: none;">
+    <div class="px-6 py-6 bg-gray-50">
+      <%= render "metadata_frame", document: @document %>
+    </div>
+  </div>
+</div>

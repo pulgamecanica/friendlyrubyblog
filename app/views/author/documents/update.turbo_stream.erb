@@ -1,0 +1,22 @@
+<!-- Update the form with fresh data -->
+<%= turbo_stream.replace "document_metadata" do %>
+  <%= render "metadata_frame", document: @document %>
+<% end %>
+
+<!-- Update the header title -->
+<%= turbo_stream.replace "document_title" do %>
+  <%= render "title_frame", document: @document %>
+<% end %>
+
+<!-- Update the collapsed summary -->
+<%= turbo_stream.replace "metadata_summary" do %>
+  <div class="text-sm text-gray-600 flex items-center space-x-4">
+    <span>Kind: <span class="font-medium"><%= @document.kind.capitalize %></span></span>
+    <% if @document.series %>
+      <span>Series: <span class="font-medium"><%= @document.series.title %></span></span>
+    <% end %>
+    <% if @document.tags.any? %>
+      <span>Tags: <span class="font-medium"><%= @document.tags.count %></span></span>
+    <% end %>
+  </div>
+<% end %>
