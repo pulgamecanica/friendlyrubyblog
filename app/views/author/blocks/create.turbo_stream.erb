@@ -1,9 +1,17 @@
-<%= turbo_stream.append "blocks" do %>
-  <%= render "author/blocks/block", block: @block %>
+<!-- Replace the entire blocks section to update positions and insert zones -->
+<%= turbo_stream.update "blocks" do %>
+  <%
+    # Ensure we get the freshest data
+    document = @block.document
+    document.reload
+    blocks = document.blocks.reload.order(:position)
+  %>
+  <%= render "author/blocks/blocks_with_inserts", blocks: blocks, document: document %>
 <% end %>
 
 <%= turbo_stream.update "new_block" do %>
+  <% document = @block.document %>
   <%= render "author/blocks/form",
-        document: @document,
-        block: Block.new(type: "MarkdownBlock", position: @document.blocks.count) %>
+        document: document,
+        block: Block.new(type: "MarkdownBlock", position: document.blocks.count + 1) %>
 <% end %>

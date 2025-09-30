@@ -1,0 +1,35 @@
+.block-insert-zone {
+  margin: 0.5rem 0;
+}
+
+.insert-trigger {
+  min-height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.insert-form {
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.block-type-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.block-type-btn.selected {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}

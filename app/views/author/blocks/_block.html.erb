@@ -1,5 +1,5 @@
 <turbo-frame id="<%= dom_id(block) %>">
-  <article class="grid grid-cols-[1fr_200px] gap-4 mb-6 group"
+  <article class="grid grid-cols-[1fr_200px] gap-4 group"
            data-controller="block-editor"
            data-block-editor-block-id-value="<%= block.id %>"
            data-block-editor-preview-url-value="<%= preview_author_document_blocks_path(block.document) %>">
@@ -51,6 +51,7 @@
                 <%= f.text_area :data_markdown,
                     value: block.data["markdown"],
                     data: {
+                      controller: "textarea-tab",
                       block_editor_target: "textarea",
                       action: "input->block-editor#renderPreview input->block-editor#autoResize"
                     },
@@ -91,6 +92,7 @@
 
             <%= f.text_area :data_code,
                 value: block.data["code"],
+                data: { controller: "textarea-tab" },
                 class: "w-full border border-gray-300 rounded-lg p-3 font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
                 placeholder: "Enter your code here...",
                 rows: 12 %>
@@ -98,10 +100,8 @@
             <%= f.hidden_field :type %>
             <%= f.hidden_field :position %>
 
-            <div class="flex justify-end">
-              <%= f.submit "Update Block",
-                  class: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500" %>
-            </div>
+            <!-- Hidden submit button (triggered from toolbar) -->
+            <%= f.submit "Update Block", style: "display: none;", data: { block_editor_target: "hiddenSubmit" } %>
           <% end %>
 
         <% else %>
@@ -112,6 +112,7 @@
 
             <%= f.text_area :data_html,
                 value: block.data["html"],
+                data: { controller: "textarea-tab" },
                 class: "w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
                 placeholder: "Enter HTML content...",
                 rows: 12 %>
@@ -119,10 +120,8 @@
             <%= f.hidden_field :type %>
             <%= f.hidden_field :position %>
 
-            <div class="flex justify-end">
-              <%= f.submit "Update Block",
-                  class: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500" %>
-            </div>
+            <!-- Hidden submit button (triggered from toolbar) -->
+            <%= f.submit "Update Block", style: "display: none;", data: { block_editor_target: "hiddenSubmit" } %>
           <% end %>
         <% end %>
       </div>
@@ -137,9 +136,7 @@
         <div class="text-xs font-medium text-gray-500 uppercase tracking-wider">
           <%= block.type.demodulize %>
         </div>
-        <div class="text-xs text-gray-400 mt-1">
-          Position <%= block.position %>
-        </div>
+        <%= render "author/blocks/position", block: block %>
       </div>
 
       <!-- Normal Mode Tools -->

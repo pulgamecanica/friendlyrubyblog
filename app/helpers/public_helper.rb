@@ -7,7 +7,7 @@ module PublicHelper
   def render_block(block)
     case block
     when MarkdownBlock
-      html = Commonmarker.to_html(block.data["markdown"].to_s, plugins: { syntax_highlighter: { theme: "InspiredGitHub" } })
+      html = text_to_markdown(block.data["markdown"].to_s)
       sanitized = Sanitize.fragment(html, Sanitize::Config::RELAXED)
       content_tag(:div, sanitized.html_safe, class: "prose prose-neutral max-w-none")
     when CodeBlock
@@ -23,12 +23,5 @@ module PublicHelper
       # fallback
       content_tag(:div, block.data.inspect, class: "text-xs text-gray-500")
     end
-  end
-
-  def safe_html(html)
-    sanitize(html.to_s,
-      tags: %w[p br a strong em code pre ul ol li h1 h2 h3 h4 h5 h6 blockquote img span div],
-      attributes: %w[href title rel target src alt width height class]
-    )
   end
 end

@@ -5,7 +5,7 @@ RSpec.describe Block, type: :model do
   it { should have_many(:likes).dependent(:destroy) }
 
   it { should validate_presence_of(:type) }
-  it { should validate_numericality_of(:position).only_integer.is_greater_than_or_equal_to(0) }
+  it { should validate_numericality_of(:position).only_integer.is_greater_than_or_equal_to(1) }
 
   it "validates data must be a hash" do
     block = build(:markdown_block, data: "string")
@@ -15,25 +15,38 @@ RSpec.describe Block, type: :model do
 
   it "orders blocks by position by default" do
     document = create(:document)
-    block3 = create(:markdown_block, document: document, position: 3)
+    # Create blocks in order to avoid position shifting issues
     block1 = create(:markdown_block, document: document, position: 1)
     block2 = create(:markdown_block, document: document, position: 2)
+    block3 = create(:markdown_block, document: document, position: 3)
 
     expect(document.blocks.pluck(:position)).to eq([ 1, 2, 3 ])
   end
 
-  it "requires position to be a non-negative integer" do
+  it "auto-assigns position when nil" do
     document = create(:document)
 
-    # Test that nil position is invalid
-    block = build(:markdown_block, document: document, position: nil)
+    # First block gets position 1
+    block1 = create(:markdown_block, document: document, position: nil)
+    expect(block1.position).to eq(1)
+
+    # Second block gets position 2
+    block2 = create(:markdown_block, document: document, position: nil)
+    expect(block2.position).to eq(2)
+  end
+
+  it "requires position to be a positive integer when provided" do
+    document = create(:document)
+
+    # Test zero position is invalid
+    block = build(:markdown_block, document: document, position: 0)
     expect(block).not_to be_valid
-    expect(block.errors[:position]).to include("is not a number")
+    expect(block.errors[:position]).to include("must be greater than or equal to 1")
 
     # Test negative position is invalid
     block.position = -1
     expect(block).not_to be_valid
-    expect(block.errors[:position]).to include("must be greater than or equal to 0")
+    expect(block.errors[:position]).to include("must be greater than or equal to 1")
 
     # Test float position is invalid
     block.position = 1.5
@@ -48,22 +61,46 @@ RSpec.describe Block, type: :model do
     expect(block.position).to eq(5)
   end
 
-  it "allows multiple blocks with same position" do
+  it "shifts positions when inserting at specific position" do
     document = create(:document)
     block1 = create(:markdown_block, document: document, position: 1)
-    block2 = create(:markdown_block, document: document, position: 1)
+    block2 = create(:markdown_block, document: document, position: 2)
 
-    expect(block1.position).to eq(1)
-    expect(block2.position).to eq(1)
+    # Insert new block at position 1
+    new_block = create(:markdown_block, document: document, position: 1)
+
+    # Original blocks should be shifted
+    expect(new_block.position).to eq(1)
+    expect(block1.reload.position).to eq(2)
+    expect(block2.reload.position).to eq(3)
   end
 
-  it "maintains position when updated" do
+  it "repositions siblings when updating position" do
     document = create(:document)
-    block = create(:markdown_block, document: document, position: 2)
+    block1 = create(:markdown_block, document: document, position: 1)
+    block2 = create(:markdown_block, document: document, position: 2)
+    block3 = create(:markdown_block, document: document, position: 3)
 
-    block.update(position: 5)
+    # Move block3 to position 1
+    block3.update(position: 1)
 
-    expect(block.reload.position).to eq(5)
+    expect(block3.reload.position).to eq(1)
+    expect(block1.reload.position).to eq(2)
+    expect(block2.reload.position).to eq(3)
+  end
+
+  it "compacts positions after deletion" do
+    document = create(:document)
+    block1 = create(:markdown_block, document: document, position: 1)
+    block2 = create(:markdown_block, document: document, position: 2)
+    block3 = create(:markdown_block, document: document, position: 3)
+
+    # Delete middle block
+    block2.destroy
+
+    # Positions should be compacted
+    expect(block1.reload.position).to eq(1)
+    expect(block3.reload.position).to eq(2)
   end
 
   it "triggers document search reindex after commit" do

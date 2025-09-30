@@ -1,0 +1,10 @@
+<!-- Insert zone at the beginning -->
+<%= render "author/blocks/insert_form", position: 1, document: document %>
+
+<% blocks.each_with_index do |block, index| %>
+  <!-- Render the block -->
+  <%= render "author/blocks/block", block: block %>
+
+  <!-- Insert zone after this block (position will be block.position + 1) -->
+  <%= render "author/blocks/insert_form", position: block.position + 1, document: document %>
+<% end %>

@@ -23,10 +23,11 @@ module MarkdownHelper
     s.encode(Encoding::UTF_8)
   end
 
+
   def safe_html(html)
     sanitize(html.to_s,
-      tags: %w[p br hr details summary a strong em code pre ul ol li h1 h2 h3 h4 h5 h6 blockquote img span div],
-      attributes: %w[href stylec title rel target src alt width height class open]
+      tags: %w[p br hr a strong em code pre ul ol li h1 h2 h3 h4 h5 h6 blockquote img span div],
+      attributes: %w[href style title rel target src alt width height class]
     )
   end
 end

@@ -1,1 +1,5 @@
-<%= turbo_stream.remove dom_id(@block) %>
+<!-- Replace the entire blocks section to update positions and insert zones after deletion -->
+<%= turbo_stream.update "blocks" do %>
+  <% document = @block.document %>
+  <%= render "author/blocks/blocks_with_inserts", blocks: document.blocks.reload, document: document %>
+<% end %>

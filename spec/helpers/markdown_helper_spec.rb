@@ -30,7 +30,6 @@ RSpec.describe MarkdownHelper, type: :helper do
     it "handles unsafe HTML when enabled" do
       markdown = '<script>alert("xss")</script>'
       result = helper.text_to_markdown(markdown)
-      # CommonMarker with unsafe: true still escapes HTML in plain text
       expect(result).to include("&lt;script")
       expect(result).to include("&lt;/script>")
     end
