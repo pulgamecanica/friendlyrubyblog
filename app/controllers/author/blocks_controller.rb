@@ -42,6 +42,29 @@ class Author::BlocksController < Author::BaseController
     render html: helpers.safe_html(html)
   end
 
+  def sort
+    block_ids = params[:block_ids]
+
+    if block_ids.present? && block_ids.is_a?(Array)
+      # Disable callbacks to prevent position shifting during bulk update
+      Block.transaction do
+        block_ids.each_with_index do |block_id, index|
+          block = @document.blocks.find(block_id)
+          # Use update_column to bypass callbacks and validations
+          block.update_column(:position, index + 1)
+        end
+      end
+
+      render json: { success: true, message: "Blocks reordered successfully" }
+    else
+      render json: { success: false, error: "Invalid block_ids parameter" }, status: :bad_request
+    end
+  rescue ActiveRecord::RecordNotFound => e
+    render json: { success: false, error: "Block not found: #{e.message}" }, status: :not_found
+  rescue => e
+    render json: { success: false, error: "Failed to reorder blocks: #{e.message}" }, status: :internal_server_error
+  end
+
   private
 
   def set_document = @document = Document.friendly.find(params[:document_id])

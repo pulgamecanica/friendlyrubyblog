@@ -1,10 +1,15 @@
-<!-- Insert zone at the beginning -->
-<%= render "author/blocks/insert_form", position: 1, document: document %>
+<div data-drag-sort-target="container" class="space-y-2">
+  <!-- Insert zone at the beginning -->
+  <%= render "author/blocks/insert_form", position: 1, document: document %>
 
-<% blocks.each_with_index do |block, index| %>
-  <!-- Render the block -->
-  <%= render "author/blocks/block", block: block %>
+  <% blocks.each_with_index do |block, index| %>
+    <!-- Wrap block + its insert zone together so they move as a unit -->
+    <div class="block-with-insert">
+      <!-- Render the block -->
+      <%= render "author/blocks/block", block: block %>
 
-  <!-- Insert zone after this block (position will be block.position + 1) -->
-  <%= render "author/blocks/insert_form", position: block.position + 1, document: document %>
-<% end %>
+      <!-- Insert zone after this block (position will be block.position + 1) -->
+      <%= render "author/blocks/insert_form", position: block.position + 1, document: document %>
+    </div>
+  <% end %>
+</div>

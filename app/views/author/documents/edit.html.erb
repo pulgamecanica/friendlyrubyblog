@@ -17,7 +17,11 @@
           <span class="text-sm text-gray-500"><%= @blocks.count %> blocks</span>
         </div>
 
-        <div id="blocks" class="space-y-2">
+        <div id="blocks"
+             class="space-y-2"
+             data-controller="drag-sort"
+             data-drag-sort-document-id-value="<%= @document.id %>"
+             data-drag-sort-sort-url-value="<%= sort_author_document_blocks_path(@document) %>">
           <%= turbo_frame_tag "blocks" do %>
             <%= render "author/blocks/blocks_with_inserts", blocks: @blocks, document: @document %>
           <% end %>

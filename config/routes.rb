@@ -41,6 +41,7 @@ Rails.application.routes.draw do
       resources :blocks, only: [ :create, :update, :destroy ] do
         collection do
           post :preview
+          patch :sort
         end
       end
     end
