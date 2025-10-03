@@ -10,6 +10,8 @@ class Document < ApplicationRecord
   has_many   :comments, as: :commentable, dependent: :destroy
   has_many   :likes,    as: :likable,     dependent: :destroy
 
+  has_one_attached :portrait
+
   has_paper_trail
 
   before_validation { self.kind ||= "post" }

@@ -1,5 +1,6 @@
 class Block < ApplicationRecord
   belongs_to :document
+  belongs_to :language, optional: true
   has_many :likes,    as: :likable,     dependent: :destroy
 
   has_paper_trail

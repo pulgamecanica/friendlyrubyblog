@@ -66,11 +66,11 @@ RSpec.describe PublicHelper, type: :helper do
       end
     end
 
-    context "RichTextBlock" do
+    context "HtmlBlock" do
       it "renders provided HTML as-is within prose container" do
         block = Block.create!(
           document: document,
-          type: "RichTextBlock",
+          type: "HtmlBlock",
           position: 1,
           data: { "html" => "<p>Hello <strong>world</strong></p>" }
         )
@@ -84,7 +84,7 @@ RSpec.describe PublicHelper, type: :helper do
       it "falls back to data['content'] when html is blank" do
         block = Block.create!(
           document: document,
-          type: "RichTextBlock",
+          type: "HtmlBlock",
           position: 1,
           data: { "html" => "", "content" => "<em>content</em>" }
         )

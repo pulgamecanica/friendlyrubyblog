@@ -106,7 +106,7 @@
           <% end %>
 
         <% else %>
-          <!-- Rich Text Editor -->
+          <!-- Html Editor -->
           <%= form_with model: [:author, block.document, block.becomes(Block)],
                         data: { turbo_frame: dom_id(block) },
                         class: "space-y-3" do |f| %>

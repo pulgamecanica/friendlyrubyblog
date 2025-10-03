@@ -53,7 +53,7 @@
       <!-- HTML Block -->
       <button type="button"
               data-action="click->block-insert#selectType"
-              data-type="Block"
+              data-type="HtmlBlock"
               class="block-type-btn p-3 border border-gray-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-all group">
         <div class="text-purple-600 mb-2">
           <svg class="w-6 h-6 mx-auto" fill="currentColor" viewBox="0 0 20 20">
@@ -62,6 +62,20 @@
         </div>
         <div class="text-xs font-medium">HTML</div>
         <div class="text-xs text-gray-500">Raw HTML content</div>
+      </button>
+
+      <!-- Image Block -->
+      <button type="button"
+              data-action="click->block-insert#selectType"
+              data-type="ImageBlock"
+              class="block-type-btn p-3 border border-gray-200 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-all group">
+        <div class="text-orange-600 mb-2">
+          <svg class="w-6 h-6 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+        <div class="text-xs font-medium">Images</div>
+        <div class="text-xs text-gray-500">Photo collection</div>
       </button>
     </div>
 

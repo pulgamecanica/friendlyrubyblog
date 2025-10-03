@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # Mount ActionCable for WebSocket connections
+  mount ActionCable.server => '/cable'
+
   devise_for :authors, path: "author", path_names: { sign_in: "sign_in", sign_out: "sign_out" }
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -37,11 +40,17 @@ Rails.application.routes.draw do
       member do
         patch :publish
         patch :unpublish
+        delete :remove_portrait
       end
       resources :blocks, only: [ :create, :update, :destroy ] do
         collection do
           post :preview
           patch :sort
+        end
+        member do
+          delete "images/:attachment_id", to: "blocks#remove_image", as: :remove_image
+          post :execute
+          patch :toggle_interactive
         end
       end
     end

@@ -46,8 +46,8 @@ export default class extends Controller {
     if (blockType === "MarkdownBlock") {
       formData.append("block[data_markdown]", "# New Section\n\nStart writing here...")
     } else if (blockType === "CodeBlock") {
-      formData.append("block[data_language]", "javascript")
-      formData.append("block[data_code]", "// Your code here")
+      formData.append("block[data_language]", "Ruby")
+      formData.append("block[data_code]", "# Your code here")
     } else {
       formData.append("block[data_html]", "<p>Your HTML content here</p>")
     }

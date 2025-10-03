@@ -34,7 +34,7 @@ export default class extends Controller {
       this.sortable = Sortable.create(container, {
         animation: 150,
         ghostClass: "opacity-50",
-        chosenClass: "ring-2",
+        // chosenClass: "ring-2",
         dragClass: "shadow-lg",
         filter: ".block-insert-zone:not(.block-with-insert .block-insert-zone), [data-block-editor-target='editor']",
         preventOnFilter: false,

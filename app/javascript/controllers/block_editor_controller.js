@@ -5,7 +5,7 @@ export default class extends Controller {
     "content", "toolbar", "editor", "preview", "textarea",
     "normalTools", "editTools", "collapseBtn", "previewBtn",
     "layoutBtn", "fadeOverlay", "editorContainer", "updateButton",
-    "hiddenSubmit", "submitButton"
+    "hiddenSubmit", "submitButton", "interactiveLayout", "singleLayout"
   ]
 
   static values = {
@@ -20,12 +20,28 @@ export default class extends Controller {
   connect() {
     this.boundClickOutside = this.handleClickOutside.bind(this)
     this.boundEscapeKey = this.handleEscapeKey.bind(this)
+    this.boundInteractiveToggle = this.handleInteractiveToggle.bind(this)
+
+    // Use event delegation to listen for toggle clicks (works even when button is replaced)
+    this.element.addEventListener('click', this.boundInteractiveToggle)
+
+    // BRUTE FORCE: Check for unhighlighted code every 500ms
+    this.highlightInterval = setInterval(() => {
+      this.checkAndFixHighlighting()
+    }, 500)
+
     this.updateToolbar()
     this.updateLayout()
   }
 
   disconnect() {
     this.removeGlobalListeners()
+    this.element.removeEventListener('click', this.boundInteractiveToggle)
+
+    // Clean up interval
+    if (this.highlightInterval) {
+      clearInterval(this.highlightInterval)
+    }
   }
 
   // Block state management
@@ -89,6 +105,63 @@ export default class extends Controller {
   handleEscapeKey(event) {
     if (event.key === "Escape") {
       this.exitEditMode()
+    }
+  }
+
+  handleInteractiveToggle(event) {
+    // Check if this is actually the toggle button
+    const toggleButton = event.target.closest('[type="submit"][class*="bg-blue-"], [type="submit"][class*="bg-gray-"]')
+    if (!toggleButton) return
+
+    // Get current state before the toggle happens
+    const isCurrentlyInteractive = toggleButton.classList.contains('bg-blue-600')
+
+    // The state will be flipped after the form submission, so we toggle opposite
+    const willBeInteractive = !isCurrentlyInteractive
+
+    // Use setTimeout to let the form submission complete first
+    setTimeout(() => {
+      this.updateInteractiveLayout(willBeInteractive)
+    }, 100)
+  }
+
+  checkAndFixHighlighting() {
+    // Find code elements that have language classes but no highlighting
+    const codeElements = this.element.querySelectorAll('pre code[class*="language-"]')
+
+    codeElements.forEach(codeElement => {
+      // Check if it's already highlighted (has .token elements)
+      if (!codeElement.querySelector('.token')) {
+        // Not highlighted - fix it!
+        if (window.Prism) {
+          window.Prism.highlightElement(codeElement)
+        } else {
+          // Import and highlight
+          import('prismjs').then((Prism) => {
+            Prism.default.highlightElement(codeElement)
+          })
+        }
+      }
+    })
+  }
+
+  updateInteractiveLayout(isInteractive = null) {
+    // If not provided, check the current button state
+    if (isInteractive === null) {
+      const toggleButton = this.element.querySelector('[type="submit"][class*="bg-blue-600"], [type="submit"][class*="bg-gray-300"]')
+      if (!toggleButton) return
+      isInteractive = toggleButton.classList.contains('bg-blue-600')
+    }
+
+    // Toggle between layouts
+    if (this.hasInteractiveLayoutTarget && this.hasSingleLayoutTarget) {
+      if (isInteractive) {
+        this.interactiveLayoutTarget.style.display = ''
+        this.singleLayoutTarget.style.display = 'none'
+      } else {
+        this.interactiveLayoutTarget.style.display = 'none'
+        this.singleLayoutTarget.style.display = ''
+      }
     }
   }
 

@@ -21,6 +21,54 @@
         placeholder: "Brief description of the document..." %>
   </div>
 
+  <!-- Portrait Image -->
+  <div data-controller="image-preview">
+    <%= f.label :portrait, "Portrait Image", class: "block text-sm font-medium text-gray-700 mb-2" %>
+    <div class="space-y-3">
+      <!-- Current Image Preview -->
+      <% if document.portrait.attached? %>
+        <div class="relative inline-block" data-image-preview-target="currentImage">
+          <%= image_tag document.portrait,
+              class: "w-32 h-32 object-cover rounded-lg border border-gray-300",
+              alt: "Document portrait" %>
+          <div class="absolute top-1 right-1">
+            <%= link_to remove_portrait_author_document_path(document),
+                method: :delete,
+                data: {
+                  confirm: "Remove portrait image?",
+                  turbo_method: :delete,
+                  turbo_frame: "document_metadata"
+                },
+                class: "bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600" do %>
+              ×
+            <% end %>
+          </div>
+        </div>
+      <% else %>
+        <div class="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center" data-image-preview-target="currentImage">
+          <div class="text-center">
+            <svg class="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <p class="text-xs text-gray-500">No image</p>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- New Image Preview (hidden by default) -->
+      <div data-image-preview-target="preview" style="display: none;" class="space-y-2">
+        <p class="text-sm font-medium text-green-700">New image to upload:</p>
+      </div>
+
+      <!-- File Upload -->
+      <%= f.file_field :portrait,
+          accept: "image/*",
+          data: { "image-preview-target": "input" },
+          class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" %>
+      <p class="text-xs text-gray-500">PNG, JPG, JPEG up to 10MB</p>
+    </div>
+  </div>
+
   <!-- Series and Tags -->
   <div class="grid md:grid-cols-2 gap-6">
     <div>

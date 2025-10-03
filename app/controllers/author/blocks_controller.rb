@@ -1,6 +1,6 @@
 class Author::BlocksController < Author::BaseController
   before_action :set_document
-  before_action :set_block, only: %i[update destroy]
+  before_action :set_block, only: %i[update destroy remove_image execute toggle_interactive]
 
   # POST /author/documents/:document_id/blocks
   # Params:
@@ -18,6 +18,13 @@ class Author::BlocksController < Author::BaseController
   end
 
   def update
+    # Handle image appending for ImageBlock
+    if @block.is_a?(ImageBlock) && params.dig(:block, :images).present?
+      params[:block][:images].each do |image|
+        @block.images.attach(image) if image.present?
+      end
+    end
+
     if @block.update(permitted_params)
       respond_to do |format|
         format.turbo_stream # renders update.turbo_stream.erb
@@ -36,10 +43,74 @@ class Author::BlocksController < Author::BaseController
     end
   end
 
+  def remove_image
+    attachment = @block.images.attachments.find(params[:attachment_id])
+    attachment.purge
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("image_block_#{@block.id}", partial: "author/blocks/block", locals: { block: @block }) }
+      format.html { redirect_to edit_author_document_path(@document) }
+    end
+  end
+
   def preview
     markdown = params[:markdown].to_s
     html = helpers.text_to_markdown(markdown)
     render html: helpers.safe_html(html)
+  end
+
+  def toggle_interactive
+    unless @block.is_a?(CodeBlock) && @block.can_be_interactive?
+      head :unprocessable_entity
+      return
+    end
+
+    # Just toggle the interactive field, don't touch anything else
+    @block.update_column(:interactive, !@block.interactive?)
+
+    # Return minimal response - just update the toolbar
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace("code_block_#{@block.id}_toolbar",
+          partial: "author/blocks/toolbar", locals: { block: @block })
+      end
+      format.json { render json: { interactive: @block.interactive? } }
+    end
+  end
+
+  def execute
+    unless @block.is_a?(CodeBlock) && @block.supports_execution?
+      render json: { error: "Block does not support code execution" }, status: :unprocessable_entity
+      return
+    end
+
+    code = params[:code].to_s
+
+    if code.blank?
+      render json: { error: "No code provided" }, status: :unprocessable_entity
+      return
+    end
+
+    begin
+      # Mark execution as running
+      @block.set_execution_result({
+        status: 'running',
+        started_at: Time.current
+      })
+      @block.save!
+
+      # Queue the job for async execution
+      CodeExecutionJob.perform_later(@block.id, code)
+
+      render json: {
+        status: 'queued',
+        message: 'Code execution started',
+        block_id: @block.id
+      }
+
+    rescue => e
+      Rails.logger.error "Failed to queue code execution: #{e.message}"
+      render json: { error: "Failed to start execution: #{e.message}" }, status: :internal_server_error
+    end
   end
 
   def sort
@@ -76,12 +147,33 @@ class Author::BlocksController < Author::BaseController
     data["language"] = params.dig(:block, :data_language)
     data["code"]     = params.dig(:block, :data_code)
     data["html"]     = params.dig(:block, :data_html)
+    data["caption"]  = params.dig(:block, :data_caption)
+    data["filename"] = params.dig(:block, :data_filename)
 
-    # Normalize type to known subclasses only (safety)
-    {
+    block_params = {
       type: params.dig(:block, :type),
       position: params.dig(:block, :position),
-      data: data.compact_blank
+      data: data.compact_blank,
+      language_id: params.dig(:block, :language_id),
+      interactive: params.dig(:block, :interactive) == "1"
     }
+
+    # Handle images for ImageBlock (append, don't replace)
+    if params.dig(:block, :type) == "ImageBlock" && params.dig(:block, :images).present?
+      # Don't add to block_params, handle separately to append
+    end
+
+    # For CodeBlocks, handle language assignment by name for backward compatibility
+    if params.dig(:block, :type) == "CodeBlock" && params.dig(:block, :language_name).present?
+      language = Language.find_or_create_by_name(params.dig(:block, :language_name))
+      block_params[:language_id] = language&.id
+      data["language"] = params.dig(:block, :language_name)
+    end
+
+    block_params[:data] = data.compact_blank
+
+    # Don't use compact_blank on block_params because it removes false values
+    # and we need to be able to set interactive: false
+    block_params.compact { |key, value| value.nil? }
   end
 end

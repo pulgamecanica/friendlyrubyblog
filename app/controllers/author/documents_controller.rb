@@ -64,13 +64,21 @@ class Author::DocumentsController < Author::BaseController
     end
   end
 
+  def remove_portrait
+    @document.portrait.purge
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("document_metadata", partial: "form", locals: { document: @document }) }
+      format.html { redirect_to edit_author_document_path(@document), notice: "Portrait removed" }
+    end
+  end
+
   private
 
   def set_document = @document = Document.friendly.find(params[:id])
 
   def doc_params
     params.require(:document).permit(
-      :kind, :title, :description,
+      :kind, :title, :description, :portrait,
       :series_id, :series_position, tag_ids: []
     )
   end

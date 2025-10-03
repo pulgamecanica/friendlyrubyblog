@@ -1,6 +1,13 @@
 <turbo-frame id="<%= dom_id(block) %>">
   <article class="grid grid-cols-[1fr_200px] gap-4 group"
-           data-controller="block-editor"
+           data-controller="block-editor<%= ' image-carousel' if block.is_a?(ImageBlock) && block.images.count > 1 %><%= ' code-executor' if block.is_a?(CodeBlock) %>"
+           <% if block.is_a?(ImageBlock) && block.images.count > 1 %>
+             data-image-carousel-count-value="<%= block.images.count %>"
+           <% end %>
+           <% if block.is_a?(CodeBlock) %>
+             data-code-executor-block-id-value="<%= block.id %>"
+             data-code-executor-document-id-value="<%= block.document.id %>"
+           <% end %>
            data-block-editor-block-id-value="<%= block.id %>"
            data-block-editor-preview-url-value="<%= preview_author_document_blocks_path(block.document) %>">
 
@@ -10,15 +17,70 @@
       <!-- Normal Mode: Rendered Content (shown by default) -->
       <div data-block-editor-target="content"
            data-action="click->block-editor#handleContentClick"
-           class="relative cursor-pointer hover:bg-gray-50 transition-colors h-full">
+           class="relative cursor-pointer hover:bg-gray-50 transition-colors h-full focus:outline-none">
 
-        <div class="p-4">
+        <div class="p-4 h-full">
           <% if block.is_a?(MarkdownBlock) %>
-            <div class="prose prose-neutral max-w-none">
+            <div class="prose prose-neutral max-w-none h-full">
               <%= safe_html(text_to_markdown(block.data["markdown"].to_s)) %>
             </div>
           <% elsif block.is_a?(CodeBlock) %>
-            <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm"><code class="language-<%= block.data["language"] %>"><%= block.data["code"] %></code></pre>
+            <!-- Interactive Mode: Side-by-side layout - ALWAYS PRESENT -->
+            <div data-block-editor-target="interactiveLayout" class="grid grid-cols-2 gap-4 h-full" style="<%= block.interactive? ? '' : 'display: none;' %>">
+              <!-- Code Column -->
+              <div class="bg-gray-900 text-gray-100 rounded-lg overflow-hidden"
+                   data-controller="syntax-highlighter"
+                   data-syntax-highlighter-language-value="<%= block.language_name %>">
+                <% if block.filename.present? %>
+                  <div class="bg-gray-800 px-4 py-2 text-xs text-gray-400 border-b border-gray-700">
+                    <%= block.filename %>
+                  </div>
+                <% end %>
+                <pre class="p-4 overflow-x-auto text-sm"><code class="language-<%= block.language&.extension || block.data["language"] %>"><%= block.data["code"] %></code></pre>
+              </div>
+
+              <!-- Console Column -->
+              <div class="bg-gray-900 text-gray-100 rounded-lg overflow-hidden">
+                <div class="bg-gray-800 px-4 py-2 text-xs text-gray-400 border-b border-gray-700">
+                  Console Output
+                </div>
+                <div class="p-4" data-code-executor-target="console">
+                  <% if block.execution_result.present? %>
+                    <div class="text-sm font-mono">
+                      <% if block.execution_result['success'] %>
+                        <div class="text-green-400 text-xs mb-2">
+                          ✅ Executed in <%= block.execution_result['execution_time'] %>s
+                        </div>
+                        <pre class="whitespace-pre-wrap text-gray-100"><%= block.execution_result['output'] %></pre>
+                      <% else %>
+                        <div class="text-red-400 text-xs mb-2">❌ Error</div>
+                        <pre class="whitespace-pre-wrap text-red-300"><%= block.execution_result['error'] %></pre>
+                      <% end %>
+                    </div>
+                  <% else %>
+                    <div class="text-gray-500 text-sm">
+                      <div class="text-xs mb-2">💻 Ready to run</div>
+                      <div class="text-xs">Click "Run Code" in the toolbar to execute</div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
+            <!-- Non-interactive Mode: Single code block - ALWAYS PRESENT -->
+            <div data-block-editor-target="singleLayout" class="bg-gray-900 text-gray-100 rounded-lg overflow-hidden"
+                 data-controller="syntax-highlighter"
+                 data-syntax-highlighter-language-value="<%= block.language_name %>"
+                 style="<%= block.interactive? ? 'display: none;' : '' %>">
+              <% if block.filename.present? %>
+                <div class="bg-gray-800 px-4 py-2 text-xs text-gray-400 border-b border-gray-700">
+                  <%= block.filename %>
+                </div>
+              <% end %>
+              <pre class="p-4 overflow-x-auto text-sm"><code class="language-<%= block.language&.extension || block.data["language"] %>" data-syntax-highlighter-target="code"><%= block.data["code"] %></code></pre>
+            </div>
+          <% elsif block.is_a?(ImageBlock) %>
+            <%= render_image_block(block) %>
           <% else %>
             <div class="prose prose-neutral max-w-none">
               <%= safe_html(block.data["html"].to_s) %>
@@ -85,10 +147,40 @@
                         data: { turbo_frame: dom_id(block) },
                         class: "space-y-3" do |f| %>
 
-            <%= f.text_field :data_language,
-                value: block.data["language"],
-                class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
-                placeholder: "Language (e.g., ruby, javascript)" %>
+            <!-- Language and Filename -->
+            <div class="space-y-3">
+              <!-- Language Selection -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Language</label>
+                <%= f.text_field :language_name,
+                    value: block.language_name,
+                    list: "languages_#{block.id}",
+                    class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+                    placeholder: "Language (e.g., ruby, javascript)" %>
+
+                <datalist id="languages_<%= block.id %>">
+                  <% Language.by_name.each do |language| %>
+                    <option value="<%= language.name %>"><%= language.name %></option>
+                  <% end %>
+                </datalist>
+              </div>
+
+              <!-- Filename (Optional) -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Filename (optional)</label>
+                <%= f.text_field :data_filename,
+                    value: block.filename,
+                    class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+                    placeholder: "e.g., main.rb, app.js, hello.py" %>
+              </div>
+
+              <!-- Hidden Interactive Toggle (controlled from toolbar) -->
+              <%= f.hidden_field :interactive, value: block.interactive? ? "1" : "0" %>
+
+              <% if block.language && !block.language.interactive? %>
+                <p class="text-xs text-gray-500">This language doesn't support interactive mode yet.</p>
+              <% end %>
+            </div>
 
             <%= f.text_area :data_code,
                 value: block.data["code"],
@@ -104,8 +196,58 @@
             <%= f.submit "Update Block", style: "display: none;", data: { block_editor_target: "hiddenSubmit" } %>
           <% end %>
 
-        <% else %>
-          <!-- Rich Text Editor -->
+        <% elsif block.is_a?(ImageBlock) %>
+          <!-- Image Block Editor -->
+          <%= form_with model: [:author, block.document, block.becomes(Block)],
+                        data: { turbo_frame: dom_id(block) },
+                        class: "space-y-4" do |f| %>
+
+            <!-- Caption -->
+            <%= f.text_field :data_caption,
+                value: block.data["caption"],
+                class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+                placeholder: "Caption (optional)..." %>
+
+            <!-- Current Images -->
+            <% if block.persisted? && block.images.any? %>
+              <div class="space-y-3">
+                <label class="block text-sm font-medium text-gray-700">Current Images</label>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  <% block.images.each_with_index do |image, index| %>
+                    <div class="relative group">
+                      <%= image_tag image, class: "w-full h-20 object-cover rounded border", alt: "Image #{index + 1}" %>
+                      <%= link_to "×", remove_image_author_document_block_path(block.document, block, image.id),
+                          method: :delete,
+                          data: {
+                            turbo_method: :delete,
+                            turbo_confirm: "Remove this image?"
+                          },
+                          class: "absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600" %>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+
+            <!-- Image Upload -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                <%= block.persisted? ? "Add More Images" : "Upload Images" %>
+              </label>
+              <%= f.file_field :images,
+                  multiple: true,
+                  accept: "image/*",
+                  class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100" %>
+              <p class="text-xs text-gray-500 mt-1">Select multiple images. PNG, JPG, JPEG up to 10MB each</p>
+            </div>
+
+            <%= f.hidden_field :type %>
+            <%= f.hidden_field :position %>
+
+            <!-- Hidden submit button (triggered from toolbar) -->
+            <%= f.submit "Update Block", style: "display: none;", data: { block_editor_target: "hiddenSubmit" } %>
+          <% end %>
+        <% elsif block.is_a?(HtmlBlock) %>
           <%= form_with model: [:author, block.document, block.becomes(Block)],
                         data: { turbo_frame: dom_id(block) },
                         class: "space-y-3" do |f| %>
@@ -123,86 +265,29 @@
             <!-- Hidden submit button (triggered from toolbar) -->
             <%= f.submit "Update Block", style: "display: none;", data: { block_editor_target: "hiddenSubmit" } %>
           <% end %>
+        <% else %>
+          <!-- Rich Text Editor -->
+          <%= form_with model: [:author, block.document, block.becomes(Block)],
+                        data: { turbo_frame: dom_id(block) },
+                        class: "space-y-3" do |f| %>
+
+            <%= f.text_area :data_html,
+                value: block.data["html"],
+                data: { controller: "textarea-tab" },
+                class: "w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+                placeholder: "Content not yet supported...",
+                rows: 12 %>
+
+            <%= f.hidden_field :type %>
+            <%= f.hidden_field :position %>
+
+            <!-- Hidden submit button (triggered from toolbar) -->
+            <%= f.submit "Update Block", style: "display: none;", data: { block_editor_target: "hiddenSubmit" } %>
+          <% end %>
         <% end %>
       </div>
     </div>
 
-    <!-- Sticky Toolbar Column -->
-    <div data-block-editor-target="toolbar"
-         class="sticky top-20 h-fit flex flex-col gap-3">
-
-      <!-- Block Info -->
-      <div class="bg-white rounded-lg border border-gray-200 p-4">
-        <div class="text-xs font-medium text-gray-500 uppercase tracking-wider">
-          <%= block.type.demodulize %>
-        </div>
-        <%= render "author/blocks/position", block: block %>
-      </div>
-
-      <!-- Normal Mode Tools -->
-      <div data-block-editor-target="normalTools"
-           class="bg-white rounded-lg border border-gray-200 p-4 space-y-3 flex flex-col">
-
-        <div class="flex gap-2">
-          <button data-block-editor-target="collapseBtn"
-                  data-action="click->block-editor#toggleCollapse"
-                  class="flex-1 px-2 py-1.5 text-xs border border-gray-300 rounded hover:bg-gray-50 transition-colors">
-            Collapse
-          </button>
-
-          <button class="drag-handle px-2 py-1.5 text-xs border border-gray-300 rounded hover:bg-gray-50 transition-colors cursor-move"
-                  title="Drag to reorder">
-            <svg class="w-3 h-3 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
-            </svg>
-          </button>
-        </div>
-
-        <%= button_to "Delete",
-            author_document_block_path(block.document, block),
-            method: :delete,
-            form: { data: { turbo_confirm: "Delete this block?" } },
-            class: "w-full px-2 py-1.5 text-xs border border-red-300 text-red-700 rounded hover:bg-red-50 transition-colors" %>
-      </div>
-
-      <!-- Edit Mode Tools -->
-      <div data-block-editor-target="editTools"
-           class="bg-white rounded-lg border border-gray-200 p-4 pt-2 flex flex-col gap-2"
-           style="display: none;">
-        <% if block.is_a?(MarkdownBlock) %>
-          <div class="text-xs text-center text-gray-400">Markdown Preview</div>
-
-          <div class="flex flex-row gap-1 pb-2 border-b border-gray-300">
-            <button data-block-editor-target="previewBtn"
-                    data-action="click->block-editor#togglePreview"
-                    class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded hover:bg-gray-50 transition-colors">
-              Preview
-            </button>
-
-            <button data-block-editor-target="layoutBtn"
-                    data-action="click->block-editor#toggleLayout"
-                    class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded hover:bg-gray-50 transition-colors">
-              Layout
-            </button>
-          </div>
-        <% end %>
-        <button data-action="click->block-editor#exitEditMode"
-                class="w-full px-2 py-2 text-xs bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors">
-          Close
-        </button>
-      </div>
-
-      <!-- Update Button (Edit Mode Only) -->
-      <div data-block-editor-target="updateButton"
-           class="bg-white rounded-lg border border-gray-200 p-4"
-           style="display: none;">
-
-        <button data-block-editor-target="submitButton"
-                data-action="click->block-editor#submitForm"
-                class="w-full px-3 py-2 text-xs bg-green-600 text-white rounded hover:bg-green-700 font-medium transition-colors">
-          Update Block
-        </button>
-      </div>
-    </div>
+    <%= render "author/blocks/toolbar", block: block %>
   </article>
 </turbo-frame>
