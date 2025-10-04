@@ -5,7 +5,7 @@ class CodeBlock < Block
   before_save :auto_disable_interactive_for_unsupported_language
 
   def plain_text  = data.to_h["code"].to_s
-  def languages   = language ? [language.extension] : [ data.to_h["language"].to_s.downcase ].compact_blank
+  def languages   = language ? [ language.extension ] : [ data.to_h["language"].to_s.downcase ].compact_blank
 
   def language_name
     language&.name || data.to_h["language"].to_s

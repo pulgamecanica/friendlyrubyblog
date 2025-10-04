@@ -87,9 +87,6 @@ class CodeExecutionService
   end
 
   def execute_interpreted_language(command, file_path)
-    # Build the full command
-    full_command = "#{command} #{file_path}"
-
     # Use Open3 to capture both stdout and stderr with timeout
     require "timeout"
     require "open3"
@@ -99,7 +96,8 @@ class CodeExecutionService
     status = nil
 
     Timeout.timeout(TIMEOUT) do
-      output, error, status = Open3.capture3(full_command)
+      # Pass command and file_path as separate arguments to avoid injection
+      output, error, status = Open3.capture3(command, file_path)
     end
 
     [ output, error, status ]
@@ -113,22 +111,22 @@ class CodeExecutionService
     output_executable = "#{file_path}_out"
 
     begin
-      # Compile first
-      compile_command = case command
+      # Compile first using safe argument passing
+      compile_args = case command
       when "gcc_wrapper"
-        "gcc -o #{output_executable} #{file_path}"
+        ["gcc", "-o", output_executable, file_path]
       when "gcc_c98_wrapper"
-        "gcc -o #{output_executable} #{file_path}"
+        ["gcc", "-o", output_executable, file_path]
       when "gcc_gnu11_wrapper"
-        "gcc -std=gnu11 -o #{output_executable} #{file_path}"
+        ["gcc", "-std=gnu11", "-o", output_executable, file_path]
       when "g++_wrapper"
-        "g++ -o #{output_executable} #{file_path}"
+        ["g++", "-o", output_executable, file_path]
       when "g++_98_wrapper"
-        "g++ -std=c++98 -o #{output_executable} #{file_path}"
+        ["g++", "-std=c++98", "-o", output_executable, file_path]
       when "g++_11_wrapper"
-        "g++ -std=c++11 -o #{output_executable} #{file_path}"
+        ["g++", "-std=c++11", "-o", output_executable, file_path]
       when "g++_17_wrapper"
-        "g++ -std=c++17 -o #{output_executable} #{file_path}"
+        ["g++", "-std=c++17", "-o", output_executable, file_path]
       end
 
       # Compile with timeout
@@ -137,7 +135,7 @@ class CodeExecutionService
       compile_status = nil
 
       Timeout.timeout(TIMEOUT) do
-        compile_output, compile_error, compile_status = Open3.capture3(compile_command)
+        compile_output, compile_error, compile_status = Open3.capture3(*compile_args)
       end
 
       # If compilation failed, return the compile error

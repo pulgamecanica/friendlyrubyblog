@@ -93,7 +93,7 @@ class Author::BlocksController < Author::BaseController
     begin
       # Mark execution as running
       @block.set_execution_result({
-        status: 'running',
+        status: "running",
         started_at: Time.current
       })
       @block.save!
@@ -102,8 +102,8 @@ class Author::BlocksController < Author::BaseController
       CodeExecutionJob.perform_later(@block.id, code)
 
       render json: {
-        status: 'queued',
-        message: 'Code execution started',
+        status: "queued",
+        message: "Code execution started",
         block_id: @block.id
       }
 
@@ -154,8 +154,7 @@ class Author::BlocksController < Author::BaseController
       type: params.dig(:block, :type),
       position: params.dig(:block, :position),
       data: data.compact_blank,
-      language_id: params.dig(:block, :language_id),
-      interactive: params.dig(:block, :interactive) == "1"
+      language_id: params.dig(:block, :language_id)
     }
 
     # Handle images for ImageBlock (append, don't replace)
@@ -167,6 +166,7 @@ class Author::BlocksController < Author::BaseController
     if params.dig(:block, :type) == "CodeBlock" && params.dig(:block, :language_name).present?
       language = Language.find_or_create_by_name(params.dig(:block, :language_name))
       block_params[:language_id] = language&.id
+      block_params[:interactive] = if @block.nil? then false else @block.interactive? end
       data["language"] = params.dig(:block, :language_name)
     end
 

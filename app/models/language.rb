@@ -1,7 +1,7 @@
 class Language < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :extension, presence: true
-  validates :interactive, inclusion: { in: [true, false] }
+  validates :interactive, inclusion: { in: [ true, false ] }
 
   scope :interactive, -> { where(interactive: true) }
   scope :by_name, -> { order(:name) }
@@ -10,7 +10,7 @@ class Language < ApplicationRecord
     return nil if name.blank?
 
     # Try to find existing language (case insensitive)
-    existing = find_by('LOWER(name) = ?', name.downcase)
+    existing = find_by("LOWER(name) = ?", name.downcase)
     return existing if existing
 
     # Create new language (non-interactive by default)

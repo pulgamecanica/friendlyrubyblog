@@ -18,14 +18,14 @@ class CodeExecutionJob < ApplicationJob
       )
 
       # Store result in block data
-      block.set_execution_result(result.merge(status: 'completed', executed_at: Time.current))
+      block.set_execution_result(result.merge(status: "completed", executed_at: Time.current))
       block.save!
 
       # Broadcast the result to the user via ActionCable
       ActionCable.server.broadcast(
         "code_execution_#{block_id}",
         {
-          status: 'completed',
+          status: "completed",
           output: result[:output],
           error: result[:error],
           execution_time: result[:execution_time],
@@ -38,7 +38,7 @@ class CodeExecutionJob < ApplicationJob
 
       # Store error result
       error_result = {
-        status: 'failed',
+        status: "failed",
         error: e.message,
         executed_at: Time.current
       }
@@ -50,7 +50,7 @@ class CodeExecutionJob < ApplicationJob
       ActionCable.server.broadcast(
         "code_execution_#{block_id}",
         {
-          status: 'failed',
+          status: "failed",
           error: e.message,
           block_id: block_id
         }

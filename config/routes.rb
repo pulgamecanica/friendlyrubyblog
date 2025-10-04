@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # Mount ActionCable for WebSocket connections
-  mount ActionCable.server => '/cable'
+  mount ActionCable.server => "/cable"
 
   devise_for :authors, path: "author", path_names: { sign_in: "sign_in", sign_out: "sign_out" }
 

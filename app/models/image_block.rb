@@ -3,7 +3,7 @@ class ImageBlock < Block
 
   def plain_text
     images_text = images.map { |img| img.blob.filename.to_s }.join(" ")
-    [data.to_h["caption"], images_text].compact_blank.join(" ")
+    [ data.to_h["caption"], images_text ].compact_blank.join(" ")
   end
 
   def image_count
