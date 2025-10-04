@@ -1,0 +1,5 @@
+<%= turbo_stream.replace "document_metadata" do %>
+  <%= render "metadata_frame", document: @document %>
+<% end %>
+
+<%= success_toast "Portrait image removed!" %>

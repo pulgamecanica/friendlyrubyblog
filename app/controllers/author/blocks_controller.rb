@@ -47,7 +47,7 @@ class Author::BlocksController < Author::BaseController
     attachment = @block.images.attachments.find(params[:attachment_id])
     attachment.purge
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("image_block_#{@block.id}", partial: "author/blocks/block", locals: { block: @block }) }
+      format.turbo_stream # renders remove_image.turbo_stream.erb
       format.html { redirect_to edit_author_document_path(@document) }
     end
   end
@@ -69,10 +69,7 @@ class Author::BlocksController < Author::BaseController
 
     # Return minimal response - just update the toolbar
     respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.replace("code_block_#{@block.id}_toolbar",
-          partial: "author/blocks/toolbar", locals: { block: @block })
-      end
+      format.turbo_stream # renders toggle_interactive.turbo_stream.erb
       format.json { render json: { interactive: @block.interactive? } }
     end
   end

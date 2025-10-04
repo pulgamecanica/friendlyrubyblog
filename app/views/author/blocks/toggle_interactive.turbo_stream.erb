@@ -1,0 +1,9 @@
+<%= turbo_stream.replace "code_block_#{@block.id}_toolbar" do %>
+  <%= render "author/blocks/toolbar", block: @block %>
+<% end %>
+
+<% if @block.interactive? %>
+  <%= success_toast "Code block enabled for interactive execution!" %>
+<% else %>
+  <%= warning_toast "Code block disabled for interactive execution!" %>
+<% end %>

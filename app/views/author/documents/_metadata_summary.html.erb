@@ -1,0 +1,9 @@
+<div id="metadata_summary" class="text-sm text-gray-600 flex items-center space-x-4">
+  <span>Kind: <span class="font-medium"><%= document.kind.capitalize %></span></span>
+  <% if document.series %>
+    <span>Series: <span class="font-medium"><%= document.series.title %></span></span>
+  <% end %>
+  <% if document.tags.any? %>
+    <span>Tags: <span class="font-medium"><%= document.tags.count %></span></span>
+  <% end %>
+</div>

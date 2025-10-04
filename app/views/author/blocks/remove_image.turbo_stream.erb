@@ -1,0 +1,5 @@
+<%= turbo_stream.replace "image_block_#{@block.id}" do %>
+  <%= render "author/blocks/block", block: @block %>
+<% end %>
+
+<%= success_toast "Image removed from block!" %>

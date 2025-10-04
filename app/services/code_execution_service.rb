@@ -108,25 +108,25 @@ class CodeExecutionService
     require "open3"
 
     # Create output executable path
-    output_executable = "#{file_path}_out"
+    output_executable = file_path + "_out"
 
     begin
       # Compile first using safe argument passing
       compile_args = case command
       when "gcc_wrapper"
-        ["gcc", "-o", output_executable, file_path]
+        [ "gcc", "-o", output_executable, file_path ]
       when "gcc_c98_wrapper"
-        ["gcc", "-o", output_executable, file_path]
+        [ "gcc", "-o", output_executable, file_path ]
       when "gcc_gnu11_wrapper"
-        ["gcc", "-std=gnu11", "-o", output_executable, file_path]
+        [ "gcc", "-std=gnu11", "-o", output_executable, file_path ]
       when "g++_wrapper"
-        ["g++", "-o", output_executable, file_path]
+        [ "g++", "-o", output_executable, file_path ]
       when "g++_98_wrapper"
-        ["g++", "-std=c++98", "-o", output_executable, file_path]
+        [ "g++", "-std=c++98", "-o", output_executable, file_path ]
       when "g++_11_wrapper"
-        ["g++", "-std=c++11", "-o", output_executable, file_path]
+        [ "g++", "-std=c++11", "-o", output_executable, file_path ]
       when "g++_17_wrapper"
-        ["g++", "-std=c++17", "-o", output_executable, file_path]
+        [ "g++", "-std=c++17", "-o", output_executable, file_path ]
       end
 
       # Compile with timeout

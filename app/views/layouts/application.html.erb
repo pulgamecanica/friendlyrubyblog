@@ -23,8 +23,14 @@
   </head>
 
   <body>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+    <!-- Flash messages for toasts -->
+    <div data-controller="toast" data-toast-flash-value="<%= JSON.dump(flash.to_a) %>"></div>
+
+    <!-- Fallback for non-JS users -->
+    <noscript>
+      <p class="notice"><%= notice %></p>
+      <p class="alert"><%= alert %></p>
+    </noscript>
 
     <main class="container mx-auto mt-28 px-5 flex">
       <%= yield %>

@@ -12,6 +12,9 @@
   </head>
 
   <body class="min-h-screen bg-gray-100">
+    <!-- Toast container for turbo stream appends -->
+    <div id="toast_container" class="toast-container"></div>
+
     <header class="bg-white border-b">
       <div class="mx-auto max-w-6xl flex items-center justify-between py-4">
         <%= link_to "Author Dashboard", author_root_path, class: "font-semibold tracking-tight" %>
@@ -25,15 +28,17 @@
       </div>
     </header>
 
-    <!-- Flash -->
-    <div class="mx-auto max-w-3xl px-4">
-      <% if notice.present? %>
-        <p class="mt-4 rounded-md bg-green-50 text-green-700 px-4 py-2 text-sm"><%= notice %></p>
-      <% end %>
-      <% if alert.present? %>
-        <p class="mt-4 rounded-md bg-red-50 text-red-700 px-4 py-2 text-sm"><%= alert %></p>
-      <% end %>
-    </div>
+    <!-- Fallback for non-JS users -->
+    <noscript>
+      <div class="mx-auto max-w-3xl px-4">
+        <% if notice.present? %>
+          <p class="mt-4 rounded-md bg-green-50 text-green-700 px-4 py-2 text-sm"><%= notice %></p>
+        <% end %>
+        <% if alert.present? %>
+          <p class="mt-4 rounded-md bg-red-50 text-red-700 px-4 py-2 text-sm"><%= alert %></p>
+        <% end %>
+      </div>
+    </noscript>
 
     <main class="">
       <%= yield %>

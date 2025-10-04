@@ -15,3 +15,5 @@
         document: document,
         block: Block.new(type: "MarkdownBlock", position: document.blocks.count + 1) %>
 <% end %>
+
+<%= success_toast "#{@block.type} created successfully!" %>

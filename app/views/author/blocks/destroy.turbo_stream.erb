@@ -3,3 +3,5 @@
   <% document = @block.document %>
   <%= render "author/blocks/blocks_with_inserts", blocks: document.blocks.reload, document: document %>
 <% end %>
+
+<%= success_toast "#{@block.type} deleted successfully!" %>

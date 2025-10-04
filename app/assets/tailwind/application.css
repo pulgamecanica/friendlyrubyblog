@@ -1,6 +1,46 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* Simple Toast Styles */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 300px;
+  max-width: 400px;
+  padding: 16px 20px;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+  z-index: 9999;
+  cursor: pointer;
+}
+
+.toast.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.toast-container .toast {
+  position: relative;
+  top: auto;
+  right: auto;
+  margin-bottom: 10px;
+  pointer-events: auto;
+}
+
 /* Optional: anchor styles for headings with <a class="anchor"> */
 .prose .anchor {
   position: relative;
@@ -32,3 +72,39 @@
   overflow-x: auto;
 }
 .prose code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: .875rem; }
+
+/* Toast Notifications */
+.toast-success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.toast-error {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.toast-warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.toast-info {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.toast-default {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+  color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
