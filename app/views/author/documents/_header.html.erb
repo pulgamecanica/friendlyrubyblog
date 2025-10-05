@@ -4,9 +4,7 @@
       <!-- Left: Navigation -->
       <div class="flex items-center space-x-4">
         <%= link_to author_documents_path, class: "flex items-center text-gray-600 hover:text-gray-900" do %>
-          <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-          </svg>
+          <%= icon_arrow_left size: :md, class: "mr-1" %>
           Back
         <% end %>
       </div>
@@ -18,35 +16,21 @@
       <div class="flex items-center justify-end space-x-4" data-controller="blocks-manager">
         <!-- Collapse All Button -->
         <button type="button" data-action="click->blocks-manager#collapseAll" class="flex items-center text-gray-600 hover:text-gray-900" title="Collapse All Blocks">
-          <svg class="w-5 h-5" viewBox="0 0 48 48" fill="currentColor">
-            <path d="M22.6,15.4a1.9,1.9,0,0,0,2.8,0l6-5.9a2.1,2.1,0,0,0,.2-2.7,1.9,1.9,0,0,0-3-.2L26,9.2V4a2,2,0,0,0-4,0V9.2L19.4,6.6a1.9,1.9,0,0,0-3,.2,2.1,2.1,0,0,0,.2,2.7Z"></path>
-            <path d="M25.4,32.6a1.9,1.9,0,0,0-2.8,0l-6,5.9a2.1,2.1,0,0,0-.2,2.7,1.9,1.9,0,0,0,3,.2L22,38.8V44a2,2,0,0,0,4,0V38.8l2.6,2.6a1.9,1.9,0,0,0,3-.2,2.1,2.1,0,0,0-.2-2.7Z"></path>
-            <path d="M6,22H42a2,2,0,0,0,0-4H6a2,2,0,0,0,0,4Z"></path>
-            <path d="M42,26H6a2,2,0,0,0,0,4H42a2,2,0,0,0,0-4Z"></path>
-          </svg>
+          <%= icon_collapse_all size: :md %>
         </button>
 
         <!-- Expand All Button -->
         <button type="button" data-action="click->blocks-manager#expandAll" class="flex items-center text-gray-600 hover:text-gray-900" title="Expand All Blocks">
-          <svg class="w-5 h-5" viewBox="0 0 48 48" fill="currentColor">
-            <path style="rotate: 180deg; transform-origin: 0; transform: translate(-100%, 65%);" d="M22.6,15.4a1.9,1.9,0,0,0,2.8,0l6-5.9a2.1,2.1,0,0,0,.2-2.7,1.9,1.9,0,0,0-3-.2L26,9.2V4a2,2,0,0,0-4,0V9.2L19.4,6.6a1.9,1.9,0,0,0-3,.2,2.1,2.1,0,0,0,.2,2.7Z"></path>
-            <path style="rotate: 180deg; transform-origin: 0; transform: translate(-100%, -65%);" d="M25.4,32.6a1.9,1.9,0,0,0-2.8,0l-6,5.9a2.1,2.1,0,0,0-.2,2.7,1.9,1.9,0,0,0,3,.2L22,38.8V44a2,2,0,0,0,4,0V38.8l2.6,2.6a1.9,1.9,0,0,0,3-.2,2.1,2.1,0,0,0-.2-2.7Z"></path>
-            <path d="M6,22H42a2,2,0,0,0,0-4H6a2,2,0,0,0,0,4Z"></path>
-            <path d="M42,26H6a2,2,0,0,0,0,4H42a2,2,0,0,0,0-4Z"></path>
-          </svg>
+          <%= icon_expand_all size: :md %>
         </button>
 
         <!-- Expand Editor Button -->
         <button type="button" data-action="click->editor-width#toggle" class="flex items-center text-gray-600 hover:text-gray-900" title="Expand/Collapse Editor">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
-          </svg>
+          <%= icon_expand size: :md %>
         </button>
 
         <%= link_to public_document_path(@document), target: "_blank", class: "flex items-center text-teal-600 hover:text-teal-800" do %>
-          <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-          </svg>
+          <%= icon_external_link size: :md, class: "mr-1" %>
           Preview
         <% end %>
 

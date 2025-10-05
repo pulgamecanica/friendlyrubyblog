@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+button {
+  cursor: pointer;
+}
+
 /* Simple Toast Styles */
 .toast {
   position: fixed;
