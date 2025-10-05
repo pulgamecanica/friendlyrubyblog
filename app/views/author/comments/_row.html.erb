@@ -1,63 +1,88 @@
 <% target = comment.commentable %>
 
-<tr id="<%= dom_id(comment) %>" class="border-t align-top">
-  <td class="px-4 py-3">
-    <p class="text-gray-800"><%= simple_format(comment.body_markdown) %></p>
-    <p class="mt-1 text-xs text-gray-500">
-      <%= l comment.created_at, format: :short %> · IP# <%= comment.ip_hash&.first(8) %>
-    </p>
+<tr id="<%= dom_id(comment) %>" class="hover:bg-gray-50">
+  <td class="px-6 py-4">
+    <div class="text-sm text-gray-900 max-w-md">
+      <%= simple_format(comment.body_markdown, class: "whitespace-pre-wrap") %>
+    </div>
+    <div class="mt-2 flex items-center gap-3 text-xs text-gray-500">
+      <span class="flex items-center">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <%= time_ago_in_words(comment.created_at) %> ago
+      </span>
+      <span class="flex items-center">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+        IP: <%= comment.ip_hash&.first(8) %>
+      </span>
+    </div>
   </td>
 
-  <td class="px-4 py-3">
+  <td class="px-6 py-4 whitespace-nowrap">
     <% if target.is_a?(Document) %>
-      Document:
-      <%= link_to target.title, edit_author_document_path(target),
-            class: "text-indigo-600 hover:underline" %>
+      <div class="text-sm">
+        <%= link_to target.title, edit_author_document_path(target),
+              class: "text-indigo-600 hover:text-indigo-900 font-medium" %>
+      </div>
+      <div class="text-xs text-gray-500">Document</div>
     <% else %>
-      Block in:
-      <%= link_to target.document.title, edit_author_document_path(target.document),
-            class: "text-indigo-600 hover:underline" %>
-      <span class="ml-1 text-xs text-gray-500">
-        (pos <%= target.position %>, <%= target.type.demodulize %>)
-      </span>
+      <div class="text-sm">
+        <%= link_to target.document.title, edit_author_document_path(target.document),
+              class: "text-indigo-600 hover:text-indigo-900 font-medium" %>
+      </div>
+      <div class="text-xs text-gray-500">
+        Block #<%= target.position %> · <%= target.type.demodulize %>
+      </div>
     <% end %>
   </td>
 
-  <td class="px-4 py-3">
-    <div class="text-gray-800"><%= comment.name.presence || "Anonymous" %></div>
+  <td class="px-6 py-4">
+    <div class="text-sm font-medium text-gray-900">
+      <%= comment.name.presence || "Anonymous" %>
+    </div>
     <% if comment.email.present? %>
       <div class="text-xs text-gray-500"><%= comment.email %></div>
     <% end %>
     <% if comment.website.present? %>
       <div class="text-xs">
-        <%= link_to safe_html(comment.website), safe_html(comment.website), rel: "nofollow noopener", target: "_blank",
-              class: "text-indigo-600 hover:underline" %>
+        <%= link_to safe_html(comment.website), safe_html(comment.website),
+              rel: "nofollow noopener", target: "_blank",
+              class: "text-indigo-600 hover:text-indigo-900" %>
       </div>
     <% end %>
   </td>
 
-  <td class="px-4 py-3">
-    <% badge_classes = { "visible"=>"bg-green-100 text-green-800",
-                         "pending"=>"bg-yellow-100 text-yellow-800",
-                         "hidden"=>"bg-gray-200 text-gray-700" }[comment.status] || "bg-gray-200 text-gray-700" %>
-    <span class="inline-block rounded px-2 py-0.5 text-xs <%= badge_classes %>">
-      <%= comment.status %>
+  <td class="px-6 py-4">
+    <% badge_classes = {
+      "visible" => "bg-green-100 text-green-800",
+      "pending" => "bg-yellow-100 text-yellow-800",
+      "hidden" => "bg-gray-200 text-gray-700"
+    }[comment.status] || "bg-gray-200 text-gray-700" %>
+
+    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium <%= badge_classes %> mb-2">
+      <%= comment.status.capitalize %>
     </span>
 
-    <div class="mt-2">
-      <%= form_with model: [:author, comment], method: :patch,
-            data: { turbo_stream: true } do |f| %>
-        <%= f.select :status,
-              options_for_select([%w[visible visible], %w[pending pending], %w[hidden hidden]], comment.status),
-              {}, class: "rounded border px-2 py-1 text-xs" %>
-        <%= f.submit "Update", class: "ml-2 rounded bg-indigo-600 text-white px-2 py-1 text-xs hover:bg-indigo-700" %>
-      <% end %>
-    </div>
+    <%= form_with model: [:author, comment], method: :patch,
+          data: { turbo_stream: true },
+          class: "flex items-center gap-2 mt-2" do |f| %>
+      <%= f.select :status,
+            options_for_select([%w[visible visible], %w[pending pending], %w[hidden hidden]], comment.status),
+            {}, class: "block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs py-1 px-2" %>
+      <%= f.submit "Update", class: "inline-flex items-center px-2 py-1 border border-transparent rounded-md text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+    <% end %>
   </td>
 
-  <td class="px-4 py-3 text-right">
-    <%= button_to "Delete", author_comment_path(comment), method: :delete,
+  <td class="px-6 py-4 text-right whitespace-nowrap">
+    <%= button_to author_comment_path(comment), method: :delete,
           form: { data: { turbo_confirm: "Delete this comment?" } },
-          class: "text-sm text-red-600 hover:underline" %>
+          class: "inline-flex items-center text-red-600 hover:text-red-900" do %>
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+      </svg>
+    <% end %>
   </td>
 </tr>

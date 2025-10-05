@@ -27,8 +27,8 @@ export default class extends Controller {
       this.sortable = null
     }
 
-    // Get the current container element
-    const container = this.containerTarget
+    // Get the current container element - use containerTarget if available, otherwise use element itself
+    const container = this.hasContainerTarget ? this.containerTarget : this.element
 
     if (container) {
       this.sortable = Sortable.create(container, {

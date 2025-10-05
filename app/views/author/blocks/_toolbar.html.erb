@@ -102,6 +102,53 @@
       </div>
     <% end %>
 
+    <!-- MLX42 Controls (only for Mlx42Block) -->
+    <% if block.is_a?(Mlx42Block) %>
+      <div class="border-t pt-3" data-controller="mlx42-compiler">
+        <div class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
+          MLX42 Controls
+        </div>
+
+        <!-- Toggle View Button -->
+        <button data-action="click->mlx42-preview#toggleView"
+                data-mlx42-preview-target="toggleButton"
+                class="w-full px-2 py-1.5 text-xs border border-purple-300 text-purple-700 rounded hover:bg-purple-50 transition-colors mb-2">
+          📺 Show Canvas
+        </button>
+
+        <!-- Run Button (visible in canvas view) -->
+        <button data-action="click->mlx42-preview#triggerRun"
+                data-mlx42-preview-target="runButton"
+                style="display: none;"
+                class="w-full px-2 py-1.5 text-xs bg-green-600 text-white rounded hover:bg-green-700 transition-colors mb-2">
+          ▶️ Run
+        </button>
+
+        <!-- Enable Controls Button (visible in canvas view) -->
+        <button data-action="click->mlx42-preview#triggerCapture"
+                data-mlx42-preview-target="captureButton"
+                style="display: none;"
+                class="w-full px-2 py-1.5 text-xs border border-blue-300 text-blue-700 rounded hover:bg-blue-50 transition-colors mb-2">
+          🎮 Enable Controls
+        </button>
+
+        <!-- Compile Button -->
+        <button data-action="click->mlx42-compiler#compile"
+                data-block-id="<%= block.id %>"
+                data-document-id="<%= block.document.id %>"
+                class="w-full px-2 py-1.5 text-xs bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors">
+          🔨 Compile
+        </button>
+
+        <!-- Compilation Status -->
+        <div id="mlx42_compilation_status_<%= block.id %>"
+             data-turbo-stream-target
+             class="mt-2 text-xs">
+          <%= render "author/blocks/mlx42_compilation_status", block: block %>
+        </div>
+      </div>
+    <% end %>
+
     <%= button_to "Delete",
         author_document_block_path(block.document, block),
         method: :delete,

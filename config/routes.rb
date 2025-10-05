@@ -34,7 +34,12 @@ Rails.application.routes.draw do
   end
 
   namespace :author do
-    root "documents#index"
+    root "dashboard#index"
+
+    get "dashboard", to: "dashboard#index", as: :dashboard
+    get "analytics", to: "analytics#index", as: :analytics
+    get "analytics/visitor/:id", to: "analytics#visitor", as: :analytics_visitor
+
     resources :series
     resources :documents do
       member do
@@ -51,9 +56,16 @@ Rails.application.routes.draw do
           delete "images/:attachment_id", to: "blocks#remove_image", as: :remove_image
           post :execute
           patch :toggle_interactive
+          post :compile_mlx42
         end
       end
     end
+
+    # Separate routes for document types
+    resources :posts, controller: "documents", defaults: { kind: "post" }
+    resources :notes, controller: "documents", defaults: { kind: "note" }
+    resources :pages, controller: "documents", defaults: { kind: "page" }
+
     resources :comments, only: [ :index, :update, :destroy ]
   end
 end

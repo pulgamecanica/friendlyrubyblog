@@ -92,6 +92,17 @@
         <p class="text-xs text-gray-500 mt-1">Select multiple images. PNG, JPG, JPEG up to 10MB each</p>
       </div>
     </div>
+
+  <% when "Mlx42Block" %>
+    <div class="space-y-3">
+      <%= f.text_area :text,
+          value: block.text,
+          rows: 15,
+          data: { controller: "textarea-tab" },
+          class: "w-full font-mono text-sm bg-gray-900 text-gray-100 p-4 rounded border-0",
+          placeholder: "void user_main(int argc, char **argv) {\n  extern mlx_t *mlx;\n  // Your MLX42 code here\n}" %>
+      <p class="text-xs text-gray-500">Entry point: <code class="bg-gray-100 px-1 rounded">void user_main(int argc, char **argv)</code></p>
+    </div>
   <% end %>
 
   <div class="flex items-center gap-3">

@@ -1,52 +1,337 @@
-<% content_for :title, "Dashboard · Author" %>
+<%
+  page_title = case @kind
+  when "post" then "Posts"
+  when "note" then "Notes"
+  when "page" then "Pages"
+  else "All Documents"
+  end
+%>
 
-<div class="mx-auto max-w-6xl px-6">
-  <h2 class="text-2xl font-semibold mb-6">Dashboard</h2>
+<% content_for :title, "#{page_title} · Author" %>
 
-  <div class="grid md:grid-cols-3 gap-6">
-    <!-- Recent Documents -->
-    <section class="bg-white rounded-lg shadow p-4">
-      <h3 class="text-lg font-semibold mb-3">Recent Documents</h3>
-      <ul class="space-y-2 text-sm">
-        <% @recent_documents.each do |doc| %>
-          <li>
-            <%= link_to doc.title, edit_author_document_path(doc), class: "text-indigo-600 hover:underline" %>
-            <span class="text-gray-500">· <%= doc.published? ? "Published" : "Draft" %></span>
-          </li>
-        <% end %>
-      </ul>
-      <div class="mt-3">
-        <%= link_to "All documents →", author_documents_path, class: "text-xs text-gray-600 hover:underline" %>
+<div class="mx-auto max-w-7xl px-6 py-8" data-controller="documents-view-toggle">
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900"><%= page_title %></h1>
+        <p class="mt-1 text-sm text-gray-500">
+          <%= @documents.count %> <%= @documents.count == 1 ? 'document' : 'documents' %>
+        </p>
       </div>
-    </section>
+      <div class="flex items-center gap-4">
+        <!-- View Toggle -->
+        <div class="inline-flex rounded-md shadow-sm" role="group">
+          <button type="button" data-documents-view-toggle-target="gridButton" data-action="click->documents-view-toggle#showGrid"
+                  class="px-3 py-2 text-sm font-medium rounded-l-md border border-gray-300 bg-white hover:bg-gray-50">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            </svg>
+          </button>
+          <button type="button" data-documents-view-toggle-target="tableButton" data-action="click->documents-view-toggle#showTable"
+                  class="px-3 py-2 text-sm font-medium rounded-r-md border border-l-0 border-gray-300 bg-white hover:bg-gray-50">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
 
-    <!-- Recent Series -->
-    <section class="bg-white rounded-lg shadow p-4">
-      <h3 class="text-lg font-semibold mb-3">Recent Series</h3>
-      <ul class="space-y-2 text-sm">
-        <% @recent_series.each do |s| %>
-          <li><%= link_to s.title, edit_author_series_path(s), class: "text-indigo-600 hover:underline" %></li>
+        <!-- New Document Button -->
+        <% if @kind %>
+          <%= link_to send("new_author_#{@kind}_path"),
+                      class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700" do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            New <%= @kind.capitalize %>
+          <% end %>
+        <% else %>
+          <%= link_to new_author_document_path,
+                      class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700" do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            New Document
+          <% end %>
         <% end %>
-      </ul>
-      <div class="mt-3">
-        <%= link_to "All series →", author_series_index_path, class: "text-xs text-gray-600 hover:underline" %>
       </div>
-    </section>
+    </div>
 
-    <!-- Recent Comments -->
-    <section class="bg-white rounded-lg shadow p-4">
-      <h3 class="text-lg font-semibold mb-3">Recent Comments</h3>
-      <ul class="space-y-3 text-sm">
-        <% @recent_comments.each do |c| %>
-          <li>
-            <p class="line-clamp-2 text-gray-700"><%= c.body_markdown %></p>
-            <span class="text-gray-400">on <%= link_to c.commentable.title, edit_author_document_path(c.commentable), class: "hover:underline" %></span>
-          </li>
+    <!-- Filter Tabs -->
+    <div class="border-b border-gray-200">
+      <nav class="-mb-px flex space-x-8">
+        <%= link_to author_documents_path,
+            class: "#{@kind.nil? ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex items-center" do %>
+          All
+          <span class="ml-2 py-0.5 px-2 rounded-full text-xs bg-gray-100 text-gray-700">
+            <%= current_author.documents.count %>
+          </span>
         <% end %>
-      </ul>
-      <div class="mt-3">
-        <%= link_to "All comments →", author_comments_path, class: "text-xs text-gray-600 hover:underline" %>
-      </div>
-    </section>
+        <%= link_to author_posts_path,
+            class: "#{@kind == 'post' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex items-center" do %>
+          Posts
+          <span class="ml-2 py-0.5 px-2 rounded-full text-xs bg-blue-100 text-blue-800">
+            <%= current_author.documents.posts.count %>
+          </span>
+        <% end %>
+        <%= link_to author_notes_path,
+            class: "#{@kind == 'note' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex items-center" do %>
+          Notes
+          <span class="ml-2 py-0.5 px-2 rounded-full text-xs bg-green-100 text-green-800">
+            <%= current_author.documents.notes.count %>
+          </span>
+        <% end %>
+        <%= link_to author_pages_path,
+            class: "#{@kind == 'page' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex items-center" do %>
+          Pages
+          <span class="ml-2 py-0.5 px-2 rounded-full text-xs bg-purple-100 text-purple-800">
+            <%= current_author.documents.pages.count %>
+          </span>
+        <% end %>
+      </nav>
+    </div>
   </div>
+
+  <% if @documents.any? %>
+    <!-- Grid View -->
+    <div data-documents-view-toggle-target="gridView" class="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
+      <% @documents.each do |doc| %>
+        <div class="group relative bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-200 hover:border-indigo-300">
+          <%= link_to edit_author_document_path(doc), class: "block" do %>
+            <!-- Portrait Image -->
+            <div class="aspect-video w-full overflow-hidden bg-gray-100">
+              <% if doc.portrait.attached? %>
+                <%= image_tag doc.portrait, class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-200", alt: doc.title %>
+              <% else %>
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+                  <svg class="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Content -->
+            <div class="p-4">
+            <!-- Badges -->
+            <div class="flex items-center gap-2 mb-2">
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium <%=
+                case doc.kind
+                when 'post' then 'bg-blue-100 text-blue-800'
+                when 'note' then 'bg-green-100 text-green-800'
+                when 'page' then 'bg-purple-100 text-purple-800'
+                end
+              %>">
+                <%= doc.kind.capitalize %>
+              </span>
+              <% if doc.published? %>
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                  <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  Published
+                </span>
+              <% else %>
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">
+                  <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clip-rule="evenodd" />
+                  </svg>
+                  Draft
+                </span>
+              <% end %>
+            </div>
+
+            <!-- Title -->
+            <h3 class="text-lg font-semibold text-gray-900 group-hover:text-indigo-600 mb-2 overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+              <%= doc.title %>
+            </h3>
+
+            <!-- Description -->
+            <% if doc.description.present? %>
+              <p class="text-sm text-gray-500 mb-3 overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                <%= doc.description %>
+              </p>
+            <% end %>
+
+            <!-- Meta -->
+            <div class="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-gray-100">
+              <div class="flex items-center gap-3">
+                <span class="flex items-center">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <%= time_ago_in_words(doc.updated_at) %>
+                </span>
+                <span class="flex items-center">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                  <%= doc.blocks.count %>
+                </span>
+              </div>
+              <div class="flex items-center gap-2">
+                <% if doc.published? %>
+                  <%= link_to public_document_path(doc),
+                      class: "inline-flex items-center text-indigo-600 hover:text-indigo-800",
+                      target: "_blank",
+                      title: "View published",
+                      onclick: "event.stopPropagation();" do %>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  <% end %>
+                <% end %>
+                <%= button_to author_document_path(doc),
+                    method: :delete,
+                    class: "inline-flex items-center text-red-600 hover:text-red-800",
+                    title: "Delete document",
+                    onclick: "event.stopPropagation(); return confirm('Are you sure you want to delete this document?');",
+                    form: { data: { turbo_confirm: "Are you sure you want to delete '#{doc.title}'?" } } do %>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                <% end %>
+              </div>
+            </div>
+
+              <!-- Tags -->
+              <% if doc.tags.any? %>
+                <div class="flex flex-wrap gap-1 mt-3 pt-3 border-t border-gray-100">
+                  <% doc.tags.first(3).each do |tag| %>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs bg-gray-50 text-gray-600">
+                      #<%= tag.title %>
+                    </span>
+                  <% end %>
+                  <% if doc.tags.count > 3 %>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs text-gray-400">
+                      +<%= doc.tags.count - 3 %>
+                    </span>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Table View -->
+    <div data-documents-view-toggle-target="tableView" class="hidden bg-white rounded-lg shadow overflow-hidden">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Document</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Blocks</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Updated</th>
+            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @documents.each do |doc| %>
+            <tr class="hover:bg-gray-50 cursor-pointer" onclick="window.location='<%= edit_author_document_path(doc) %>'">
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10">
+                    <% if doc.portrait.attached? %>
+                      <%= image_tag doc.portrait, class: "h-10 w-10 rounded object-cover", alt: doc.title %>
+                    <% else %>
+                      <div class="h-10 w-10 rounded bg-gray-200 flex items-center justify-center">
+                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      </div>
+                    <% end %>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900"><%= doc.title %></div>
+                    <% if doc.description.present? %>
+                      <div class="text-sm text-gray-500 truncate max-w-md"><%= doc.description %></div>
+                    <% end %>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%=
+                  case doc.kind
+                  when 'post' then 'bg-blue-100 text-blue-800'
+                  when 'note' then 'bg-green-100 text-green-800'
+                  when 'page' then 'bg-purple-100 text-purple-800'
+                  end
+                %>">
+                  <%= doc.kind.capitalize %>
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <% if doc.published? %>
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    Published
+                  </span>
+                <% else %>
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                    Draft
+                  </span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= doc.blocks.count %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= time_ago_in_words(doc.updated_at) %> ago
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" onclick="event.stopPropagation()">
+                <div class="flex items-center justify-end gap-3">
+                  <% if doc.published? %>
+                    <%= link_to public_document_path(doc), class: "text-indigo-600 hover:text-indigo-900", target: "_blank", title: "View" do %>
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    <% end %>
+                  <% end %>
+                  <%= button_to author_document_path(doc),
+                      method: :delete,
+                      class: "text-red-600 hover:text-red-900",
+                      title: "Delete",
+                      form: { data: { turbo_confirm: "Are you sure you want to delete '#{doc.title}'?" } } do %>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <!-- Empty State -->
+    <div class="text-center py-12">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      <h3 class="mt-2 text-sm font-medium text-gray-900">No documents</h3>
+      <p class="mt-1 text-sm text-gray-500">Get started by creating a new <%= @kind || 'document' %>.</p>
+      <div class="mt-6">
+        <% if @kind %>
+          <%= link_to send("new_author_#{@kind}_path"),
+                      class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700" do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            New <%= @kind.capitalize %>
+          <% end %>
+        <% else %>
+          <%= link_to new_author_document_path,
+                      class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700" do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            New Document
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
 </div>

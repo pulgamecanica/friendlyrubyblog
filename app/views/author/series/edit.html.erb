@@ -1,12 +1,45 @@
 <% content_for :title, "Edit Series · #{@series.title}" %>
 
-<div class="flex items-center justify-between mb-6">
-  <h1 class="text-2xl font-semibold">Edit Series</h1>
-  <div class="space-x-3">
-    <%= link_to "View Public", public_series_path(@series), target: "_blank",
-          class: "text-sm text-gray-600 hover:underline" %>
-    <%= link_to "Back", author_series_index_path, class: "text-sm text-gray-600 hover:underline" %>
+<div class="mx-auto max-w-3xl px-6 py-8">
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Edit Series</h1>
+        <p class="mt-1 text-sm text-gray-500">Update series information and organization</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <%= link_to public_series_path(@series), target: "_blank",
+              class: "inline-flex items-center text-sm text-gray-600 hover:text-gray-900" do %>
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+          View Public
+        <% end %>
+        <%= link_to author_series_index_path, class: "text-sm text-gray-600 hover:text-gray-900" do %>
+          ← Back to Series
+        <% end %>
+      </div>
+    </div>
   </div>
-</div>
 
-<%= render "form", series: @series %>
+  <!-- Form Card -->
+  <div class="bg-white rounded-lg shadow p-6">
+    <%= render "form", series: @series %>
+  </div>
+
+  <!-- Documents in Series -->
+  <% if @series.documents.any? %>
+    <div class="mt-8 bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">
+        Documents in this Series
+        <span class="text-sm font-normal text-gray-500">(<%= @series.documents.count %>)</span>
+      </h2>
+      <div class="space-y-2">
+        <% @series.documents.order(:series_position).each do |doc| %>
+          <%= render "document_row", document: doc %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

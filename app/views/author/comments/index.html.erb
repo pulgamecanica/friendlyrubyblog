@@ -1,32 +1,87 @@
 <% content_for :title, "Comments · Author" %>
 
-<div class="flex items-center justify-between mb-6">
-  <h1 class="text-2xl font-semibold">Comments</h1>
-  <div class="text-sm text-gray-600">
-    Total: <%= Comment.count %>
+<div class="mx-auto max-w-7xl px-6 py-8">
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Comments</h1>
+        <p class="mt-1 text-sm text-gray-500">
+          <%= @comments.count %> <%= params[:status] ? params[:status] : 'total' %> comments
+        </p>
+      </div>
+      <div class="text-sm text-gray-600 bg-gray-100 px-4 py-2 rounded-lg">
+        <span class="font-semibold"><%= Comment.count %></span> total comments
+      </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="border-b border-gray-200">
+      <nav class="-mb-px flex space-x-8">
+        <%= link_to author_comments_path,
+            class: "#{params[:status].nil? ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex items-center" do %>
+          All
+          <span class="ml-2 py-0.5 px-2 rounded-full text-xs bg-gray-100 text-gray-700">
+            <%= Comment.count %>
+          </span>
+        <% end %>
+        <%= link_to author_comments_path(status: "visible"),
+            class: "#{params[:status] == 'visible' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex items-center" do %>
+          Visible
+          <span class="ml-2 py-0.5 px-2 rounded-full text-xs bg-green-100 text-green-800">
+            <%= Comment.where(status: "visible").count %>
+          </span>
+        <% end %>
+        <%= link_to author_comments_path(status: "pending"),
+            class: "#{params[:status] == 'pending' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex items-center" do %>
+          Pending
+          <span class="ml-2 py-0.5 px-2 rounded-full text-xs bg-yellow-100 text-yellow-800">
+            <%= Comment.where(status: "pending").count %>
+          </span>
+        <% end %>
+        <%= link_to author_comments_path(status: "hidden"),
+            class: "#{params[:status] == 'hidden' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex items-center" do %>
+          Hidden
+          <span class="ml-2 py-0.5 px-2 rounded-full text-xs bg-gray-200 text-gray-700">
+            <%= Comment.where(status: "hidden").count %>
+          </span>
+        <% end %>
+      </nav>
+    </div>
   </div>
-</div>
 
-<div class="mb-4 flex gap-2 text-sm">
-  <%= link_to "All", author_comments_path, class: "px-2 py-1 rounded border bg-white hover:bg-gray-50" %>
-  <%= link_to "Visible", author_comments_path(status: "visible"), class: "px-2 py-1 rounded border bg-white hover:bg-gray-50" %>
-  <%= link_to "Pending", author_comments_path(status: "pending"), class: "px-2 py-1 rounded border bg-white hover:bg-gray-50" %>
-  <%= link_to "Hidden", author_comments_path(status: "hidden"), class: "px-2 py-1 rounded border bg-white hover:bg-gray-50" %>
-</div>
-
-<div class="overflow-hidden rounded-lg border bg-white">
-  <table class="w-full text-sm">
-    <thead class="bg-gray-50 text-gray-600">
-      <tr>
-        <th class="px-4 py-2 text-left">Comment</th>
-        <th class="px-4 py-2 text-left">On</th>
-        <th class="px-4 py-2 text-left">By</th>
-        <th class="px-4 py-2 text-left">Status</th>
-        <th class="px-4 py-2 text-right">Actions</th>
-      </tr>
-    </thead>
-    <tbody id="comments">
-      <%= render partial: "row", collection: @comments, as: :comment %>
-    </tbody>
-  </table>
+  <% if @comments.any? %>
+    <!-- Comments Table -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comment</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">On</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">By</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="comments" class="bg-white divide-y divide-gray-200">
+          <%= render partial: "row", collection: @comments, as: :comment %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <!-- Empty State -->
+    <div class="text-center py-12 bg-white rounded-lg shadow">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+      </svg>
+      <h3 class="mt-2 text-sm font-medium text-gray-900">No comments</h3>
+      <p class="mt-1 text-sm text-gray-500">
+        <% if params[:status].present? %>
+          No <%= params[:status] %> comments found.
+        <% else %>
+          No comments have been posted yet.
+        <% end %>
+      </p>
+    </div>
+  <% end %>
 </div>

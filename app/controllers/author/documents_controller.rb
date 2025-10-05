@@ -1,27 +1,26 @@
 class Author::DocumentsController < Author::BaseController
   include ToastHelper
-  before_action :set_document, only: %i[edit show update destroy publish unpublish remove_portrait]
+  before_action :set_document, only: %i[edit update destroy publish unpublish remove_portrait]
 
   def index
-    @recent_documents = Document.order(updated_at: :desc).limit(10)
-    @recent_series    = Series.order(updated_at: :desc).limit(5)
-    @recent_comments  = Comment.order(created_at: :desc).limit(5)
-  end
-
-  def show
+    @kind = params[:kind]
+    @documents = current_author.documents
+    @documents = @documents.where(kind: @kind) if @kind.present?
+    @documents = @documents.order(updated_at: :desc)
   end
 
   def new
-    @document = Document.new(kind: "post", published: false)
+    kind = params[:kind] || "post"
+    @document = Document.new(kind: kind, published: false)
   end
 
   def create
     @document = current_author.documents.build(doc_params)
-    @document.kind ||= "post"
+    @document.kind ||= params[:kind] || "post"
     process_new_tags if params[:new_tags].present?
 
     if @document.save
-      redirect_to edit_author_document_path(@document), notice: "Document created"
+      redirect_to edit_author_document_path(@document), notice: "#{@document.kind.capitalize} created"
     else
       Rails.logger.debug(@document.errors.full_messages.join(", "))
       render :new, status: :unprocessable_entity

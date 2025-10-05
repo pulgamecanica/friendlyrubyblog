@@ -9,6 +9,7 @@ class Document < ApplicationRecord
   has_many   :tags, through: :document_tags
   has_many   :comments, as: :commentable, dependent: :destroy
   has_many   :likes,    as: :likable,     dependent: :destroy
+  has_many   :page_views, dependent: :destroy
 
   has_one_attached :portrait
 
@@ -25,12 +26,17 @@ class Document < ApplicationRecord
   after_commit :reindex_search!, on: [ :create, :update ]
 
   scope :published, -> { where(published: true) }
+  scope :posts, -> { where(kind: "post") }
+  scope :notes, -> { where(kind: "note") }
+  scope :pages, -> { where(kind: "page") }
 
   def should_generate_new_friendly_id?
     title_changed? || super
   end
 
   def reindex_search!
+    return if destroyed? || marked_for_destruction?
+
     parts = []
     langs = []
 

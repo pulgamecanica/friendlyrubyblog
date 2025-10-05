@@ -1,30 +1,130 @@
 <% content_for :title, "Series · Author" %>
 
-<div class="flex items-center justify-between mb-6">
-  <h1 class="text-2xl font-semibold">Series</h1>
-  <%= link_to "New Series", new_author_series_path,
-        class: "px-3 py-1.5 rounded bg-indigo-600 text-white text-sm hover:bg-indigo-700" %>
-</div>
+<div class="mx-auto max-w-7xl px-6 py-8">
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Series</h1>
+        <p class="mt-1 text-sm text-gray-500">
+          <%= @series.count %> <%= @series.count == 1 ? 'series' : 'series' %>
+        </p>
+      </div>
+      <%= link_to new_author_series_path,
+                  class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        New Series
+      <% end %>
+    </div>
+  </div>
 
-<table class="w-full text-sm border rounded-lg overflow-hidden bg-white">
-  <thead class="bg-gray-50 text-gray-600">
-    <tr>
-      <th class="text-left px-4 py-2">Title</th>
-      <th class="text-left px-4 py-2">Slug</th>
-      <th class="text-left px-4 py-2">Updated</th>
-      <th class="px-4 py-2"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @series.each do |s| %>
-      <tr class="border-t">
-        <td class="px-4 py-2"><%= s.title %></td>
-        <td class="px-4 py-2 text-gray-500"><%= s.slug %></td>
-        <td class="px-4 py-2 text-gray-500"><%= l s.updated_at, format: :short %></td>
-        <td class="px-4 py-2 text-right">
-          <%= link_to "Edit", edit_author_series_path(s), class: "text-indigo-600 hover:underline" %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+  <% if @series.any? %>
+    <!-- Table View -->
+    <div class="bg-white rounded-lg shadow overflow-hidden" data-controller="series-toggle">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-10"></th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Series</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Documents</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Updated</th>
+            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @series.each_with_index do |s, index| %>
+            <!-- Series Row -->
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4">
+                <% if s.documents.any? %>
+                  <button type="button"
+                          data-action="click->series-toggle#toggle"
+                          data-series-toggle-target="toggleButton"
+                          data-series-id="<%= s.id %>"
+                          class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 cursor-pointer" onclick="window.location='<%= edit_author_series_path(s) %>'">
+                <div>
+                  <div class="text-sm font-medium text-gray-900"><%= s.title %></div>
+                  <% if s.description.present? %>
+                    <div class="text-sm text-gray-500 truncate max-w-md"><%= s.description %></div>
+                  <% end %>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap cursor-pointer" onclick="window.location='<%= edit_author_series_path(s) %>'">
+                <div class="text-sm text-gray-500"><%= s.slug %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap cursor-pointer" onclick="window.location='<%= edit_author_series_path(s) %>'">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                  <%= s.documents.count %>
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 cursor-pointer" onclick="window.location='<%= edit_author_series_path(s) %>'">
+                <%= time_ago_in_words(s.updated_at) %> ago
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" onclick="event.stopPropagation()">
+                <div class="flex items-center justify-end gap-3">
+                  <%= link_to public_series_path(s), class: "text-indigo-600 hover:text-indigo-900", target: "_blank", title: "View" do %>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  <% end %>
+                  <%= button_to author_series_path(s),
+                      method: :delete,
+                      class: "text-red-600 hover:text-red-900",
+                      title: "Delete",
+                      form: { data: { turbo_confirm: "Are you sure you want to delete '#{s.title}'? All documents will be moved to 'Uncategorized'." } } do %>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Expandable Documents -->
+            <% if s.documents.any? %>
+              <tr class="hidden bg-gray-50" data-series-toggle-target="expandable" data-series-id="<%= s.id %>">
+                <td colspan="6" class="px-6 py-0">
+                  <div class="py-4 pl-16">
+                    <div class="space-y-1">
+                      <% s.documents.order(:series_position).each do |doc| %>
+                        <%= render "document_row", document: doc %>
+                      <% end %>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <!-- Empty State -->
+    <div class="text-center py-12">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+      </svg>
+      <h3 class="mt-2 text-sm font-medium text-gray-900">No series</h3>
+      <p class="mt-1 text-sm text-gray-500">Get started by creating a new series to organize your documents.</p>
+      <div class="mt-6">
+        <%= link_to new_author_series_path,
+                    class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700" do %>
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          New Series
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

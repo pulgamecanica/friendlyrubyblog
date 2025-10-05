@@ -1,6 +1,6 @@
 class Author::BlocksController < Author::BaseController
   before_action :set_document
-  before_action :set_block, only: %i[update destroy remove_image execute toggle_interactive]
+  before_action :set_block, only: %i[update destroy remove_image execute toggle_interactive compile_mlx42]
 
   # POST /author/documents/:document_id/blocks
   # Params:
@@ -22,6 +22,13 @@ class Author::BlocksController < Author::BaseController
     if @block.is_a?(ImageBlock) && params.dig(:block, :images).present?
       params[:block][:images].each do |image|
         @block.images.attach(image) if image.present?
+      end
+    end
+
+    # Handle asset appending for Mlx42Block
+    if @block.is_a?(Mlx42Block) && params.dig(:block, :assets).present?
+      params[:block][:assets].each do |asset|
+        @block.assets.attach(asset) if asset.present?
       end
     end
 
@@ -133,6 +140,34 @@ class Author::BlocksController < Author::BaseController
     render json: { success: false, error: "Failed to reorder blocks: #{e.message}" }, status: :internal_server_error
   end
 
+  def compile_mlx42
+    unless @block.is_a?(Mlx42Block)
+      render json: { error: "Block is not an MLX42 block" }, status: :unprocessable_entity
+      return
+    end
+
+    begin
+      # Mark compilation as starting
+      @block.data = @block.data.to_h.merge(
+        "compilation_status" => "queued",
+        "compilation_queued_at" => Time.current
+      )
+      @block.save!
+
+      # Queue the job for async compilation
+      Mlx42CompilationJob.perform_later(@block.id)
+
+      render json: {
+        status: "queued",
+        message: "Compilation started",
+        block_id: @block.id
+      }
+    rescue => e
+      Rails.logger.error "Failed to queue MLX42 compilation: #{e.message}"
+      render json: { error: "Failed to start compilation: #{e.message}" }, status: :internal_server_error
+    end
+  end
+
   private
 
   def set_document = @document = Document.friendly.find(params[:document_id])
@@ -146,6 +181,7 @@ class Author::BlocksController < Author::BaseController
     data["html"]     = params.dig(:block, :data_html)
     data["caption"]  = params.dig(:block, :data_caption)
     data["filename"] = params.dig(:block, :data_filename)
+    data["text"]     = params.dig(:block, :text)
 
     block_params = {
       type: params.dig(:block, :type),
@@ -156,6 +192,11 @@ class Author::BlocksController < Author::BaseController
 
     # Handle images for ImageBlock (append, don't replace)
     if params.dig(:block, :type) == "ImageBlock" && params.dig(:block, :images).present?
+      # Don't add to block_params, handle separately to append
+    end
+
+    # Handle assets for Mlx42Block (append, don't replace)
+    if params.dig(:block, :type) == "Mlx42Block" && params.dig(:block, :assets).present?
       # Don't add to block_params, handle separately to append
     end
 

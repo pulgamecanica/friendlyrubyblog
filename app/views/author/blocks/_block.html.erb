@@ -1,6 +1,6 @@
 <turbo-frame id="<%= dom_id(block) %>">
   <article class="grid grid-cols-[1fr_200px] gap-4 group"
-           data-controller="block-editor<%= ' image-carousel' if block.is_a?(ImageBlock) && block.images.count > 1 %><%= ' code-executor' if block.is_a?(CodeBlock) %>"
+           data-controller="block-editor<%= ' image-carousel' if block.is_a?(ImageBlock) && block.images.count > 1 %><%= ' code-executor' if block.is_a?(CodeBlock) %><%= ' mlx42-preview' if block.is_a?(Mlx42Block) %>"
            <% if block.is_a?(ImageBlock) && block.images.count > 1 %>
              data-image-carousel-count-value="<%= block.images.count %>"
            <% end %>
@@ -81,6 +81,42 @@
             </div>
           <% elsif block.is_a?(ImageBlock) %>
             <%= render_image_block(block) %>
+          <% elsif block.is_a?(Mlx42Block) %>
+            <div>
+              <!-- Content Preview (code, assets) -->
+              <div data-mlx42-preview-target="contentView" class="space-y-4">
+                <h3 class="text-sm font-medium text-gray-700">MLX42 Code</h3>
+                <pre class="bg-gray-900 text-gray-100 p-4 rounded font-mono text-sm overflow-auto max-h-96"><%= block.text %></pre>
+
+                <% if block.assets.attached? %>
+                  <div>
+                    <h3 class="text-sm font-medium text-gray-700 mb-2">Assets</h3>
+                    <div class="space-y-1">
+                      <% block.assets.each do |asset| %>
+                        <div class="text-sm font-mono text-purple-600">assets/<%= asset.filename %></div>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+
+                <% unless block.compiled? %>
+                  <div class="p-3 bg-yellow-50 border border-yellow-200 rounded">
+                    <p class="text-sm text-yellow-800">⚠️ Not compiled yet. Click "Compile" to build.</p>
+                  </div>
+                <% end %>
+              </div>
+
+              <!-- Canvas Preview (MLX42 running) -->
+              <div data-mlx42-preview-target="canvasView" style="display: none;">
+                <% if block.compiled? %>
+                  <%= render "author/blocks/mlx42_canvas", block: block %>
+                <% else %>
+                  <div class="bg-gray-100 p-8 rounded text-center">
+                    <p class="text-gray-600">Compile your code to see the canvas</p>
+                  </div>
+                <% end %>
+              </div>
+            </div>
           <% else %>
             <div class="prose prose-neutral max-w-none">
               <%= safe_html(block.data["html"].to_s) %>
@@ -258,6 +294,30 @@
                 class: "w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
                 placeholder: "Enter HTML content...",
                 rows: 12 %>
+
+            <%= f.hidden_field :type %>
+            <%= f.hidden_field :position %>
+
+            <!-- Hidden submit button (triggered from toolbar) -->
+            <%= f.submit "Update Block", style: "display: none;", data: { block_editor_target: "hiddenSubmit" } %>
+          <% end %>
+        <% elsif block.is_a?(Mlx42Block) %>
+          <%= form_with model: [:author, block.document, block.becomes(Block)],
+                        data: { turbo_frame: dom_id(block) },
+                        class: "space-y-3" do |f| %>
+
+            <%= f.text_area :text,
+                value: block.text,
+                data: {
+                  block_editor_target: "textarea",
+                  action: "input->block-editor#autoResize",
+                  controller: "textarea-tab"
+                },
+                class: "w-full font-mono text-sm bg-gray-900 text-gray-100 p-4 rounded border-0 focus:ring-2 focus:ring-purple-500",
+                placeholder: "#include <MLX42/MLX42.h>\n\nvoid user_main(int argc, char **argv) {\n  extern mlx_t *mlx;\n  // Your MLX42 code here\n}",
+                rows: 15 %>
+
+            <%= render "author/blocks/mlx42_assets", block: block, form: f %>
 
             <%= f.hidden_field :type %>
             <%= f.hidden_field :position %>

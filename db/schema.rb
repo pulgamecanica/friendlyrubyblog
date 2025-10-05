@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_03_103719) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_05_164838) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -166,6 +166,30 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_03_103719) do
     t.index ["likable_type", "likable_id"], name: "index_likes_on_likable"
   end
 
+  create_table "page_views", force: :cascade do |t|
+    t.bigint "document_id", null: false
+    t.string "ip_address"
+    t.string "country"
+    t.string "city"
+    t.string "device"
+    t.string "browser"
+    t.string "os"
+    t.text "referrer"
+    t.string "next_page"
+    t.text "user_agent"
+    t.string "unique_visitor_id"
+    t.string "session_id"
+    t.datetime "visited_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["country"], name: "index_page_views_on_country"
+    t.index ["document_id"], name: "index_page_views_on_document_id"
+    t.index ["ip_address"], name: "index_page_views_on_ip_address"
+    t.index ["session_id"], name: "index_page_views_on_session_id"
+    t.index ["unique_visitor_id"], name: "index_page_views_on_unique_visitor_id"
+    t.index ["visited_at"], name: "index_page_views_on_visited_at"
+  end
+
   create_table "series", force: :cascade do |t|
     t.string "title"
     t.string "slug"
@@ -202,4 +226,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_03_103719) do
   add_foreign_key "document_tags", "tags"
   add_foreign_key "documents", "authors"
   add_foreign_key "documents", "series"
+  add_foreign_key "page_views", "documents"
 end

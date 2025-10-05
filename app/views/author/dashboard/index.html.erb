@@ -1,0 +1,279 @@
+<div class="mx-auto max-w-7xl px-6 py-8">
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold mb-2">Dashboard</h1>
+    <p class="text-gray-600">Overview of your blog statistics and analytics</p>
+  </div>
+
+  <!-- Overview Stats Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Total Documents -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-gray-500 text-sm font-medium">Total Documents</p>
+          <p class="text-3xl font-bold mt-2"><%= @stats.total_documents %></p>
+        </div>
+        <div class="text-blue-500">
+          <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+      </div>
+      <div class="mt-4 text-sm text-gray-600">
+        <%= @stats.documents_this_week %> created this week
+      </div>
+    </div>
+
+    <!-- Total Views -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-gray-500 text-sm font-medium">Total Views</p>
+          <p class="text-3xl font-bold mt-2"><%= @stats.total_views %></p>
+        </div>
+        <div class="text-green-500">
+          <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+        </div>
+      </div>
+      <div class="mt-4 text-sm text-gray-600">
+        <%= @stats.views_this_week %> this week
+      </div>
+    </div>
+
+    <!-- Unique Visitors -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-gray-500 text-sm font-medium">Unique Visitors</p>
+          <p class="text-3xl font-bold mt-2"><%= @stats.unique_visitors %></p>
+        </div>
+        <div class="text-purple-500">
+          <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        </div>
+      </div>
+      <div class="mt-4 text-sm text-gray-600">
+        <%= @stats.views_today %> views today
+      </div>
+    </div>
+
+    <!-- Total Blocks -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-gray-500 text-sm font-medium">Total Blocks</p>
+          <p class="text-3xl font-bold mt-2"><%= @stats.total_blocks %></p>
+        </div>
+        <div class="text-orange-500">
+          <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z" />
+          </svg>
+        </div>
+      </div>
+      <div class="mt-4 text-sm text-gray-600">
+        <%= @stats.blocks_this_week %> created this week
+      </div>
+    </div>
+  </div>
+
+  <!-- Document Types Distribution -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold mb-4">Posts</h3>
+      <div class="flex items-center justify-between">
+        <p class="text-4xl font-bold text-blue-600"><%= @stats.total_posts %></p>
+        <%= link_to "View All", author_posts_path, class: "text-blue-500 hover:text-blue-700 text-sm" %>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold mb-4">Notes</h3>
+      <div class="flex items-center justify-between">
+        <p class="text-4xl font-bold text-green-600"><%= @stats.total_notes %></p>
+        <%= link_to "View All", author_notes_path, class: "text-green-500 hover:text-green-700 text-sm" %>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold mb-4">Pages</h3>
+      <div class="flex items-center justify-between">
+        <p class="text-4xl font-bold text-purple-600"><%= @stats.total_pages %></p>
+        <%= link_to "View All", author_pages_path, class: "text-purple-500 hover:text-purple-700 text-sm" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Views Over Time -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold mb-4">Views Over Time (Last 30 Days)</h3>
+      <div style="position: relative; height: 250px;">
+        <canvas
+          data-controller="chart"
+          data-chart-type-value="line"
+          data-chart-data-value="<%= {
+            labels: @stats.views_over_time.keys,
+            datasets: [{
+              label: 'Views',
+              data: @stats.views_over_time.values,
+              borderColor: 'rgb(59, 130, 246)',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              tension: 0.4
+            }]
+          }.to_json %>"
+          data-chart-options-value="<%= {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }.to_json %>"
+        ></canvas>
+      </div>
+    </div>
+
+    <!-- Block Types Distribution -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold mb-4">Block Types Distribution</h3>
+      <div style="position: relative; height: 250px;">
+        <canvas
+          data-controller="chart"
+          data-chart-type-value="doughnut"
+          data-chart-data-value="<%= {
+            labels: @stats.blocks_by_type.keys,
+            datasets: [{
+              data: @stats.blocks_by_type.values,
+              backgroundColor: [
+                'rgb(59, 130, 246)',
+                'rgb(16, 185, 129)',
+                'rgb(245, 158, 11)',
+                'rgb(139, 92, 246)',
+                'rgb(239, 68, 68)',
+                'rgb(236, 72, 153)'
+              ]
+            }]
+          }.to_json %>"
+          data-chart-options-value="<%= {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'right' }
+            }
+          }.to_json %>"
+        ></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Most Viewed Documents & Top Tags -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Most Viewed Documents -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold mb-4">Most Viewed Documents</h3>
+      <div class="space-y-3">
+        <% @stats.most_viewed_documents(5).each do |doc| %>
+          <div class="flex items-center justify-between py-2 border-b">
+            <div class="flex-1 min-w-0">
+              <%= link_to doc[:title], public_document_path(doc[:slug]), class: "text-blue-600 hover:text-blue-800 truncate block", target: "_blank" %>
+            </div>
+            <span class="ml-4 text-gray-600 font-medium"><%= doc[:views] %> views</span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Top Tags -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold mb-4">Most Used Tags</h3>
+      <div class="space-y-3">
+        <% @stats.top_tags(10).each do |tag, count| %>
+          <div class="flex items-center justify-between py-2 border-b">
+            <span class="text-gray-800"><%= tag %></span>
+            <span class="text-gray-600 font-medium"><%= count %> uses</span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Device & Browser Stats -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Views by Device -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold mb-4">Views by Device</h3>
+      <div style="position: relative; height: 250px;">
+        <canvas
+          data-controller="chart"
+          data-chart-type-value="bar"
+          data-chart-data-value="<%= {
+            labels: @stats.views_by_device.keys,
+            datasets: [{
+              label: 'Views',
+              data: @stats.views_by_device.values,
+              backgroundColor: 'rgba(59, 130, 246, 0.8)'
+            }]
+          }.to_json %>"
+          data-chart-options-value="<%= {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }.to_json %>"
+        ></canvas>
+      </div>
+    </div>
+
+    <!-- Views by Browser -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold mb-4">Views by Browser</h3>
+      <div style="position: relative; height: 250px;">
+        <canvas
+          data-controller="chart"
+          data-chart-type-value="bar"
+          data-chart-data-value="<%= {
+            labels: @stats.views_by_browser.keys,
+            datasets: [{
+              label: 'Views',
+              data: @stats.views_by_browser.values,
+              backgroundColor: 'rgba(16, 185, 129, 0.8)'
+            }]
+          }.to_json %>"
+          data-chart-options-value="<%= {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }.to_json %>"
+        ></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
+    <div class="flex flex-wrap gap-4">
+      <%= link_to "New Post", new_author_post_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded" %>
+      <%= link_to "New Note", new_author_note_path, class: "bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded" %>
+      <%= link_to "New Page", new_author_page_path, class: "bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded" %>
+      <%= link_to "All Documents", author_documents_path, class: "bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded" %>
+      <%= link_to "View Analytics", author_analytics_path, class: "bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded" %>
+    </div>
+  </div>
+</div>
