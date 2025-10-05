@@ -44,7 +44,6 @@
 /* Optional: anchor styles for headings with <a class="anchor"> */
 .prose .anchor {
   position: relative;
-  margin-right: 0.25rem;
   text-decoration: none;
   opacity: 0;
   transition: opacity .15s ease;
@@ -55,9 +54,9 @@
 .prose h4:hover .anchor,
 .prose h5:hover .anchor,
 .prose h6:hover .anchor { opacity: 1; }
-.prose .anchor::before {
+#public .prose .anchor::before {
   position: absolute;
-  left: -1.5rem;
+  left: -2rem;
   content: "#";
   display: inline-block;
   color: rgb(115 115 115); /* neutral-500 */

@@ -30,6 +30,9 @@ export default class extends Controller {
       this.checkAndFixHighlighting()
     }, 500)
 
+    // Load saved state from localStorage
+    this.loadState()
+
     this.updateToolbar()
     this.updateLayout()
   }
@@ -74,18 +77,35 @@ export default class extends Controller {
     if (this.editingValue) return // Can't collapse in edit mode
 
     this.collapsedValue = !this.collapsedValue
+    this.saveState()
     this.updateLayout()
   }
 
   // Preview management for markdown blocks
   togglePreview() {
     this.previewVisibleValue = !this.previewVisibleValue
+    this.saveState()
     this.updateLayout()
   }
 
   toggleLayout() {
-    this.previewLayoutValue = this.previewLayoutValue === "side" ? "below" : "side"
+    const newLayout = this.previewLayoutValue === "side" ? "below" : "side"
+    this.previewLayoutValue = newLayout
+
+    // Save globally and apply to all markdown blocks
+    localStorage.setItem("markdownPreviewLayout", newLayout)
+    this.applyGlobalLayoutClass(newLayout)
+
     this.updateLayout()
+  }
+
+  applyGlobalLayoutClass(layout) {
+    // Find the blocks container and add a class
+    const blocksContainer = document.getElementById("blocks")
+    if (blocksContainer) {
+      blocksContainer.classList.remove("markdown-layout-side", "markdown-layout-below")
+      blocksContainer.classList.add(`markdown-layout-${layout}`)
+    }
   }
 
   // Event handlers
@@ -351,5 +371,48 @@ export default class extends Controller {
   previewLayoutValueChanged() {
     this.updateToolbar()
     this.updateLayout()
+  }
+
+  // localStorage state management
+  getStorageKey() {
+    return `block_${this.blockIdValue}_state`
+  }
+
+  loadState() {
+    if (!this.hasBlockIdValue) return
+
+    // Load individual block state
+    const savedState = localStorage.getItem(this.getStorageKey())
+    if (savedState) {
+      try {
+        const state = JSON.parse(savedState)
+        if (state.collapsed !== undefined) {
+          this.collapsedValue = state.collapsed
+        }
+        if (state.previewVisible !== undefined) {
+          this.previewVisibleValue = state.previewVisible
+        }
+      } catch (e) {
+        console.error("Failed to load block state:", e)
+      }
+    }
+
+    // Load global layout preference
+    const globalLayout = localStorage.getItem("markdownPreviewLayout")
+    if (globalLayout) {
+      this.previewLayoutValue = globalLayout
+      this.applyGlobalLayoutClass(globalLayout)
+    }
+  }
+
+  saveState() {
+    if (!this.hasBlockIdValue) return
+
+    const state = {
+      collapsed: this.collapsedValue,
+      previewVisible: this.previewVisibleValue
+    }
+
+    localStorage.setItem(this.getStorageKey(), JSON.stringify(state))
   }
 }

@@ -16,6 +16,13 @@
 
       <!-- Right: Status and Actions -->
       <div class="flex items-center justify-end space-x-4">
+        <!-- Expand Editor Button -->
+        <button type="button" data-action="click->editor-width#toggle" class="flex items-center text-gray-600 hover:text-gray-900" title="Expand/Collapse Editor">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+          </svg>
+        </button>
+
         <%= link_to public_document_path(@document), target: "_blank", class: "flex items-center text-teal-600 hover:text-teal-800" do %>
           <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
@@ -25,7 +32,7 @@
 
         <!-- Publish Status -->
         <%= render "status_frame", document: @document %>
-        
+
         <!-- Auto-save Status -->
         <div id="autosave_status" class="text-sm text-gray-500"></div>
       </div>
