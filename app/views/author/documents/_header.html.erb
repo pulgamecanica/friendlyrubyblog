@@ -15,7 +15,27 @@
       <%= render "title_frame", document: @document %>
 
       <!-- Right: Status and Actions -->
-      <div class="flex items-center justify-end space-x-4">
+      <div class="flex items-center justify-end space-x-4" data-controller="blocks-manager">
+        <!-- Collapse All Button -->
+        <button type="button" data-action="click->blocks-manager#collapseAll" class="flex items-center text-gray-600 hover:text-gray-900" title="Collapse All Blocks">
+          <svg class="w-5 h-5" viewBox="0 0 48 48" fill="currentColor">
+            <path d="M22.6,15.4a1.9,1.9,0,0,0,2.8,0l6-5.9a2.1,2.1,0,0,0,.2-2.7,1.9,1.9,0,0,0-3-.2L26,9.2V4a2,2,0,0,0-4,0V9.2L19.4,6.6a1.9,1.9,0,0,0-3,.2,2.1,2.1,0,0,0,.2,2.7Z"></path>
+            <path d="M25.4,32.6a1.9,1.9,0,0,0-2.8,0l-6,5.9a2.1,2.1,0,0,0-.2,2.7,1.9,1.9,0,0,0,3,.2L22,38.8V44a2,2,0,0,0,4,0V38.8l2.6,2.6a1.9,1.9,0,0,0,3-.2,2.1,2.1,0,0,0-.2-2.7Z"></path>
+            <path d="M6,22H42a2,2,0,0,0,0-4H6a2,2,0,0,0,0,4Z"></path>
+            <path d="M42,26H6a2,2,0,0,0,0,4H42a2,2,0,0,0,0-4Z"></path>
+          </svg>
+        </button>
+
+        <!-- Expand All Button -->
+        <button type="button" data-action="click->blocks-manager#expandAll" class="flex items-center text-gray-600 hover:text-gray-900" title="Expand All Blocks">
+          <svg class="w-5 h-5" viewBox="0 0 48 48" fill="currentColor">
+            <path style="rotate: 180deg; transform-origin: 0; transform: translate(-100%, 65%);" d="M22.6,15.4a1.9,1.9,0,0,0,2.8,0l6-5.9a2.1,2.1,0,0,0,.2-2.7,1.9,1.9,0,0,0-3-.2L26,9.2V4a2,2,0,0,0-4,0V9.2L19.4,6.6a1.9,1.9,0,0,0-3,.2,2.1,2.1,0,0,0,.2,2.7Z"></path>
+            <path style="rotate: 180deg; transform-origin: 0; transform: translate(-100%, -65%);" d="M25.4,32.6a1.9,1.9,0,0,0-2.8,0l-6,5.9a2.1,2.1,0,0,0-.2,2.7,1.9,1.9,0,0,0,3,.2L22,38.8V44a2,2,0,0,0,4,0V38.8l2.6,2.6a1.9,1.9,0,0,0,3-.2,2.1,2.1,0,0,0-.2-2.7Z"></path>
+            <path d="M6,22H42a2,2,0,0,0,0-4H6a2,2,0,0,0,0,4Z"></path>
+            <path d="M42,26H6a2,2,0,0,0,0,4H42a2,2,0,0,0,0-4Z"></path>
+          </svg>
+        </button>
+
         <!-- Expand Editor Button -->
         <button type="button" data-action="click->editor-width#toggle" class="flex items-center text-gray-600 hover:text-gray-900" title="Expand/Collapse Editor">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

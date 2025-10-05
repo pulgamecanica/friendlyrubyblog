@@ -78,6 +78,7 @@ export default class extends Controller {
 
     this.collapsedValue = !this.collapsedValue
     this.saveState()
+    this.updateToolbar()
     this.updateLayout()
   }
 
@@ -297,7 +298,9 @@ export default class extends Controller {
 
       // Handle collapsed state (normal mode only)
       if (this.collapsedValue) {
-        this.contentTarget.style.maxHeight = "200px"
+        // Get toolbar height dynamically
+        const toolbarHeight = this.hasToolbarTarget ? this.toolbarTarget.offsetHeight : 200
+        this.contentTarget.style.maxHeight = `${toolbarHeight}px`
         this.contentTarget.style.overflow = "hidden"
         if (this.hasFadeOverlayTarget) {
           this.fadeOverlayTarget.style.opacity = "1"
@@ -350,27 +353,6 @@ export default class extends Controller {
   removeGlobalListeners() {
     document.removeEventListener("click", this.boundClickOutside)
     document.removeEventListener("keydown", this.boundEscapeKey)
-  }
-
-  // Value change observers
-  editingValueChanged() {
-    this.updateToolbar()
-    this.updateLayout()
-  }
-
-  collapsedValueChanged() {
-    this.updateToolbar()
-    this.updateLayout()
-  }
-
-  previewVisibleValueChanged() {
-    this.updateToolbar()
-    this.updateLayout()
-  }
-
-  previewLayoutValueChanged() {
-    this.updateToolbar()
-    this.updateLayout()
   }
 
   // localStorage state management
