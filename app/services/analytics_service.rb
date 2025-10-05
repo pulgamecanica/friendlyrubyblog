@@ -27,7 +27,7 @@ class AnalyticsService
   # Top referrers
   def top_referrers(limit = 10)
     page_views_scope
-      .where.not(referrer: [nil, ""])
+      .where.not(referrer: [ nil, "" ])
       .group(:referrer)
       .order("count_all DESC")
       .limit(limit)
@@ -37,7 +37,7 @@ class AnalyticsService
   # Top sources (domains from referrers)
   def top_sources(limit = 10)
     page_views_scope
-      .where.not(referrer: [nil, ""])
+      .where.not(referrer: [ nil, "" ])
       .select("page_views.referrer")
       .distinct
       .map { |pv| extract_domain(pv.referrer) }
@@ -51,7 +51,7 @@ class AnalyticsService
   # Top next pages (where visitors went after)
   def top_next_pages(limit = 10)
     page_views_scope
-      .where.not(next_page: [nil, ""])
+      .where.not(next_page: [ nil, "" ])
       .group(:next_page)
       .order("count_all DESC")
       .limit(limit)
@@ -80,7 +80,7 @@ class AnalyticsService
   # Top countries
   def top_countries(limit = 10)
     page_views_scope
-      .where.not(country: ["Unknown", nil, ""])
+      .where.not(country: [ "Unknown", nil, "" ])
       .group(:country)
       .order("count_all DESC")
       .limit(limit)

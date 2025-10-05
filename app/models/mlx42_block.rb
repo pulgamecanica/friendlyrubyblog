@@ -13,7 +13,7 @@ class Mlx42Block < Block
   end
 
   def plain_text = text.to_s
-  def languages = ["c"]
+  def languages = [ "c" ]
 
   def width
     data.to_h["width"] || 800

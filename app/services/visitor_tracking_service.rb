@@ -91,5 +91,4 @@ class VisitorTrackingService
     else "Unknown"
     end
   end
-
 end
