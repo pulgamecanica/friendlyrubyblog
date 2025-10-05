@@ -51,7 +51,7 @@ module MergePreserveAllHash
               [ a ] + b
             elsif a.is_a?(String) && b.is_a?(String) && join_strings
               # join strings (useful for :class)
-              "#{a} #{b}".strip
+              [ a, b ].compact.map(&:to_s).map(&:strip).reject(&:empty?).join(" ")
             else
               # preserve both in array
               [ a, b ]

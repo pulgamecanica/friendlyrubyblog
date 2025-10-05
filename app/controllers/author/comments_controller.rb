@@ -8,10 +8,7 @@ class Author::CommentsController < Author::BaseController
   def update
     @comment = Comment.find(params[:id])
     @comment.update!(comment_params)
-    respond_to do |f|
-      f.turbo_stream
-      f.html { redirect_back fallback_location: author_comments_path, notice: "Updated" }
-    end
+    redirect_to author_comments_path(status: params[:comment][:status_filter]), notice: "Comment status updated to #{@comment.status}"
   end
 
   def destroy

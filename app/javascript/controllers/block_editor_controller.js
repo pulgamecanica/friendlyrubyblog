@@ -86,6 +86,7 @@ export default class extends Controller {
   togglePreview() {
     this.previewVisibleValue = !this.previewVisibleValue
     this.saveState()
+    this.updateToolbar()
     this.updateLayout()
   }
 
@@ -97,6 +98,7 @@ export default class extends Controller {
     localStorage.setItem("markdownPreviewLayout", newLayout)
     this.applyGlobalLayoutClass(newLayout)
 
+    this.updateToolbar()
     this.updateLayout()
   }
 

@@ -94,6 +94,205 @@ RSpec.describe PublicHelper, type: :helper do
       end
     end
 
+    context "ImageBlock" do
+      it "renders 'No images' message when no images attached" do
+        block = ImageBlock.create!(
+          document: document,
+          position: 1,
+          data: {}
+        )
+
+        html = helper.render_block(block)
+
+        expect(html).to include('class="text-gray-500 text-sm"')
+        expect(html).to include("No images")
+      end
+
+      it "renders single image without carousel" do
+        block = ImageBlock.create!(
+          document: document,
+          position: 1,
+          data: { "caption" => "Beautiful sunset" }
+        )
+
+        block.images.attach(
+          io: StringIO.new("fake image content"),
+          filename: "sunset.jpg",
+          content_type: "image/jpeg"
+        )
+
+        html = helper.render_block(block)
+
+        expect(html).to include("<figure")
+        expect(html).to include('class="my-6"')
+        expect(html).to include('class="w-full rounded-lg shadow-lg max-h-96 object-cover mx-auto"')
+        expect(html).to include("<figcaption")
+        expect(html).to include("Beautiful sunset")
+      end
+
+      it "renders single image without caption" do
+        block = ImageBlock.create!(
+          document: document,
+          position: 1,
+          data: {}
+        )
+
+        block.images.attach(
+          io: StringIO.new("fake image content"),
+          filename: "photo.jpg",
+          content_type: "image/jpeg"
+        )
+
+        html = helper.render_block(block)
+
+        expect(html).to include("<figure")
+        expect(html).not_to include("<figcaption")
+      end
+
+      it "renders multiple images with carousel" do
+        block = ImageBlock.create!(
+          document: document,
+          position: 1,
+          data: { "caption" => "Photo gallery" }
+        )
+
+        block.images.attach([
+          { io: StringIO.new("image1"), filename: "img1.jpg", content_type: "image/jpeg" },
+          { io: StringIO.new("image2"), filename: "img2.jpg", content_type: "image/jpeg" },
+          { io: StringIO.new("image3"), filename: "img3.jpg", content_type: "image/jpeg" }
+        ])
+
+        html = helper.render_block(block)
+
+        expect(html).to include("<figure")
+        expect(html).to include('data-image-carousel-target="container"')
+        expect(html).to include('class="flex transition-transform duration-300 ease-in-out"')
+        expect(html).to include("<figcaption")
+        expect(html).to include("Photo gallery")
+      end
+
+      it "renders multiple images without caption" do
+        block = ImageBlock.create!(
+          document: document,
+          position: 1,
+          data: {}
+        )
+
+        block.images.attach([
+          { io: StringIO.new("image1"), filename: "img1.jpg", content_type: "image/jpeg" },
+          { io: StringIO.new("image2"), filename: "img2.jpg", content_type: "image/jpeg" }
+        ])
+
+        html = helper.render_block(block)
+
+        expect(html).to include('data-image-carousel-target="container"')
+        expect(html).not_to include("<figcaption")
+      end
+    end
+
+    context "Mlx42Block" do
+      it "renders 'not compiled yet' message when not compiled" do
+        block = Mlx42Block.create!(
+          document: document,
+          position: 1,
+          data: { "text" => "#include <MLX42/MLX42.h>\nvoid user_main() {}" }
+        )
+
+        html = helper.render_block(block)
+
+        expect(html).to include('class="text-gray-500 text-sm p-4 bg-gray-50 rounded"')
+        expect(html).to include("MLX42 block not compiled yet")
+      end
+
+      it "renders MLX42 runner when compiled" do
+        block = Mlx42Block.create!(
+          document: document,
+          position: 1,
+          data: { "text" => "#include <MLX42/MLX42.h>\nvoid user_main() {}" }
+        )
+
+        # Attach compiled files
+        block.wasm_file.attach(
+          io: StringIO.new("fake wasm"),
+          filename: "mlx42_output.wasm",
+          content_type: "application/wasm"
+        )
+        block.js_file.attach(
+          io: StringIO.new("fake js"),
+          filename: "mlx42_output.js",
+          content_type: "application/javascript"
+        )
+
+        html = helper.render_block(block)
+
+        expect(html).to include('data-controller="mlx42-runner"')
+        expect(html).to include("mlx42-runner-block-id-value=\"#{block.id}\"")
+        expect(html).to include('data-mlx42-runner-target="canvas"')
+        expect(html).to include("mlx42_canvas_#{block.id}")
+        expect(html).to include('data-mlx42-runner-target="console"')
+        expect(html).to include("mlx42_console_#{block.id}")
+        expect(html).to include('data-mlx42-runner-target="loader"')
+        expect(html).to include("Loading WebAssembly...")
+        expect(html).to include("Console Output")
+        expect(html).to include("🖱️ Mouse Captured")
+      end
+
+      it "renders MLX42 runner with data file when attached" do
+        block = Mlx42Block.create!(
+          document: document,
+          position: 1,
+          data: { "text" => "#include <MLX42/MLX42.h>\nvoid user_main() {}" }
+        )
+
+        block.wasm_file.attach(
+          io: StringIO.new("fake wasm"),
+          filename: "mlx42_output.wasm",
+          content_type: "application/wasm"
+        )
+        block.js_file.attach(
+          io: StringIO.new("fake js"),
+          filename: "mlx42_output.js",
+          content_type: "application/javascript"
+        )
+        block.data_file.attach(
+          io: StringIO.new("fake data"),
+          filename: "mlx42_output.data",
+          content_type: "application/octet-stream"
+        )
+
+        html = helper.render_block(block)
+
+        expect(html).to include('data-controller="mlx42-runner"')
+        # Data URL should be present (not empty)
+        expect(html).to match(/mlx42-runner-data-url-value="[^"]+"/)
+      end
+
+      it "renders MLX42 runner without data file when not attached" do
+        block = Mlx42Block.create!(
+          document: document,
+          position: 1,
+          data: { "text" => "#include <MLX42/MLX42.h>\nvoid user_main() {}" }
+        )
+
+        block.wasm_file.attach(
+          io: StringIO.new("fake wasm"),
+          filename: "mlx42_output.wasm",
+          content_type: "application/wasm"
+        )
+        block.js_file.attach(
+          io: StringIO.new("fake js"),
+          filename: "mlx42_output.js",
+          content_type: "application/javascript"
+        )
+
+        html = helper.render_block(block)
+
+        expect(html).to include('data-controller="mlx42-runner"')
+        # Data URL should be empty string
+        expect(html).to include('mlx42-runner-data-url-value=""')
+      end
+    end
+
     # context "unknown block type" do
     #   it "renders a fallback inspector" do
     #     block = Block.create!(

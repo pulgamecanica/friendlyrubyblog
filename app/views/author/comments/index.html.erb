@@ -10,9 +10,6 @@
           <%= @comments.count %> <%= params[:status] ? params[:status] : 'total' %> comments
         </p>
       </div>
-      <div class="text-sm text-gray-600 bg-gray-100 px-4 py-2 rounded-lg">
-        <span class="font-semibold"><%= Comment.count %></span> total comments
-      </div>
     </div>
 
     <!-- Filter Tabs -->
@@ -50,7 +47,7 @@
     </div>
   </div>
 
-  <% if @comments.any? %>
+  <% if@comments.any? %>
     <!-- Comments Table -->
     <div class="bg-white rounded-lg shadow overflow-hidden">
       <table class="min-w-full divide-y divide-gray-200">
@@ -64,7 +61,7 @@
           </tr>
         </thead>
         <tbody id="comments" class="bg-white divide-y divide-gray-200">
-          <%= render partial: "row", collection: @comments, as: :comment %>
+          <%= render partial: "row", collection: @comments, as: :comment, locals: { current_status_filter: params[:status] } %>
         </tbody>
       </table>
     </div>

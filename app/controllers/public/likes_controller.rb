@@ -24,8 +24,6 @@ class Public::LikesController < Public::BaseController
       Document.friendly.find(params[:document_id])
     elsif params[:block_id]
       Block.find(params[:block_id])
-    else
-      raise ActiveRecord::RecordNotFound
     end
   end
 

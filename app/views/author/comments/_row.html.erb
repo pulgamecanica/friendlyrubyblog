@@ -63,8 +63,9 @@
     </span>
 
     <%= form_with model: [:author, comment], method: :patch,
-          data: { turbo_stream: true },
+          data: { turbo: false },
           class: "flex items-center gap-2 mt-2" do |f| %>
+      <%= f.hidden_field :status_filter, value: current_status_filter %>
       <%= f.select :status,
             options_for_select([%w[visible visible], %w[pending pending], %w[hidden hidden]], comment.status),
             {}, class: "block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs py-1 px-2" %>
