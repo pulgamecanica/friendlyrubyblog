@@ -94,7 +94,7 @@ class Mlx42CompilerService
       "-DWEB",
       "-O3",
       "-I", "/usr/local/include",
-      "-I", "MLX42/include",
+      "-I", Rails.root.join("MLX42_headers").to_s,
       "-pthread",
       wrapper_file,
       user_file,

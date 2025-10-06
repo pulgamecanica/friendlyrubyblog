@@ -111,12 +111,12 @@ languages = [
 ]
 
 languages.each do |lang_attrs|
-  existing_language = Language.find_by(name: lang_attrs[:name])
+  existing_language = Language.find_by(extension: lang_attrs[:extension])
 
   if existing_language
     # Update existing language if needed
     existing_language.update!(
-      extension: lang_attrs[:extension],
+      name: lang_attrs[:name],
       executable_command: lang_attrs[:executable_command],
       interactive: lang_attrs[:interactive]
     )

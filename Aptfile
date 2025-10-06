@@ -2,6 +2,9 @@ git
 emscripten
 cmake
 build-essential
+gcc
+g++
+python3
 libglfw3-dev
 libglfw3
 xorg-dev
