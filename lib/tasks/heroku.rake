@@ -15,10 +15,25 @@ namespace :heroku do
     # Install Emscripten if not cached
     if !Dir.exist?("#{cache_dir}/emsdk")
       puts "-----> Installing Emscripten SDK"
-      system("git clone --depth 1 https://github.com/emscripten-core/emsdk.git #{cache_dir}/emsdk")
+      unless system("git clone --depth 1 https://github.com/emscripten-core/emsdk.git #{cache_dir}/emsdk")
+        puts "-----> ERROR: Failed to clone emsdk"
+        exit 1
+      end
+
+      unless Dir.exist?("#{cache_dir}/emsdk")
+        puts "-----> ERROR: emsdk directory not created"
+        exit 1
+      end
+
       Dir.chdir("#{cache_dir}/emsdk") do
-        system("./emsdk install latest")
-        system("./emsdk activate latest")
+        unless system("./emsdk install latest")
+          puts "-----> ERROR: Failed to install emsdk"
+          exit 1
+        end
+        unless system("./emsdk activate latest")
+          puts "-----> ERROR: Failed to activate emsdk"
+          exit 1
+        end
       end
     else
       puts "-----> Using cached Emscripten SDK"
