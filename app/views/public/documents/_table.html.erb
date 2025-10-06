@@ -66,13 +66,13 @@
           </td>
 
           <!-- Tags -->
-          <td class="hidden lg:table-cell px-6 py-4">
+          <td class="hidden lg:table-cell px-6 py-4" onclick="event.stopPropagation()">
             <% if doc.tags.any? %>
               <div class="flex flex-wrap gap-1">
                 <% doc.tags.limit(3).each do |tag| %>
-                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                  <%= link_to public_tag_path(tag), class: "inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors" do %>
                     #<%= tag.title %>
-                  </span>
+                  <% end %>
                 <% end %>
                 <% if doc.tags.count > 3 %>
                   <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500">

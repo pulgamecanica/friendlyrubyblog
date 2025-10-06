@@ -12,78 +12,76 @@
     public_document_path(doc)
   end
 %>
-<%= link_to path, class: "group block h-full" do %>
-  <article class="relative h-full overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-2xl hover:border-indigo-200 hover:-translate-y-1">
-    <!-- Gradient overlay on hover -->
-    <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/0 via-purple-50/0 to-pink-50/0 group-hover:from-indigo-50/50 group-hover:via-purple-50/30 group-hover:to-pink-50/50 transition-all duration-300 rounded-2xl"></div>
+<article class="group relative h-full overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-2xl hover:border-indigo-200 hover:-translate-y-1 cursor-pointer" onclick="window.location='<%= path %>'">
+  <!-- Gradient overlay on hover -->
+  <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/0 via-purple-50/0 to-pink-50/0 group-hover:from-indigo-50/50 group-hover:via-purple-50/30 group-hover:to-pink-50/50 transition-all duration-300 rounded-2xl"></div>
 
-    <div class="relative z-10">
-      <!-- Series Badge -->
-      <% if doc.series %>
-        <div class="mb-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 text-xs font-medium">
-          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-          </svg>
-          <%= doc.series.title %>
-        </div>
-      <% end %>
+  <div class="relative z-10">
+    <!-- Series Badge -->
+    <% if doc.series %>
+      <div class="mb-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 text-xs font-medium">
+        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+        <%= doc.series.title %>
+      </div>
+    <% end %>
 
-      <!-- Title -->
-      <h2 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors line-clamp-2">
-        <%= doc.title %>
-      </h2>
+    <!-- Title -->
+    <h2 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors line-clamp-2">
+      <%= doc.title %>
+    </h2>
 
-      <!-- Description -->
-      <p class="text-sm text-gray-600 line-clamp-3 mb-4 leading-relaxed">
-        <%= doc.description.presence || "Click to read more..." %>
-      </p>
+    <!-- Description -->
+    <p class="text-sm text-gray-600 line-clamp-3 mb-4 leading-relaxed">
+      <%= doc.description.presence || "Click to read more..." %>
+    </p>
 
-      <!-- Tags -->
-      <% if doc.tags.any? %>
-        <div class="flex flex-wrap gap-2 mb-4">
-          <% doc.tags.limit(4).each do |t| %>
-            <span class="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-md bg-gray-100 text-gray-700 group-hover:bg-indigo-100 group-hover:text-indigo-700 transition-colors">
-              #<%= t.title %>
-            </span>
+    <!-- Tags -->
+    <% if doc.tags.any? %>
+      <div class="flex flex-wrap gap-2 mb-4" onclick="event.stopPropagation()">
+        <% doc.tags.limit(4).each do |t| %>
+          <%= link_to public_tag_path(t), class: "inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-md bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors" do %>
+            #<%= t.title %>
           <% end %>
-          <% if doc.tags.count > 4 %>
-            <span class="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-md bg-gray-100 text-gray-500">
-              +<%= doc.tags.count - 4 %>
-            </span>
-          <% end %>
-        </div>
-      <% end %>
+        <% end %>
+        <% if doc.tags.count > 4 %>
+          <span class="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-md bg-gray-100 text-gray-500">
+            +<%= doc.tags.count - 4 %>
+          </span>
+        <% end %>
+      </div>
+    <% end %>
 
-      <!-- Footer -->
-      <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-        <div class="flex items-center gap-2 text-xs text-gray-500">
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <% if doc.published_at.present? %>
-            <time datetime="<%= doc.published_at.iso8601 %>">
-              <%= format_date(doc.published_at) %>
-            </time>
-          <% elsif doc.published %>
-            <time datetime="<%= doc.created_at.iso8601 %>">
-              <%= format_date(doc.created_at) %>
-            </time>
-          <% else %>
-            <span>Draft</span>
-          <% end %>
-        </div>
+    <!-- Footer -->
+    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+      <div class="flex items-center gap-2 text-xs text-gray-500">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <% if doc.published_at.present? %>
+          <time datetime="<%= doc.published_at.iso8601 %>">
+            <%= format_date(doc.published_at) %>
+          </time>
+        <% elsif doc.published %>
+          <time datetime="<%= doc.created_at.iso8601 %>">
+            <%= format_date(doc.created_at) %>
+          </time>
+        <% else %>
+          <span>Draft</span>
+        <% end %>
+      </div>
 
-        <!-- Read more indicator -->
-        <div class="flex items-center gap-1 text-xs font-semibold text-indigo-600 group-hover:gap-2 transition-all">
-          Read more
-          <svg class="h-4 w-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </div>
+      <!-- Read more indicator -->
+      <div class="flex items-center gap-1 text-xs font-semibold text-indigo-600 group-hover:gap-2 transition-all">
+        Read more
+        <svg class="h-4 w-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
       </div>
     </div>
+  </div>
 
-    <!-- Corner accent -->
-    <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-indigo-400/0 to-purple-600/0 group-hover:from-indigo-400/10 group-hover:to-purple-600/10 rounded-bl-full transition-all duration-300"></div>
-  </article>
-<% end %>
+  <!-- Corner accent -->
+  <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-indigo-400/0 to-purple-600/0 group-hover:from-indigo-400/10 group-hover:to-purple-600/10 rounded-bl-full transition-all duration-300"></div>
+</article>

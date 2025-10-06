@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["gridView", "tableView", "gridButton", "tableButton"]
   static values = {
-    storageKey: { type: String, default: "documents_view_mode" }
+    storageKey: { type: String, default: "global_view_mode" }
   }
 
   connect() {

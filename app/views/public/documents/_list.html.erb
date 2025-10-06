@@ -2,12 +2,12 @@
   # Local variables:
   # - documents: collection of documents to display
   # - title: (optional) title for the section
-  # - storage_key: (optional) localStorage key for view preference (default: "documents_view_mode")
+  # - storage_key: (optional) localStorage key for view preference (default: "global_view_mode")
   # - show_count: (optional) show document count badge (default: true)
   # - empty_title: (optional) custom empty state title
   # - empty_message: (optional) custom empty state message
 
-  storage_key ||= "documents_view_mode"
+  storage_key = "global_view_mode"
   show_count = true if show_count.nil?
   title ||= "Documents"
 %>

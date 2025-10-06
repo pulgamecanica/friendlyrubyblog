@@ -2,10 +2,10 @@
   # Local variables:
   # - series_list: collection of series to display
   # - title: (optional) title for the section (default: "Series")
-  # - storage_key: (optional) localStorage key for view preference (default: "series_view_mode")
+  # - storage_key: (optional) localStorage key for view preference (default: "global_view_mode")
   # - show_count: (optional) show series count badge (default: true)
 
-  storage_key ||= "series_view_mode"
+  storage_key = "global_view_mode"
   show_count = true if show_count.nil?
   title ||= "Series"
 %>
