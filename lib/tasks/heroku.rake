@@ -1,31 +1,19 @@
 namespace :heroku do
-  desc "Build MLX42 for WebAssembly on Heroku"
-  task :build_mlx42 do
-    puts "-----> Installing Emscripten and MLX42"
+  desc "Install Emscripten and MLX42 headers on Heroku"
+  task :setup_mlx42 do
+    puts "-----> Setting up Emscripten and MLX42 headers"
 
-    # Define directories
-    home_dir = ENV["HOME"]
-    cache_dir = "#{home_dir}/.cache"
-    emsdk_dir = "#{home_dir}/.emsdk"
-    mlx42_dir = "#{home_dir}/.mlx42"
-    install_dir = Rails.root.join("vendor", "mlx42")
+    # Install Emscripten to /app/.emsdk
+    emsdk_dir = "/app/.emsdk"
 
-    FileUtils.mkdir_p(cache_dir)
-
-    # Install Emscripten if not cached
-    if !Dir.exist?("#{cache_dir}/emsdk")
+    unless Dir.exist?(emsdk_dir)
       puts "-----> Installing Emscripten SDK"
-      unless system("git clone --depth 1 https://github.com/emscripten-core/emsdk.git #{cache_dir}/emsdk")
+      unless system("git clone --depth 1 https://github.com/emscripten-core/emsdk.git #{emsdk_dir}")
         puts "-----> ERROR: Failed to clone emsdk"
         exit 1
       end
 
-      unless Dir.exist?("#{cache_dir}/emsdk")
-        puts "-----> ERROR: emsdk directory not created"
-        exit 1
-      end
-
-      Dir.chdir("#{cache_dir}/emsdk") do
+      Dir.chdir(emsdk_dir) do
         unless system("./emsdk install latest")
           puts "-----> ERROR: Failed to install emsdk"
           exit 1
@@ -36,54 +24,31 @@ namespace :heroku do
         end
       end
     else
-      puts "-----> Using cached Emscripten SDK"
+      puts "-----> Emscripten SDK already installed"
     end
 
-    # Copy emsdk to home directory
-    FileUtils.cp_r("#{cache_dir}/emsdk", emsdk_dir) unless Dir.exist?(emsdk_dir)
+    # Add emcc to PATH by sourcing emsdk_env.sh
+    puts "-----> Activating Emscripten environment"
+    system("bash -c 'source #{emsdk_dir}/emsdk_env.sh'")
 
-    # Source Emscripten environment
-    emsdk_env = `bash -c 'source #{emsdk_dir}/emsdk_env.sh && env'`
-    emsdk_env.each_line do |line|
-      key, value = line.chomp.split("=", 2)
-      ENV[key] = value if value
-    end
+    # Install MLX42 headers to /MLX42/include
+    mlx42_include_dir = "/MLX42/include"
 
-    # Build MLX42 for WebAssembly if not cached
-    if !Dir.exist?("#{cache_dir}/mlx42")
-      puts "-----> Building MLX42 for WebAssembly"
-      system("git clone --depth 1 https://github.com/codam-coding-college/MLX42.git #{mlx42_dir}")
-
-      Dir.chdir(mlx42_dir) do
-        FileUtils.mkdir_p("build")
-        Dir.chdir("build") do
-          system("#{emsdk_dir}/upstream/emscripten/emcmake cmake .. -DCMAKE_BUILD_TYPE=Release")
-          system("#{emsdk_dir}/upstream/emscripten/emmake make -j$(nproc)")
-        end
+    unless Dir.exist?(mlx42_include_dir)
+      puts "-----> Installing MLX42 headers"
+      unless system("git clone --depth 1 https://github.com/codam-coding-college/MLX42.git /tmp/mlx42_clone")
+        puts "-----> ERROR: Failed to clone MLX42"
+        exit 1
       end
 
-      # Cache the built library
-      FileUtils.mkdir_p("#{cache_dir}/mlx42")
-      FileUtils.cp_r("#{mlx42_dir}/build", "#{cache_dir}/mlx42/")
-      FileUtils.cp_r("#{mlx42_dir}/include", "#{cache_dir}/mlx42/")
+      FileUtils.mkdir_p("/MLX42")
+      FileUtils.cp_r("/tmp/mlx42_clone/include", "/MLX42/")
+      FileUtils.rm_rf("/tmp/mlx42_clone")
+      puts "-----> MLX42 headers installed to /MLX42/include"
     else
-      puts "-----> Using cached MLX42"
+      puts "-----> MLX42 headers already installed"
     end
 
-    # Copy MLX42 to vendor directory
-    puts "-----> Installing MLX42 to vendor directory"
-    FileUtils.mkdir_p(install_dir)
-    FileUtils.cp_r(Dir["#{cache_dir}/mlx42/*"], install_dir)
-
-    # Copy the compiled library to app/assets
-    puts "-----> Copying libmlx42.a to app/assets"
-    lib_path = "#{cache_dir}/mlx42/build/libmlx42.a"
-    if File.exist?(lib_path)
-      FileUtils.cp(lib_path, Rails.root.join("app", "assets", "libmlx42_web.a"))
-      puts "-----> MLX42 installation complete"
-    else
-      puts "-----> ERROR: libmlx42.a not found at #{lib_path}"
-      exit 1
-    end
+    puts "-----> Setup complete"
   end
 end
