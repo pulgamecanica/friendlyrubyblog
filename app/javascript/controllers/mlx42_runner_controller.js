@@ -1,16 +1,18 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["canvas", "console", "loader", "captureIndicator"]
+  static targets = ["canvas", "console", "loader", "captureIndicator", "consoleSection", "canvasContainer", "controlsButton", "importInput", "exportUrl"]
   static values = {
     jsUrl: String,
     wasmUrl: String,
     dataUrl: String,
-    blockId: String
+    blockId: String,
+    exportUrl: String
   }
 
   connect() {
     this.captured = false
+    this.consoleVisible = false
     this.moduleInstance = null
     this.scriptLoaded = false
     this.boundHandlePointerLockChange = this.handlePointerLockChange.bind(this)
@@ -21,7 +23,7 @@ export default class extends Controller {
     if (!this.hasJsUrlValue || !this.jsUrlValue) {
       this.log("⚠️ No compiled WebAssembly available. Please compile your code first.")
     } else {
-      this.log("✅ Ready to run. Click the Run button in the toolbar.")
+      this.log("✅ Ready to run. Click the Controls button to activate.")
     }
   }
 
@@ -151,14 +153,27 @@ export default class extends Controller {
 
     if (this.hasCaptureIndicatorTarget) {
       this.captureIndicatorTarget.style.display = this.captured ? "block" : "none"
-      this.captureIndicatorTarget.textContent = this.captured ? "🎮 Controls Active (Click to disable)" : ""
     }
 
     // Prevent scrolling when controls are active
     if (this.captured) {
       this.enableScrollPrevention()
+      this.log("🎮 Controls activated")
     } else {
       this.disableScrollPrevention()
+      this.log("🎮 Controls deactivated")
+    }
+  }
+
+  toggleConsole() {
+    this.consoleVisible = !this.consoleVisible
+
+    if (this.hasConsoleSectionTarget) {
+      if (this.consoleVisible) {
+        this.consoleSectionTarget.classList.remove('hidden')
+      } else {
+        this.consoleSectionTarget.classList.add('hidden')
+      }
     }
   }
 
@@ -208,5 +223,134 @@ export default class extends Controller {
       existingScript.remove()
     }
     this.scriptLoaded = false
+  }
+
+  async exportFiles(statusCallback = console.log) {
+    const exportUrl = this.exportUrlValue
+    const updateStatus = (msg) => {
+      this.log(msg)
+      if (typeof v === 'function') {
+        statusCallback(msg)
+      }
+    }
+
+    if (!exportUrl) return
+
+    try {
+      updateStatus("📦 Preparing export...")
+      const response = await fetch(exportUrl, {
+        method: "POST",
+        headers: { "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content }
+      })
+
+      if (!response.ok) {
+        throw new Error(`Server returned ${response.status}: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      const zipUrl = data.url
+
+      // Create download link
+      const a = document.createElement("a")
+      a.href = zipUrl
+      a.download = `mlx42_block_${this.blockIdValue}.zip`
+      a.style.display = "none"
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+
+      // Release object URL
+      updateStatus("✅ Export complete!")
+      return zipUrl
+    } catch (err) {
+      console.error("Export failed", err)
+      updateStatus(`❌ Export failed: ${err.message}`)
+    }
+  }
+
+  async importFiles(event) {
+    const file = event.target.files[0]
+    if (!file) return
+
+    this.log("📦 Importing files...")
+
+    try {
+      // Dynamically load JSZip
+      const JSZip = await this.loadJSZip()
+      const zip = await JSZip.loadAsync(file)
+
+      // Extract files
+      const jsFile = zip.file('mlx42_output.js')
+      const wasmFile = zip.file('mlx42_output.wasm')
+      const dataFile = zip.file('mlx42_output.data')
+
+      if (!jsFile || !wasmFile) {
+        throw new Error('ZIP must contain mlx42_output.js and mlx42_output.wasm')
+      }
+
+      this.log("Extracting files...")
+
+      // Convert to blobs
+      const jsBlob = await jsFile.async('blob')
+      const wasmBlob = await wasmFile.async('blob')
+      const dataBlob = dataFile ? await dataFile.async('blob') : null
+
+      // Upload to server
+      this.log("Uploading to server...")
+      await this.uploadFiles(jsBlob, wasmBlob, dataBlob)
+
+      this.log("✅ Import complete! Refresh to see changes.")
+
+      // Clear the input
+      event.target.value = ''
+
+      // Reload the page after a short delay
+      setTimeout(() => window.location.reload(), 1500)
+
+    } catch (error) {
+      this.log(`❌ Import failed: ${error.message}`)
+      console.error('Import error:', error)
+      event.target.value = ''
+    }
+  }
+
+  async uploadFiles(jsBlob, wasmBlob, dataBlob) {
+    const formData = new FormData()
+    formData.append('js_file', jsBlob, 'mlx42_output.js')
+    formData.append('wasm_file', wasmBlob, 'mlx42_output.wasm')
+    if (dataBlob) {
+      formData.append('data_file', dataBlob, 'mlx42_output.data')
+    }
+
+    const documentId = window.location.pathname.split('/')[3]
+    const url = `/author/documents/${documentId}/blocks/${this.blockIdValue}/import_mlx42_files`
+
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+      }
+    })
+
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.error || 'Upload failed')
+    }
+
+    return response.json()
+  }
+
+  async loadJSZip() {
+    if (window.JSZip) return window.JSZip
+
+    // Load JSZip from CDN
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'
+      script.onload = () => resolve(window.JSZip)
+      script.onerror = () => reject(new Error('Failed to load JSZip'))
+      document.head.appendChild(script)
+    })
   }
 }

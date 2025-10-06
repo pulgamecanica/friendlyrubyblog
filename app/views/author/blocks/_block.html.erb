@@ -108,13 +108,7 @@
 
               <!-- Canvas Preview (MLX42 running) -->
               <div data-mlx42-preview-target="canvasView" style="display: none;">
-                <% if block.compiled? %>
-                  <%= render "author/blocks/mlx42_canvas", block: block %>
-                <% else %>
-                  <div class="bg-gray-100 p-8 rounded text-center">
-                    <p class="text-gray-600">Compile your code to see the canvas</p>
-                  </div>
-                <% end %>
+                <%= render "author/blocks/mlx42_canvas", block: block %>
               </div>
             </div>
           <% else %>

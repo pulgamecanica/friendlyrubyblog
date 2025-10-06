@@ -1,0 +1,60 @@
+<dialog id="<%= modal_id %>" class="backdrop:bg-black/80 bg-transparent p-0 max-w-full max-h-full w-screen h-screen" data-controller="image-modal" data-start-index="<%= current_index %>" data-action="click->image-modal#closeOnBackdrop">
+  <div class="relative w-full h-full flex items-center justify-center p-4" data-image-modal-target="content">
+    <!-- Close button -->
+    <button type="button"
+            onclick="this.closest('dialog').close()"
+            class="absolute top-4 right-4 z-20 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors">
+      <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+
+    <% if images.count > 1 %>
+      <!-- Previous button -->
+      <button type="button"
+              data-action="click->image-modal#previous"
+              class="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
+
+      <!-- Next button -->
+      <button type="button"
+              data-action="click->image-modal#next"
+              class="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
+    <% end %>
+
+    <!-- Image container -->
+    <div class="flex flex-col items-center justify-center max-w-full max-h-full">
+      <% images.each_with_index do |image, index| %>
+        <%= image_tag image,
+                     class: "max-h-[90vh] max-w-full rounded-lg shadow-2xl object-contain #{index == current_index ? '' : 'hidden'}",
+                     alt: caption || "Image #{index + 1}",
+                     data: { image_modal_target: "image", index: index } %>
+      <% end %>
+
+      <% if caption %>
+        <p class="text-white text-center mt-4 text-sm max-w-2xl"><%= caption %></p>
+      <% end %>
+    </div>
+
+    <% if images.count > 1 %>
+      <!-- Indicators -->
+      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+        <% images.each_with_index do |_, index| %>
+          <button type="button"
+                  data-action="click->image-modal#goTo"
+                  data-index="<%= index %>"
+                  data-image-modal-target="indicator"
+                  class="h-2 w-2 rounded-full <%= index == current_index ? 'bg-white' : 'bg-white/50' %> transition-colors">
+          </button>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</dialog>

@@ -43,17 +43,30 @@ export default class extends Controller {
     const style = document.createElement('style')
     style.id = 'prism-dark-theme'
     style.textContent = `
-      /* Dark Prism Theme */
+      /* Force light backgrounds for all code blocks */
+      pre[class*="language-"],
+      code[class*="language-"] {
+        background: white !important;
+        color: #1f2937 !important;
+      }
+
+      code[class*="language-"] {
+        background: transparent !important;
+      }
+
+      /* Light Prism Theme Tokens */
       .token.comment,
       .token.prolog,
       .token.doctype,
       .token.cdata {
-        color: #6272a4;
+        color: #6b7280;
         font-style: italic;
+        background: transparent !important;
       }
 
       .token.punctuation {
-        color: #f8f8f2;
+        color: #374151;
+        background: transparent !important;
       }
 
       .token.property,
@@ -61,12 +74,14 @@ export default class extends Controller {
       .token.constant,
       .token.symbol,
       .token.deleted {
-        color: #ff79c6;
+        color: #db2777;
+        background: transparent !important;
       }
 
       .token.boolean,
       .token.number {
-        color: #bd93f9;
+        color: #7c3aed;
+        background: transparent !important;
       }
 
       .token.selector,
@@ -75,7 +90,8 @@ export default class extends Controller {
       .token.char,
       .token.builtin,
       .token.inserted {
-        color: #50fa7b;
+        color: #059669;
+        background: transparent !important;
       }
 
       .token.operator,
@@ -84,33 +100,48 @@ export default class extends Controller {
       .language-css .token.string,
       .style .token.string,
       .token.variable {
-        color: #f8f8f2;
+        color: #1f2937;
+        background: transparent !important;
       }
 
       .token.atrule,
       .token.attr-value,
       .token.function,
       .token.class-name {
-        color: #f1fa8c;
+        color: #d97706;
+        background: transparent !important;
       }
 
       .token.keyword {
-        color: #8be9fd;
+        color: #2563eb;
         font-weight: bold;
+        background: transparent !important;
       }
 
       .token.regex,
       .token.important {
-        color: #ffb86c;
+        color: #dc2626;
+        background: transparent !important;
       }
 
       .token.important,
       .token.bold {
         font-weight: bold;
+        background: transparent !important;
       }
 
       .token.italic {
         font-style: italic;
+        background: transparent !important;
+      }
+
+      .token.string-literal {
+        background: transparent !important;
+      }
+
+      /* Ensure no token has a background */
+      .token {
+        background: transparent !important;
       }
     `
     document.head.appendChild(style)

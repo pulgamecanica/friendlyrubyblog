@@ -1,5 +1,4 @@
 git
-emscripten
 cmake
 build-essential
 gcc

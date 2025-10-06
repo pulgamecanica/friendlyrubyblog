@@ -371,6 +371,7 @@ GEM
     ruby-vips (2.2.5)
       ffi (~> 1.12)
       logger
+    rubyzip (3.1.1)
     sanitize (7.0.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.16.8)
@@ -452,6 +453,8 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.7.3)
+    zip-zip (0.3)
+      rubyzip (>= 1.0.0)
 
 PLATFORMS
   aarch64-linux
@@ -499,6 +502,7 @@ DEPENDENCIES
   turbo-rails
   tzinfo-data
   web-console
+  zip-zip (~> 0.3)
 
 BUNDLED WITH
    2.7.1

@@ -74,6 +74,8 @@ Rails.application.routes.draw do
           post :execute
           patch :toggle_interactive
           post :compile_mlx42
+          post :import_mlx42_files
+          post :export_mlx42_files
         end
       end
     end

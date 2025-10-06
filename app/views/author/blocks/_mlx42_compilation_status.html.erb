@@ -10,6 +10,11 @@
     <%= icon_checkmark_circle size: "sm", class: "mr-2" %>
     Compiled successfully
   </div>
+<% when "imported" %>
+  <div class="flex items-center text-green-600 bg-green-50 p-2 rounded">
+    <%= icon_checkmark_circle size: "sm", class: "mr-2" %>
+    Imported successfully
+  </div>
 <% when "failed", "error" %>
   <div class="text-red-600 bg-red-50 p-2 rounded">
     <div class="flex items-center">

@@ -68,8 +68,6 @@ button {
 
 /* Optional: nicer code blocks */
 .prose pre {
-  background: rgb(17 24 39);      /* gray-900 */
-  color: #fff;
   border-radius: 0.5rem;
   padding: 1rem;
   overflow-x: auto;

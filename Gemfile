@@ -75,3 +75,5 @@ gem "shoulda-matchers", "~> 6.5"
 gem "faker", "~> 3.5"
 gem "capybara", "~> 3.40"
 gem "cuprite", "~> 0.17"
+
+gem "zip-zip", "~> 0.3"

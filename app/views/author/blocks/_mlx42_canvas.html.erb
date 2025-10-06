@@ -1,53 +1,129 @@
+<% js_url  = block.compiled? ? rails_blob_url(block.js_file)   : "" %>
+<% wasm_url = block.compiled? ? rails_blob_url(block.wasm_file) : "" %>
+<% data_url = (block.data_file.attached? && block.compiled?) ? rails_blob_url(block.data_file) : "" %>
+
 <div id="mlx42_preview_<%= block.id %>"
      data-controller="mlx42-runner"
      data-mlx42-runner-block-id-value="<%= block.id %>"
-     data-mlx42-runner-js-url-value="<%= rails_blob_url(block.js_file) %>"
-     data-mlx42-runner-wasm-url-value="<%= rails_blob_url(block.wasm_file) %>"
-     data-mlx42-runner-data-url-value="<%= block.data_file.attached? ? rails_blob_url(block.data_file) : '' %>"
+     data-mlx42-runner-export-url-value="<%= export_mlx42_files_author_document_block_path(block.document, block) %>"
+     data-mlx42-runner-js-url-value="<%= js_url %>"
+     data-mlx42-runner-wasm-url-value="<%= wasm_url %>"
+     data-mlx42-runner-data-url-value="<%= data_url %>"
      class="relative">
 
-  <!-- Canvas Container -->
-  <div class="border-2 border-purple-300 rounded-lg overflow-hidden bg-black relative" style="max-width: 800px; margin: 0 auto;">
-    <canvas id="mlx42_canvas_<%= block.id %>"
-            data-mlx42-runner-target="canvas"
-            tabindex="-1"
-            width="800"
-            height="600"
-            class="w-full h-auto"></canvas>
+  <% if block.compiled? %>
+    <!-- Header with controls -->
+    <div class="flex items-center justify-between px-4 py-2 bg-purple-100 rounded-t-lg border-b border-purple-200">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-semibold text-purple-700">MLX42 PROGRAM</span>
+        <span class="text-xs font-semibold text-green-600 bg-green-100 px-2 py-0.5 rounded">INTERACTIVE</span>
+      </div>
 
-    <!-- Controls Active Indicator -->
-    <div data-mlx42-runner-target="captureIndicator"
-         style="display: none;"
-         class="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded shadow-lg">
-      🎮 Controls Active (Click to disable)
-    </div>
-  </div>
+      <div class="flex items-center gap-2">
+        <!-- Export ZIP -->
+        <button type="button"
+                data-action="mlx42-runner#exportFiles"
+                class="text-xs px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded transition-colors"
+                title="Export WASM files as ZIP">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
+          </svg>
+        </button>
 
-  <!-- Console Output -->
-  <div class="mt-4">
-    <div class="flex items-center justify-between mb-2">
-      <div class="text-sm font-medium text-gray-700">Console Output</div>
-      <button type="button"
-              onclick="document.getElementById('mlx42_console_<%= block.id %>').value = ''"
-              class="text-xs text-gray-500 hover:text-gray-700">
-        Clear
-      </button>
-    </div>
-    <textarea id="mlx42_console_<%= block.id %>"
-              data-mlx42-runner-target="console"
-              rows="8"
-              readonly
-              class="w-full font-mono text-xs bg-gray-900 text-green-400 p-4 rounded border border-gray-700 focus:outline-none"></textarea>
-  </div>
+        <!-- Import ZIP -->
+        <label class="text-xs px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded transition-colors cursor-pointer"
+              title="Import WASM files from ZIP">
+          <svg class="h-4 w-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+          </svg>
+          <input type="file"
+                accept=".zip"
+                data-action="change->mlx42-runner#importFiles"
+                data-mlx42-runner-target="importInput"
+                class="hidden" />
+        </label>
 
-  <!-- Loading State -->
-  <div data-mlx42-runner-target="loader"
-       style="display: none;"
-       class="absolute inset-0 bg-white bg-opacity-95 flex items-center justify-center rounded-lg">
-    <div class="text-center">
-      <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-purple-500 border-t-transparent"></div>
-      <p class="mt-2 text-gray-600 text-sm font-medium">Loading WebAssembly...</p>
-      <p data-mlx42-runner-target="loadProgress" class="text-xs text-gray-500 mt-1"></p>
+        <!-- Toggle Console -->
+        <button type="button"
+                data-action="mlx42-runner#toggleConsole"
+                class="text-xs px-2 py-1 bg-purple-200 hover:bg-purple-300 text-purple-700 rounded transition-colors"
+                title="Toggle Console">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+        </button>
+
+        <!-- Toggle Controls -->
+        <button type="button"
+                data-action="mlx42-runner#toggleCapture"
+                data-mlx42-runner-target="controlsButton"
+                class="text-xs px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded transition-colors font-medium"
+                title="Toggle Controls">
+          <svg class="h-4 w-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+          Controls
+        </button>
+      </div>
     </div>
-  </div>
+
+    <!-- Canvas Container -->
+    <div class="relative bg-black" data-mlx42-runner-target="canvasContainer">
+      <canvas id="mlx42_canvas_<%= block.id %>"
+              data-mlx42-runner-target="canvas"
+              tabindex="-1"
+              width="800"
+              height="600"
+              class="w-full h-auto"></canvas>
+
+      <!-- Controls Active Indicator -->
+      <div data-mlx42-runner-target="captureIndicator"
+          style="display: none;"
+          class="absolute top-2 left-2 bg-green-600 text-white text-xs px-3 py-1.5 rounded-lg shadow-lg">
+        <div class="flex items-center gap-2">
+          <svg class="h-4 w-4 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          <span>Controls Active (Click to release)</span>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div data-mlx42-runner-target="loader"
+          style="display: none;"
+          class="absolute inset-0 bg-black bg-opacity-90 flex items-center justify-center">
+        <div class="text-center">
+          <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent"></div>
+          <p class="mt-4 text-white text-sm font-medium">Loading MLX42 Program...</p>
+          <p data-mlx42-runner-target="loadProgress" class="text-xs text-gray-400 mt-1"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Console Output (collapsible) -->
+    <div data-mlx42-runner-target="consoleSection" class="border-t border-purple-200 bg-gray-50 p-4 rounded-b-lg hidden">
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-2 text-sm font-medium text-gray-700">
+          <svg class="h-4 w-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+          <span>Console Output</span>
+        </div>
+        <button type="button"
+                onclick="document.getElementById('mlx42_console_<%= block.id %>').value = ''"
+                class="text-xs text-gray-500 hover:text-gray-700 font-medium">
+          Clear
+        </button>
+      </div>
+      <textarea id="mlx42_console_<%= block.id %>"
+                data-mlx42-runner-target="console"
+                rows="8"
+                readonly
+                class="w-full font-mono text-xs bg-gray-900 text-green-400 p-3 rounded border border-gray-700 focus:outline-none"></textarea>
+    </div>
+  <% else %>
+    <div class="bg-gray-100 p-8 rounded text-center">
+      <p class="text-gray-600">Compile your code to see the canvas</p>
+    </div>
+  <% end %>
 </div>

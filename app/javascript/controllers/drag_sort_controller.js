@@ -36,7 +36,7 @@ export default class extends Controller {
         ghostClass: "opacity-50",
         // chosenClass: "ring-2",
         dragClass: "shadow-lg",
-        filter: ".block-insert-zone:not(.block-with-insert .block-insert-zone), [data-block-editor-target='editor']",
+        filter: ".block-insert-zone:not(.block-with-insert .block-insert-zone), [data-block-editor-target='editor'], [data-mlx42-runner-target='canvasContainer'], [data-mlx42-runner-target='canvas']",
         preventOnFilter: false,
         onMove: this.onMove.bind(this),
         onEnd: this.onEnd.bind(this)

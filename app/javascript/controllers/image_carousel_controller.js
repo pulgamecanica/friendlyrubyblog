@@ -42,11 +42,11 @@ export default class extends Controller {
   updateIndicators() {
     this.indicatorTargets.forEach((indicator, index) => {
       if (index === this.currentIndex) {
-        indicator.classList.remove("bg-gray-300")
-        indicator.classList.add("bg-gray-600")
+        indicator.classList.remove("bg-white/50")
+        indicator.classList.add("bg-white")
       } else {
-        indicator.classList.remove("bg-gray-600")
-        indicator.classList.add("bg-gray-300")
+        indicator.classList.remove("bg-white")
+        indicator.classList.add("bg-white/50")
       }
     })
   }

@@ -114,6 +114,15 @@ export default class extends Controller {
   // Event handlers
   handleContentClick(event) {
     if (!this.editingValue) {
+      // Check if this is an MLX42 block with canvas showing
+      // The mlx42-preview controller is on the same element (this.element)
+      const canvasView = this.element.querySelector('[data-mlx42-preview-target="canvasView"]')
+
+      // If canvas view exists and is visible, don't enter edit mode
+      if (canvasView && canvasView.style.display !== 'none') {
+        return
+      }
+
       event.preventDefault()
       this.enterEditMode()
     }

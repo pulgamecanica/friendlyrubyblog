@@ -26,7 +26,7 @@ RSpec.describe PublicHelper, type: :helper do
 
         html = helper.render_block(block)
 
-        expect(html).to include('class="prose prose-neutral max-w-none"')
+        expect(html).to include("prose prose-neutral max-w-none")
         expect(html).to include("<strong>bold</strong>")
         expect(html).to include("<em>italic</em>")
         # ensure sanitization (scripts removed)
@@ -62,7 +62,8 @@ RSpec.describe PublicHelper, type: :helper do
         )
 
         html = helper.render_block(block)
-        expect(html).to include('<code class="language-text">')
+        expect(html).to include('data-syntax-highlighter-target="code"')
+        expect(html).to include("echo test")
       end
     end
 
@@ -77,7 +78,7 @@ RSpec.describe PublicHelper, type: :helper do
 
         html = helper.render_block(block)
 
-        expect(html).to include('class="prose prose-neutral max-w-none"')
+        expect(html).to include("prose prose-neutral max-w-none")
         expect(html).to include("<p>Hello <strong>world</strong></p>")
       end
 
@@ -125,7 +126,8 @@ RSpec.describe PublicHelper, type: :helper do
 
         expect(html).to include("<figure")
         expect(html).to include('class="my-6"')
-        expect(html).to include('class="w-full rounded-lg shadow-lg max-h-96 object-cover mx-auto"')
+        expect(html).to include('data-controller="image-modal"')
+        expect(html).to include("<dialog")
         expect(html).to include("<figcaption")
         expect(html).to include("Beautiful sunset")
       end
@@ -201,7 +203,7 @@ RSpec.describe PublicHelper, type: :helper do
         html = helper.render_block(block)
 
         expect(html).to include('class="text-gray-500 text-sm p-4 bg-gray-50 rounded"')
-        expect(html).to include("MLX42 block not compiled yet")
+        expect(html).to include("MLX42 program not compiled yet")
       end
 
       it "renders MLX42 runner when compiled" do
@@ -225,16 +227,13 @@ RSpec.describe PublicHelper, type: :helper do
 
         html = helper.render_block(block)
 
-        expect(html).to include('data-controller="mlx42-runner"')
-        expect(html).to include("mlx42-runner-block-id-value=\"#{block.id}\"")
-        expect(html).to include('data-mlx42-runner-target="canvas"')
-        expect(html).to include("mlx42_canvas_#{block.id}")
-        expect(html).to include('data-mlx42-runner-target="console"')
-        expect(html).to include("mlx42_console_#{block.id}")
-        expect(html).to include('data-mlx42-runner-target="loader"')
-        expect(html).to include("Loading WebAssembly...")
+        expect(html).to include('data-controller="mlx42-public"')
+        expect(html).to include('data-mlx42-public-target="canvas"')
+        expect(html).to include('data-mlx42-public-target="console"')
+        expect(html).to include('data-mlx42-public-target="loader"')
+        expect(html).to include("Loading MLX42 Program...")
         expect(html).to include("Console Output")
-        expect(html).to include("🖱️ Mouse Captured")
+        expect(html).to include("<dialog")
       end
 
       it "renders MLX42 runner with data file when attached" do
@@ -262,9 +261,9 @@ RSpec.describe PublicHelper, type: :helper do
 
         html = helper.render_block(block)
 
-        expect(html).to include('data-controller="mlx42-runner"')
+        expect(html).to include('data-controller="mlx42-public"')
         # Data URL should be present (not empty)
-        expect(html).to match(/mlx42-runner-data-url-value="[^"]+"/)
+        expect(html).to match(/mlx42-public-data-url-value="[^"]+"/)
       end
 
       it "renders MLX42 runner without data file when not attached" do
@@ -287,9 +286,9 @@ RSpec.describe PublicHelper, type: :helper do
 
         html = helper.render_block(block)
 
-        expect(html).to include('data-controller="mlx42-runner"')
+        expect(html).to include('data-controller="mlx42-public"')
         # Data URL should be empty string
-        expect(html).to include('mlx42-runner-data-url-value=""')
+        expect(html).to include('mlx42-public-data-url-value=""')
       end
     end
 
