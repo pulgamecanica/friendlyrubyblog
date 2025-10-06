@@ -1,0 +1,5 @@
+cmake
+build-essential
+libglfw3-dev
+libglfw3
+xorg-dev
