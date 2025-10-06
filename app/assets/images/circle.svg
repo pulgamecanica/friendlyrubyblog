@@ -87,22 +87,22 @@
             fill="none" stroke="#222" stroke-width="1.2"
             stroke-dasharray="49.80 51.50 49.80"
             transform="rotate(90 498.06 294.74)" />
-    <circle cx="428.51" cy="238.38" r="63.91" fill="#fff" />
-    <circle cx="428.51" cy="238.38" r="63.91"
+    <circle cx="428.51" cy="238.37" r="63.91" fill="#fff" />
+    <circle cx="428.51" cy="238.37" r="63.91"
             fill="none" stroke="#222" stroke-width="1.2"
             stroke-dasharray="155.77 90 155.77"
-            transform="rotate(90 428.51 238.38)" />
+            transform="rotate(90 428.51 238.37)" />
     <circle cx="430.23" cy="396.79" r="21.56" fill="#fff" />
     <circle cx="430.23" cy="396.79" r="21.56"
             fill="none" stroke="#222" stroke-width="1.2"
             stroke-dasharray="48.74 38 48.74"
             transform="rotate(90 430.23 396.79)" />
     <circle cx="526.15" cy="311.45" r="7.07" fill="#fff" />
-    <circle cx="577.29" cy="349.88" r="40.67" fill="#fff" />
-    <circle cx="577.29" cy="349.88" r="40.67"
+    <circle cx="577.29" cy="349.87" r="40.67" fill="#fff" />
+    <circle cx="577.29" cy="349.87" r="40.67"
             fill="none" stroke="#222" stroke-width="1.2"
             stroke-dasharray="102.53 50.51 102.53"
-            transform="rotate(90 577.29 349.88)" />
+            transform="rotate(90 577.29 349.87)" />
     <circle cx="390.44" cy="320.28" r="24.85" fill="#fff" />
     <circle cx="390.44" cy="320.28" r="24.85"
             fill="none" stroke="#222" stroke-width="1.2"
@@ -240,12 +240,12 @@
     <circle cx="500.20" cy="722.76" r="1.57" fill="#fff" />
     <circle cx="500.20" cy="739.04" r="1.57" fill="#fff" />
     <circle cx="489.89" cy="749.79" r="11.76" fill="#fff" />
-    <circle cx="497.85" cy="718.69" r="1.57" fill="#fff" />
-    <circle cx="507.25" cy="726.83" r="1.57" fill="#fff" />
     <circle cx="488.45" cy="726.83" r="1.57" fill="#fff" />
-    <circle cx="490.80" cy="722.76" r="1.57" fill="#fff" />
+    <circle cx="507.25" cy="726.83" r="1.57" fill="#fff" />
+    <circle cx="497.85" cy="718.69" r="1.57" fill="#fff" />
     <circle cx="504.90" cy="722.76" r="1.57" fill="#fff" />
     <circle cx="504.90" cy="739.04" r="1.57" fill="#fff" />
+    <circle cx="490.80" cy="722.76" r="1.57" fill="#fff" />
     <circle cx="519.46" cy="717.07" r="12.50" fill="#fff" />
     <circle cx="519.46" cy="717.07" r="12.50"
             fill="none" stroke="#222" stroke-width="1.2"
@@ -352,7 +352,7 @@
             fill="none" stroke="#222" stroke-width="1.2"
             stroke-dasharray="25.17 29 25.17"
             transform="rotate(90 484.18 785.15)" />
-    <circle cx="531.22" cy="706.77" r="1.57" fill="#fff" />
+    <circle cx="531.21" cy="706.77" r="1.57" fill="#fff" />
     <circle cx="478.55" cy="692.80" r="1.57" fill="#fff" />
     <circle cx="470.35" cy="763.94" r="1.57" fill="#fff" />
     <circle cx="533.39" cy="754.24" r="1.57" fill="#fff" />
@@ -364,7 +364,7 @@
     <circle cx="527.16" cy="699.07" r="1.57" fill="#fff" />
     <circle cx="484.65" cy="160.48" r="9.94" fill="#fff" />
     <circle cx="449.05" cy="334.45" r="10.93" fill="#fff" />
-    <circle cx="472.40" cy="334.45" r="10.86" fill="#fff" />
+    <circle cx="472.40" cy="334.45" r="10.85" fill="#fff" />
     <circle cx="460.82" cy="359.39" r="15.07" fill="#fff" />
     <circle cx="460.82" cy="359.39" r="15.07"
             fill="none" stroke="#222" stroke-width="1.2"
@@ -396,16 +396,16 @@
     <circle cx="491.54" cy="308.31" r="7.42" fill="#e7298a" />
     <circle cx="491.50" cy="281.59" r="7.78" fill="#e7298a" />
     <circle cx="507.07" cy="307.88" r="6.55" fill="#e7298a" />
-    <circle cx="380.15" cy="238.38" r="13.97" fill="#fff" />
-    <circle cx="380.15" cy="238.38" r="13.97"
+    <circle cx="380.15" cy="238.37" r="13.97" fill="#fff" />
+    <circle cx="380.15" cy="238.37" r="13.97"
             fill="none" stroke="#222" stroke-width="1.2"
             stroke-dasharray="24.15 39.51 24.15"
-            transform="rotate(90 380.15 238.38)" />
-    <circle cx="443.27" cy="238.38" r="47.58" fill="#fff" />
-    <circle cx="443.27" cy="238.38" r="47.58"
+            transform="rotate(90 380.15 238.37)" />
+    <circle cx="443.27" cy="238.37" r="47.58" fill="#fff" />
+    <circle cx="443.27" cy="238.37" r="47.58"
             fill="none" stroke="#222" stroke-width="1.2"
             stroke-dasharray="106.77 85.42 106.77"
-            transform="rotate(90 443.27 238.38)" />
+            transform="rotate(90 443.27 238.37)" />
     <circle cx="391.43" cy="256.42" r="5.74" fill="#666666" />
     <circle cx="423.86" cy="396.61" r="6.03" fill="#e7298a" />
     <circle cx="438.35" cy="396.61" r="6.89" fill="#e7298a" />
@@ -418,7 +418,7 @@
     <circle cx="572.68" cy="343.19" r="7.07" fill="#e7298a" />
     <circle cx="584.83" cy="365.52" r="6.90" fill="#e7298a" />
     <circle cx="586.85" cy="339.23" r="6.07" fill="#e7298a" />
-    <circle cx="595.46" cy="356.18" r="5.69" fill="#e7298a" />
+    <circle cx="595.46" cy="356.17" r="5.69" fill="#e7298a" />
     <circle cx="601" cy="343.03" r="7.01" fill="#e7298a" />
     <circle cx="560.65" cy="350.98" r="5.69" fill="#e7298a" />
     <circle cx="571.78" cy="371.98" r="6.10" fill="#e7298a" />
@@ -429,7 +429,7 @@
     <circle cx="559.44" cy="364.72" r="6.53" fill="#e7298a" />
     <circle cx="560.10" cy="378.51" r="5.71" fill="#e7298a" />
     <circle cx="558.59" cy="337.20" r="6.68" fill="#e7298a" />
-    <circle cx="587.48" cy="318.56" r="6.17" fill="#e7298a" />
+    <circle cx="587.48" cy="318.55" r="6.17" fill="#e7298a" />
     <circle cx="389.80" cy="320.25" r="7.34" fill="#e7298a" />
     <circle cx="406.06" cy="320.25" r="7.35" fill="#e7298a" />
     <circle cx="397.92" cy="334.34" r="7.35" fill="#e7298a" />
@@ -445,11 +445,11 @@
             fill="none" stroke="#222" stroke-width="1.2"
             stroke-dasharray="133.60 58.93 133.60"
             transform="rotate(90 353.88 491.20)" />
-    <circle cx="308.87" cy="553.67" r="23.53" fill="#fff" />
-    <circle cx="308.87" cy="553.67" r="23.53"
+    <circle cx="308.87" cy="553.68" r="23.53" fill="#fff" />
+    <circle cx="308.87" cy="553.68" r="23.53"
             fill="none" stroke="#222" stroke-width="1.2"
             stroke-dasharray="48.16 51.50 48.16"
-            transform="rotate(90 308.87 553.67)" />
+            transform="rotate(90 308.87 553.68)" />
     <circle cx="321.32" cy="379.47" r="62.91" fill="#fff" />
     <circle cx="321.32" cy="379.47" r="62.91"
             fill="none" stroke="#222" stroke-width="1.2"
@@ -551,12 +551,12 @@
     <circle cx="500.20" cy="722.76" r="0" fill="#fff" />
     <circle cx="500.20" cy="739.04" r="0" fill="#fff" />
     <circle cx="489.89" cy="749.79" r="10.19" fill="#fff" />
-    <circle cx="497.85" cy="718.69" r="0" fill="#fff" />
-    <circle cx="507.25" cy="726.83" r="0" fill="#fff" />
     <circle cx="488.45" cy="726.83" r="0" fill="#fff" />
-    <circle cx="490.80" cy="722.76" r="0" fill="#fff" />
+    <circle cx="507.25" cy="726.83" r="0" fill="#fff" />
+    <circle cx="497.85" cy="718.69" r="0" fill="#fff" />
     <circle cx="504.90" cy="722.76" r="0" fill="#fff" />
     <circle cx="504.90" cy="739.04" r="0" fill="#fff" />
+    <circle cx="490.80" cy="722.76" r="0" fill="#fff" />
     <circle cx="519.46" cy="717.07" r="10.93" fill="#fff" />
     <circle cx="509.60" cy="739.04" r="0" fill="#fff" />
     <circle cx="486.10" cy="722.76" r="0" fill="#fff" />
@@ -653,7 +653,7 @@
     <circle cx="534.05" cy="711.48" r="0" fill="#fff" />
     <circle cx="483.40" cy="785.15" r="10.28" fill="#fff" />
     <circle cx="495.24" cy="785.15" r="0" fill="#fff" />
-    <circle cx="531.22" cy="706.77" r="0" fill="#fff" />
+    <circle cx="531.21" cy="706.77" r="0" fill="#fff" />
     <circle cx="478.55" cy="692.80" r="0" fill="#fff" />
     <circle cx="470.35" cy="763.94" r="0" fill="#fff" />
     <circle cx="533.39" cy="754.24" r="0" fill="#fff" />
@@ -665,9 +665,9 @@
     <circle cx="527.16" cy="699.07" r="0" fill="#fff" />
     <circle cx="484.65" cy="160.48" r="8.37" fill="#666666" />
     <circle cx="439.69" cy="334.45" r="0" fill="#fff" />
-    <circle cx="449.84" cy="334.45" r="8.58" fill="#1b9e77" />
-    <circle cx="463.12" cy="334.45" r="0" fill="#fff" />
-    <circle cx="473.19" cy="334.45" r="8.51" fill="#66a61e" />
+    <circle cx="449.83" cy="334.45" r="8.58" fill="#1b9e77" />
+    <circle cx="463.11" cy="334.45" r="0" fill="#fff" />
+    <circle cx="473.18" cy="334.45" r="8.50" fill="#66a61e" />
     <circle cx="453.65" cy="359.39" r="6.34" fill="#1b9e77" />
     <circle cx="467.94" cy="359.39" r="6.38" fill="#1b9e77" />
     <circle cx="460.80" cy="316.81" r="7.13" fill="#1b9e77" />
@@ -679,7 +679,7 @@
     <circle cx="486.85" cy="388.07" r="6.56" fill="#e7298a" />
     <circle cx="473.06" cy="387.94" r="5.67" fill="#e7298a" />
     <circle cx="470.60" cy="413.42" r="7.21" fill="#e7298a" />
-    <circle cx="501.51" cy="389.94" r="6.64" fill="#e7298a" />
+    <circle cx="501.51" cy="389.93" r="6.64" fill="#e7298a" />
     <circle cx="523.31" cy="401.85" r="6.45" fill="#e7298a" />
     <circle cx="521.59" cy="437.42" r="5.59" fill="#e7298a" />
     <circle cx="535.44" cy="437.42" r="6.70" fill="#e7298a" />
@@ -689,8 +689,8 @@
     <circle cx="541.99" cy="424.36" r="6.34" fill="#e7298a" />
     <circle cx="513.42" cy="447.67" r="5.94" fill="#e7298a" />
     <circle cx="513.19" cy="427.19" r="6.07" fill="#e7298a" />
-    <circle cx="373.77" cy="238.38" r="6.03" fill="#666666" />
-    <circle cx="386.96" cy="238.38" r="5.59" fill="#666666" />
+    <circle cx="373.77" cy="238.37" r="6.03" fill="#666666" />
+    <circle cx="386.96" cy="238.37" r="5.59" fill="#666666" />
     <circle cx="431.32" cy="236.72" r="5.92" fill="#666666" />
     <circle cx="446.58" cy="236.72" r="7.77" fill="#666666" />
     <circle cx="437.07" cy="250.12" r="7.10" fill="#666666" />
@@ -705,7 +705,7 @@
     <circle cx="441.58" cy="209.49" r="6.91" fill="#666666" />
     <circle cx="443.98" cy="263.10" r="6.04" fill="#666666" />
     <circle cx="427.19" cy="211.85" r="6.11" fill="#666666" />
-    <circle cx="426.89" cy="262.13" r="7.08" fill="#666666" />
+    <circle cx="426.88" cy="262.13" r="7.08" fill="#666666" />
     <circle cx="468.20" cy="218.05" r="7.15" fill="#666666" />
     <circle cx="435.64" cy="275.68" r="7.49" fill="#666666" />
     <circle cx="457.94" cy="265.03" r="6.48" fill="#666666" />
@@ -950,7 +950,7 @@
     <text font-family="sans-serif" font-size="14" fill="#000">
       <textPath href="#rim-assets-coverage-friendlyrubyblog-686-308" startOffset="50%" text-anchor="middle">assets</textPath>
     </text>
-    <defs><path id="rim-storage-friendlyrubyblog-500-733" d="M 466.60 676.84 A 68.62 68.62 0 0 1 532.72 676.84"/></defs>
+    <defs><path id="rim-storage-friendlyrubyblog-500-733" d="M 466.59 676.84 A 68.62 68.62 0 0 1 532.72 676.84"/></defs>
     <text font-family="sans-serif" font-size="14" fill="#000">
       <textPath href="#rim-storage-friendlyrubyblog-500-733" startOffset="50%" text-anchor="middle">storage</textPath>
     </text>
@@ -975,39 +975,39 @@
       <textPath href="#rim-controllers-app-friendlyrubyblog-507-419" startOffset="50%" text-anchor="middle">controllers</textPath>
     </text>
     <defs><path id="rim-devise-views-app-friendlyrubyblog-354-491" d="M 325.97 451.43 A 51.91 51.91 0 0 1 381.78 451.43"/></defs>
-    <text font-family="sans-serif" font-size="12.976382362510005" fill="#000">
+    <text font-family="sans-serif" font-size="12.97638249918386" fill="#000">
       <textPath href="#rim-devise-views-app-friendlyrubyblog-354-491" startOffset="50%" text-anchor="middle">devise</textPath>
     </text>
     <defs><path id="rim-db-friendlyrubyblog-623-602" d="M 607.74 560.17 A 48.39 48.39 0 0 1 639.25 560.17"/></defs>
-    <text font-family="sans-serif" font-size="12.097645108827978" fill="#000">
+    <text font-family="sans-serif" font-size="12.097645213867809" fill="#000">
       <textPath href="#rim-db-friendlyrubyblog-623-602" startOffset="50%" text-anchor="middle">db</textPath>
     </text>
     <defs><path id="rim-controllers-javascript-app-friendlyrubyblog-443-238" d="M 406.07 212.71 A 47.58 47.58 0 0 1 480.47 212.71"/></defs>
-    <text font-family="sans-serif" font-size="11.89541988573842" fill="#000">
+    <text font-family="sans-serif" font-size="11.895419979054832" fill="#000">
       <textPath href="#rim-controllers-javascript-app-friendlyrubyblog-443-238" startOffset="50%" text-anchor="middle">controllers</textPath>
     </text>
     <defs><path id="rim-models-app-friendlyrubyblog-577-350" d="M 553.63 320.79 A 40.67 40.67 0 0 1 600.95 320.79"/></defs>
-    <text font-family="sans-serif" font-size="10.16865726926091" fill="#000">
+    <text font-family="sans-serif" font-size="10.168657350541496" fill="#000">
       <textPath href="#rim-models-app-friendlyrubyblog-577-350" startOffset="50%" text-anchor="middle">models</textPath>
     </text>
     <defs><path id="rim-blocks-author-views-app-friendlyrubyblog-220-474" d="M 196.50 446.84 A 38.97 38.97 0 0 1 242.52 446.84"/></defs>
-    <text font-family="sans-serif" font-size="9.743703386823144" fill="#000">
+    <text font-family="sans-serif" font-size="9.743703464465943" fill="#000">
       <textPath href="#rim-blocks-author-views-app-friendlyrubyblog-220-474" startOffset="50%" text-anchor="middle">blocks</textPath>
     </text>
     <defs><path id="rim-models-spec-friendlyrubyblog-621-179" d="M 598.15 151.60 A 38.40 38.40 0 0 1 643.73 151.60"/></defs>
-    <text font-family="sans-serif" font-size="9.599134280617996" fill="#000">
+    <text font-family="sans-serif" font-size="9.599134354240151" fill="#000">
       <textPath href="#rim-models-spec-friendlyrubyblog-621-179" startOffset="50%" text-anchor="middle">models</textPath>
     </text>
     <defs><path id="rim-assets-app-friendlyrubyblog-452-339" d="M 429.54 312.58 A 38.34 38.34 0 0 1 475.07 312.58"/></defs>
-    <text font-family="sans-serif" font-size="9.585156679564404" fill="#000">
+    <text font-family="sans-serif" font-size="9.58512895505716" fill="#000">
       <textPath href="#rim-assets-app-friendlyrubyblog-452-339" startOffset="50%" text-anchor="middle">assets</textPath>
     </text>
     <defs><path id="rim-documents-author-views-app-friendlyrubyblog-209-552" d="M 181.14 530.31 A 37.72 37.72 0 0 1 236.69 530.31"/></defs>
-    <text font-family="sans-serif" font-size="9.42987348348023" fill="#000">
+    <text font-family="sans-serif" font-size="9.429873559942587" fill="#000">
       <textPath href="#rim-documents-author-views-app-friendlyrubyblog-209-552" startOffset="50%" text-anchor="middle">documents</textPath>
     </text>
     <defs><path id="rim-migrate-db-friendlyrubyblog-614-602" d="M 589.74 577.36 A 37.21 37.21 0 0 1 638.03 577.36"/></defs>
-    <text font-family="sans-serif" font-size="9.302661166339552" fill="#000">
+    <text font-family="sans-serif" font-size="9.302661241920653" fill="#000">
       <textPath href="#rim-migrate-db-friendlyrubyblog-614-602" startOffset="50%" text-anchor="middle">migrate</textPath>
     </text>
     <defs><path id="rim-images-0-13-2-assets-coverage-friendlyrubyblog-684-341" d="M 662.15 318.07 A 34.36 34.36 0 0 1 705.57 318.07"/></defs>
