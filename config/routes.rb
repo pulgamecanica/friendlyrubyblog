@@ -15,14 +15,31 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
-  root to: "public/documents#index"
+  root to: "public/documents#index", defaults: { kind: "post" }
 
   namespace :public, path: "" do
-    root "documents#index"
+    root "documents#index", defaults: { kind: "post" }
 
     resources :series,    only: [ :index, :show ]
     resources :tags,      only: [ :show ] # /tags/:id => tag documents
+
+    # Document type-specific routes
+    resources :posts, controller: "documents", only: [ :index, :show ], defaults: { kind: "post" } do
+      resources :comments, only: [ :create ]
+      resource  :like,     only: [ :create, :destroy ]
+    end
+
+    resources :pages, controller: "pages", only: [ :index, :show ] do
+      resources :comments, only: [ :create ]
+      resource  :like,     only: [ :create, :destroy ]
+    end
+
+    resources :notes, controller: "notes", only: [ :index, :show ] do
+      resources :comments, only: [ :create ]
+      resource  :like,     only: [ :create, :destroy ]
+    end
+
+    # Fallback for generic documents (backwards compatibility)
     resources :documents, only: [ :index, :show ] do
       resources :comments, only: [ :create ]
       resource  :like,     only: [ :create, :destroy ]

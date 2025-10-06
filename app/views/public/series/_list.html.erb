@@ -1,0 +1,56 @@
+<%
+  # Local variables:
+  # - series_list: collection of series to display
+  # - title: (optional) title for the section (default: "Series")
+  # - storage_key: (optional) localStorage key for view preference (default: "series_view_mode")
+  # - show_count: (optional) show series count badge (default: true)
+
+  storage_key ||= "series_view_mode"
+  show_count = true if show_count.nil?
+  title ||= "Series"
+%>
+
+<div data-controller="documents-view-toggle" data-documents-view-toggle-storage-key-value="<%= storage_key %>">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+    <div class="flex items-center gap-3">
+      <h2 class="text-3xl font-bold text-gray-900"><%= title %></h2>
+      <% if show_count %>
+        <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm font-semibold">
+          <%= series_list.count %>
+        </span>
+      <% end %>
+    </div>
+
+    <!-- View Switcher -->
+    <div class="flex items-center gap-2 bg-white rounded-xl p-1 border border-gray-200 shadow-sm">
+      <button data-action="click->documents-view-toggle#showGrid"
+              data-documents-view-toggle-target="gridButton"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all"
+              aria-label="Grid view">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+        </svg>
+        <span class="hidden sm:inline">Grid</span>
+      </button>
+      <button data-action="click->documents-view-toggle#showTable"
+              data-documents-view-toggle-target="tableButton"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all"
+              aria-label="Table view">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+        </svg>
+        <span class="hidden sm:inline">Table</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Grid View -->
+  <div data-documents-view-toggle-target="gridView">
+    <%= render partial: "public/series/grid", locals: { series_list: series_list } %>
+  </div>
+
+  <!-- Table View -->
+  <div data-documents-view-toggle-target="tableView" class="hidden">
+    <%= render partial: "public/series/table", locals: { series_list: series_list } %>
+  </div>
+</div>

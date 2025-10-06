@@ -1,15 +1,16 @@
 <% content_for :title, "Series · Friendlyrubyblog" %>
-<h1 class="text-2xl font-semibold mb-6">Series</h1>
 
-<ul class="grid sm:grid-cols-2 gap-6">
-  <% @series.each do |s| %>
-    <li class="rounded-xl border bg-white p-5 hover:shadow-md transition">
-      <h2 class="text-lg font-semibold">
-        <%= link_to s.title, public_series_path(s), class: "hover:underline" %>
-      </h2>
-      <% if s.description.present? %>
-        <p class="mt-2 text-sm text-gray-600 line-clamp-3"><%= s.description %></p>
-      <% end %>
-    </li>
-  <% end %>
-</ul>
+<!-- Header -->
+<div class="mb-12">
+  <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-gray-900 mb-4">Article Series</h1>
+  <p class="text-xl text-gray-600 max-w-3xl">
+    Explore our curated learning paths with comprehensive, multi-part tutorials designed to help you master Ruby on Rails.
+  </p>
+</div>
+
+<!-- Series List with View Toggle -->
+<%= render partial: "public/series/list", locals: {
+  series_list: @series,
+  title: "All Series",
+  storage_key: "series_index_view_mode"
+} %>

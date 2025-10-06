@@ -1,9 +1,42 @@
 <% content_for :title, "#{@tag.title} · Tag" %>
 
-<h1 class="text-2xl font-semibold mb-6">#<%= @tag.title %></h1>
-
-<div class="grid sm:grid-cols-2 gap-6">
-  <% @documents.each do |doc| %>
-    <%= render partial: "public/documents/card", locals: { doc: doc } %>
+<!-- Header -->
+<div class="mb-12">
+  <!-- Back link -->
+  <%= link_to public_documents_path, class: "inline-flex items-center gap-2 text-gray-600 hover:text-indigo-600 mb-6 transition-colors" do %>
+    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+    </svg>
+    <span class="text-sm font-medium">Back to articles</span>
   <% end %>
+
+  <div class="flex flex-wrap items-center gap-4 mb-4">
+    <!-- Tag icon -->
+    <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg">
+      <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+      </svg>
+    </div>
+
+    <!-- Title -->
+    <div>
+      <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight">
+        #<%= @tag.title %>
+      </h1>
+      <p class="text-gray-600 mt-2">
+        <span class="font-semibold text-indigo-600"><%= @documents.count %></span>
+        <%= 'article'.pluralize(@documents.count) %> tagged with <%= @tag.title %>
+      </p>
+    </div>
+  </div>
 </div>
+
+<!-- Articles -->
+<%= render partial: "public/documents/list", locals: {
+  documents: @documents,
+  title: "Articles",
+  storage_key: "tag_#{@tag.id}_view_mode",
+  show_count: false,
+  empty_title: "No articles with this tag",
+  empty_message: "We haven't published any articles with this tag yet."
+} %>

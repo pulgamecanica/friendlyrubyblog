@@ -1,0 +1,101 @@
+<% content_for :title, "Pages · Friendlyrubyblog" %>
+
+<!-- Header -->
+<div class="mb-12">
+  <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-gray-900 mb-4">Pages</h1>
+  <p class="text-xl text-gray-600 max-w-3xl">
+    Browse our documentation, guides, and reference pages organized by topic.
+  </p>
+</div>
+
+<!-- Pages by Series -->
+<div class="space-y-8">
+  <% Series.order(:title).each do |series| %>
+    <% pages = series.documents.published.pages.order(:series_position) %>
+    <% next if pages.empty? %>
+
+    <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm" data-controller="collapsible" data-collapsible-expanded-value="true">
+      <!-- Series Header (Collapsible) -->
+      <button type="button"
+              data-action="click->collapsible#toggle"
+              data-collapsible-target="toggle"
+              class="w-full flex items-center justify-between p-6 hover:bg-gray-50 transition-colors group">
+        <div class="flex items-center gap-4">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+          </div>
+          <div class="text-left">
+            <h2 class="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">
+              <%= series.title %>
+            </h2>
+            <p class="text-sm text-gray-600 mt-0.5">
+              <%= pages.count %> <%= 'page'.pluralize(pages.count) %>
+            </p>
+          </div>
+        </div>
+
+        <!-- Chevron -->
+        <svg data-collapsible-target="icon"
+             class="h-6 w-6 text-gray-400 transition-transform duration-200"
+             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      <!-- Pages List (Collapsible Content) -->
+      <div data-collapsible-target="content" class="border-t border-gray-200">
+        <div class="divide-y divide-gray-100">
+          <% pages.each do |page| %>
+            <%= link_to public_page_path(page), class: "group flex items-center justify-between px-6 py-4 hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-purple-50/50 transition-all" do %>
+              <div class="flex items-center gap-4 flex-1 min-w-0">
+                <div class="flex-shrink-0">
+                  <svg class="h-5 w-5 text-gray-400 group-hover:text-indigo-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors truncate">
+                    <%= page.title %>
+                  </p>
+                  <% if page.description.present? %>
+                    <p class="text-xs text-gray-500 truncate mt-0.5">
+                      <%= page.description %>
+                    </p>
+                  <% end %>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-4">
+                <% if page.tags.any? %>
+                  <div class="hidden lg:flex flex-wrap gap-1">
+                    <% page.tags.limit(3).each do |tag| %>
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                        #<%= tag.title %>
+                      </span>
+                    <% end %>
+                  </div>
+                <% end %>
+
+                <svg class="h-5 w-5 text-gray-400 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% if @documents.empty? %>
+  <div class="text-center py-20 bg-gradient-to-br from-gray-50 to-white rounded-2xl border-2 border-dashed border-gray-300">
+    <svg class="h-24 w-24 text-gray-300 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>
+    <h3 class="text-2xl font-bold text-gray-900 mb-2">No pages yet</h3>
+    <p class="text-gray-600">Check back soon for documentation and guides!</p>
+  </div>
+<% end %>

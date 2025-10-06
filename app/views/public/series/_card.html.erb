@@ -1,0 +1,52 @@
+<%= link_to public_series_path(series), class: "group block h-full" do %>
+  <article class="relative h-full overflow-hidden rounded-2xl border-2 border-gray-200 bg-white p-8 shadow-sm transition-all duration-300 hover:shadow-2xl hover:border-indigo-300 hover:-translate-y-1">
+    <!-- Gradient background on hover -->
+    <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/0 via-purple-50/0 to-pink-50/0 group-hover:from-indigo-50/80 group-hover:via-purple-50/50 group-hover:to-pink-50/80 transition-all duration-300"></div>
+
+    <div class="relative z-10">
+      <!-- Icon -->
+      <div class="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg group-hover:scale-110 transition-transform">
+        <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+      </div>
+
+      <!-- Title -->
+      <h2 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors">
+        <%= series.title %>
+      </h2>
+
+      <!-- Description -->
+      <% if series.description.present? %>
+        <p class="text-gray-600 line-clamp-3 leading-relaxed mb-4">
+          <%= series.description %>
+        </p>
+      <% else %>
+        <p class="text-gray-500 italic mb-4">
+          A collection of articles on <%= series.title.downcase %>
+        </p>
+      <% end %>
+
+      <!-- Footer -->
+      <div class="flex items-center justify-between pt-4 border-t border-gray-200 group-hover:border-indigo-200 transition-colors">
+        <div class="flex items-center gap-2 text-sm text-gray-600">
+          <svg class="h-4 w-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <span class="font-medium"><%= series.documents.published.count %> <%= 'article'.pluralize(series.documents.published.count) %></span>
+        </div>
+
+        <!-- View series indicator -->
+        <div class="flex items-center gap-1 text-sm font-semibold text-indigo-600 group-hover:gap-2 transition-all">
+          View series
+          <svg class="h-4 w-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decorative corner accent -->
+    <div class="absolute -top-8 -right-8 w-32 h-32 bg-gradient-to-br from-indigo-400/0 to-purple-600/0 group-hover:from-indigo-400/20 group-hover:to-purple-600/20 rounded-full blur-2xl transition-all duration-300"></div>
+  </article>
+<% end %>

@@ -2,12 +2,18 @@ class Public::DocumentsController < Public::BaseController
   after_action :track_page_view, only: :show
 
   def index
-    @documents = Document.published.order(published_at: :desc).limit(20)
+    # Filter by kind if provided in defaults (for /posts route)
+    kind = params[:kind] || "post"
+    @documents = Document.published.where(kind: kind).order(published_at: :desc, created_at: :desc).limit(20)
   end
 
   def show
     @document = Document.friendly.find(params[:id])
-    @blocks   = @document.blocks
+
+    # Only show published documents on public site
+    redirect_to public_posts_path, alert: "Document not found" unless @document.published?
+
+    @blocks = @document.blocks.order(:position)
   end
 
   private

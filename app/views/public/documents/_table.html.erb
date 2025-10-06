@@ -1,0 +1,128 @@
+<div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+  <table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-gradient-to-r from-indigo-50 to-purple-50">
+      <tr>
+        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+          Title
+        </th>
+        <th scope="col" class="hidden md:table-cell px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+          Series
+        </th>
+        <th scope="col" class="hidden lg:table-cell px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+          Tags
+        </th>
+        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+          Date
+        </th>
+        <th scope="col" class="hidden sm:table-cell px-6 py-4 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">
+          <svg class="h-4 w-4 inline" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+          </svg>
+        </th>
+      </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-100">
+      <% documents.each do |doc| %>
+        <%
+          # Only use specific routes for published documents
+          # Unpublished documents always use generic document_path
+          path = if doc.published?
+            case doc.kind
+            when "post" then public_post_path(doc)
+            when "page" then public_page_path(doc)
+            when "note" then public_note_path(doc)
+            else public_document_path(doc)
+            end
+          else
+            public_document_path(doc)
+          end
+        %>
+        <tr class="group hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-purple-50/50 transition-colors cursor-pointer" onclick="window.location='<%= path %>'">
+          <!-- Title -->
+          <td class="px-6 py-4">
+            <div class="flex items-center">
+              <div>
+                <div class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
+                  <%= doc.title %>
+                </div>
+                <% if doc.description.present? %>
+                  <div class="text-xs text-gray-500 line-clamp-1 mt-1">
+                    <%= doc.description %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </td>
+
+          <!-- Series -->
+          <td class="hidden md:table-cell px-6 py-4">
+            <% if doc.series && doc.series.title != "Uncategorized" %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">
+                <%= doc.series.title %>
+              </span>
+            <% else %>
+              <span class="text-xs text-gray-400">—</span>
+            <% end %>
+          </td>
+
+          <!-- Tags -->
+          <td class="hidden lg:table-cell px-6 py-4">
+            <% if doc.tags.any? %>
+              <div class="flex flex-wrap gap-1">
+                <% doc.tags.limit(3).each do |tag| %>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                    #<%= tag.title %>
+                  </span>
+                <% end %>
+                <% if doc.tags.count > 3 %>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500">
+                    +<%= doc.tags.count - 3 %>
+                  </span>
+                <% end %>
+              </div>
+            <% else %>
+              <span class="text-xs text-gray-400">—</span>
+            <% end %>
+          </td>
+
+          <!-- Date -->
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <div class="flex items-center gap-1.5">
+              <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <% if doc.published_at.present? %>
+                <time datetime="<%= doc.published_at.iso8601 %>">
+                  <%= format_date(doc.published_at) %>
+                </time>
+              <% elsif doc.published %>
+                <time datetime="<%= doc.created_at.iso8601 %>">
+                  <%= format_date(doc.created_at) %>
+                </time>
+              <% else %>
+                <span>Draft</span>
+              <% end %>
+            </div>
+          </td>
+
+          <!-- Likes -->
+          <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
+            <span class="inline-flex items-center gap-1 text-pink-600 font-medium">
+              <%= doc.likes.count %>
+            </span>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if documents.empty? %>
+    <div class="text-center py-12">
+      <svg class="h-16 w-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">No documents found</h3>
+      <p class="text-gray-600">Check back soon for new content!</p>
+    </div>
+  <% end %>
+</div>

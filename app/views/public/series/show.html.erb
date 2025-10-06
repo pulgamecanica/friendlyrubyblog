@@ -1,14 +1,54 @@
 <% content_for :title, "#{@series.title} · Series" %>
 
-<header class="mb-8">
-  <h1 class="text-3xl font-bold tracking-tight"><%= @series.title %></h1>
-  <% if @series.description.present? %>
-    <p class="mt-2 text-gray-600 max-w-3xl"><%= @series.description %></p>
-  <% end %>
-</header>
+<!-- Header -->
+<div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 p-12 mb-12 shadow-2xl">
+  <div class="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]"></div>
+  <div class="relative z-10">
+    <!-- Back button -->
+    <%= link_to public_series_index_path, class: "inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors" do %>
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      <span class="text-sm font-medium">Back to all series</span>
+    <% end %>
 
-<div class="grid gap-4">
-  <% @documents.each do |doc| %>
-    <%= render partial: "public/documents/card", locals: { doc: doc } %>
-  <% end %>
+    <!-- Series icon -->
+    <div class="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm text-white shadow-xl">
+      <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+      </svg>
+    </div>
+
+    <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4 tracking-tight">
+      <%= @series.title %>
+    </h1>
+
+    <% if @series.description.present? %>
+      <p class="text-xl text-indigo-100 max-w-3xl mb-6">
+        <%= @series.description %>
+      </p>
+    <% end %>
+
+    <div class="flex items-center gap-4 text-white/90">
+      <div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/20 backdrop-blur-sm">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <span class="font-semibold"><%= @documents.count %> <%= 'article'.pluralize(@documents.count) %></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decorative elements -->
+  <div class="absolute -top-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+  <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
 </div>
+
+<!-- Articles -->
+<%= render partial: "public/documents/list", locals: {
+  documents: @documents,
+  title: "Articles in this series",
+  storage_key: "series_#{@series.id}_view_mode",
+  empty_title: "No articles in this series yet",
+  empty_message: "Check back soon for new content!"
+} %>
