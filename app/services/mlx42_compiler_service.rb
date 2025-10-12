@@ -114,6 +114,15 @@ class Mlx42CompilerService
     # Add preload-file for assets if they exist
     if @block.assets.attached?
       base_args += [ "--preload-file", "#{working_dir}/assets" ]
+      puts "*"*42
+      puts "\n"*5
+      puts "user file: #{user_file}"
+      puts "wrapper file: #{wrapper_file}"
+      puts "Assets Loaded: [#{working_dir}/assets]"
+      Dir.new("#{working_dir}/assets").each do |f|
+        puts "\t-> #{f}"
+      end
+      puts "*"*42
     end
 
     # Add custom compiler args if present

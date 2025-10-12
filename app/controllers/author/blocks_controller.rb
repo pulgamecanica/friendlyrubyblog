@@ -30,7 +30,8 @@ class Author::BlocksController < Author::BaseController
     # Handle asset appending for Mlx42Block
     if @block.is_a?(Mlx42Block) && params.dig(:block, :assets).present?
       params[:block][:assets].each do |asset|
-        @block.assets.attach(asset) if asset.present?
+        # Only attach if the asset is actually a file (not blank/empty)
+        @block.assets.attach(asset) if asset.present? && asset.is_a?(ActionDispatch::Http::UploadedFile)
       end
     end
 

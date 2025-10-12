@@ -80,7 +80,7 @@
               <pre class="p-4 overflow-x-auto text-sm"><code class="language-<%= block.language&.extension || block.data["language"] %>" data-syntax-highlighter-target="code"><%= block.data["code"] %></code></pre>
             </div>
           <% elsif block.is_a?(ImageBlock) %>
-            <%= render_image_block(block) %>
+            <%= render_image_block(block, clickable: false) %>
           <% elsif block.is_a?(Mlx42Block) %>
             <div>
               <!-- Content Preview (code, assets) -->

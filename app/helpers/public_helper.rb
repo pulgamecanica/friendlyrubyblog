@@ -195,7 +195,7 @@ module PublicHelper
     end
   end
 
-  def render_image_block(block)
+  def render_image_block(block, clickable: true)
     return content_tag(:div, "No images", class: "text-gray-500 text-sm") unless block.images.attached?
 
     caption = block.data["caption"].presence
@@ -204,40 +204,60 @@ module PublicHelper
 
     content_tag(:figure, class: "my-6") do
       images_html = if images.count == 1
-        # Single image - clickable to open modal
-        content_tag(:button,
-                   type: "button",
-                   onclick: "document.getElementById('#{modal_id}').showModal()",
-                   class: "block w-full group cursor-pointer") do
-          content_tag(:div, class: "relative rounded-xl overflow-hidden shadow-lg") do
-            image_tag(images.first,
-                     class: "w-full h-auto transition-transform group-hover:scale-105",
-                     alt: caption || "Image") +
-            content_tag(:div, class: "absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center") do
-              content_tag(:svg, class: "h-12 w-12 text-white opacity-0 group-hover:opacity-100 transition-opacity", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24") do
-                %(<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"></path>).html_safe
+        # Single image - clickable to open modal (only if clickable is true)
+        if clickable
+          content_tag(:button,
+                     type: "button",
+                     onclick: "document.getElementById('#{modal_id}').showModal()",
+                     class: "block w-full group cursor-pointer") do
+            content_tag(:div, class: "relative rounded-xl overflow-hidden shadow-lg h-96 flex items-center justify-center bg-gray-100") do
+              image_tag(images.first,
+                       class: "max-w-full max-h-full object-contain transition-transform group-hover:scale-105",
+                       alt: caption || "Image") +
+              content_tag(:div, class: "absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center") do
+                content_tag(:svg, class: "h-12 w-12 text-white opacity-0 group-hover:opacity-100 transition-opacity", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24") do
+                  %(<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"></path>).html_safe
+                end
               end
             end
           end
+        else
+          # Non-clickable single image
+          content_tag(:div, class: "rounded-xl overflow-hidden shadow-lg h-96 flex items-center justify-center bg-gray-100") do
+            image_tag(images.first,
+                     class: "max-w-full max-h-full object-contain",
+                     alt: caption || "Image")
+          end
         end
       else
-        # Multiple images - carousel + clickable
+        # Multiple images - carousel
+        # NOTE: In author view, carousel controller is on the article element
+        # In public view, we need it here since there's no article wrapper
+        carousel_attrs = clickable ? { controller: "image-carousel", image_carousel_count_value: images.count } : {}
         content_tag(:div,
                    class: "relative",
-                   data: { controller: "image-carousel", image_carousel_count_value: images.count }) do
+                   data: carousel_attrs) do
           # Images container
-          images_container = content_tag(:div, class: "overflow-hidden rounded-xl") do
+          images_container = content_tag(:div, class: "overflow-hidden rounded-xl shadow-lg h-96 bg-gray-100") do
             content_tag(:div,
-                       class: "flex transition-transform duration-300 ease-in-out",
+                       class: "flex transition-transform duration-300 ease-in-out h-full",
                        data: { image_carousel_target: "container" }) do
               images.map.with_index do |image, index|
-                content_tag(:button,
-                           type: "button",
-                           onclick: "const modal = document.getElementById('#{modal_id}'); modal.dataset.startIndex = #{index}; modal.showModal();",
-                           class: "w-full flex-shrink-0 cursor-pointer") do
-                  image_tag(image,
-                           class: "w-full h-96 object-cover hover:opacity-95 transition-opacity",
-                           alt: "Image #{index + 1}")
+                if clickable
+                  content_tag(:button,
+                             type: "button",
+                             onclick: "const modal = document.getElementById('#{modal_id}'); modal.dataset.startIndex = #{index}; modal.showModal();",
+                             class: "w-full flex-shrink-0 cursor-pointer h-full flex items-center justify-center") do
+                    image_tag(image,
+                             class: "max-w-full max-h-full object-contain hover:opacity-95 transition-opacity",
+                             alt: "Image #{index + 1}")
+                  end
+                else
+                  content_tag(:div, class: "w-full flex-shrink-0 h-full flex items-center justify-center") do
+                    image_tag(image,
+                             class: "max-w-full max-h-full object-contain",
+                             alt: "Image #{index + 1}")
+                  end
                 end
               end.join.html_safe
             end
@@ -276,15 +296,19 @@ module PublicHelper
 
       caption_html = caption ? content_tag(:figcaption, caption, class: "text-center text-sm text-gray-600 mt-3") : "".html_safe
 
-      # Render modal
-      modal_html = render partial: "public/images/modal", locals: {
-        modal_id: modal_id,
-        images: images,
-        caption: caption,
-        current_index: 0
-      }
+      # Render modal (only if clickable is true)
+      modal_html = if clickable
+        render partial: "public/images/modal", locals: {
+          modal_id: modal_id,
+          images: images,
+          caption: caption,
+          current_index: 0
+        }
+      else
+        "".html_safe
+      end
 
-      images_html + caption_html + modal_html.html_safe
+      images_html + caption_html + modal_html
     end
   end
 end

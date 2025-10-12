@@ -33,6 +33,11 @@ export default class extends Controller {
   }
 
   updateCarousel() {
+    // Check if containerTarget exists (it might not be in the same scope)
+    if (!this.hasContainerTarget) {
+      console.warn("Image carousel: container target not found")
+      return
+    }
     const container = this.containerTarget
     const translateX = -this.currentIndex * 100
     container.style.transform = `translateX(${translateX}%)`
