@@ -5,13 +5,13 @@
   <div class="mb-8">
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900">Series</h1>
-        <p class="mt-1 text-sm text-gray-500">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Series</h1>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
           <%= @series.count %> <%= @series.count == 1 ? 'series' : 'series' %>
         </p>
       </div>
       <%= link_to new_author_series_path,
-                  class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700" do %>
+                  class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors" do %>
         <%= icon_plus size: :md, class: "mr-2" %>
         New Series
       <% end %>
@@ -20,60 +20,60 @@
 
   <% if @series.any? %>
     <!-- Table View -->
-    <div class="bg-white rounded-lg shadow overflow-hidden" data-controller="series-toggle">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 overflow-hidden transition-colors" data-controller="series-toggle">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-50 dark:bg-gray-900">
           <tr>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-10"></th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Series</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Documents</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Updated</th>
-            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-10"></th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Series</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Slug</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Documents</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Updated</th>
+            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
+        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
           <% @series.each_with_index do |s, index| %>
             <!-- Series Row -->
-            <tr class="hover:bg-gray-50">
+            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
               <td class="px-6 py-4">
                 <% if s.documents.any? %>
                   <button type="button"
                           data-action="click->series-toggle#toggle"
                           data-series-toggle-target="toggleButton"
                           data-series-id="<%= s.id %>"
-                          class="text-gray-400 hover:text-gray-600">
+                          class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
                     <%= icon_chevron_right size: :md, class: "transition-transform duration-200" %>
                   </button>
                 <% end %>
               </td>
               <td class="px-6 py-4 cursor-pointer" onclick="window.location='<%= edit_author_series_path(s) %>'">
                 <div>
-                  <div class="text-sm font-medium text-gray-900"><%= s.title %></div>
+                  <div class="text-sm font-medium text-gray-900 dark:text-white"><%= s.title %></div>
                   <% if s.description.present? %>
-                    <div class="text-sm text-gray-500 truncate max-w-md"><%= s.description %></div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400 truncate max-w-md"><%= s.description %></div>
                   <% end %>
                 </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap cursor-pointer" onclick="window.location='<%= edit_author_series_path(s) %>'">
-                <div class="text-sm text-gray-500"><%= s.slug %></div>
+                <div class="text-sm text-gray-500 dark:text-gray-400"><%= s.slug %></div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap cursor-pointer" onclick="window.location='<%= edit_author_series_path(s) %>'">
-                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
                   <%= s.documents.count %>
                 </span>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 cursor-pointer" onclick="window.location='<%= edit_author_series_path(s) %>'">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 cursor-pointer" onclick="window.location='<%= edit_author_series_path(s) %>'">
                 <%= time_ago_in_words(s.updated_at) %> ago
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" onclick="event.stopPropagation()">
                 <div class="flex items-center justify-end gap-3">
-                  <%= link_to public_series_path(s), class: "text-indigo-600 hover:text-indigo-900", target: "_blank", title: "View" do %>
+                  <%= link_to public_series_path(s), class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300", target: "_blank", title: "View" do %>
                     <%= icon_external_link size: :md %>
                   <% end %>
                   <%= button_to author_series_path(s),
                       method: :delete,
-                      class: "text-red-600 hover:text-red-900",
+                      class: "text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300",
                       title: "Delete",
                       form: { data: { turbo_confirm: "Are you sure you want to delete '#{s.title}'? All documents will be moved to 'Uncategorized'." } } do %>
                     <%= icon_trash size: :md %>
@@ -84,7 +84,7 @@
 
             <!-- Expandable Documents -->
             <% if s.documents.any? %>
-              <tr class="hidden bg-gray-50" data-series-toggle-target="expandable" data-series-id="<%= s.id %>">
+              <tr class="hidden bg-gray-50 dark:bg-gray-900" data-series-toggle-target="expandable" data-series-id="<%= s.id %>">
                 <td colspan="6" class="px-6 py-0">
                   <div class="py-4 pl-16">
                     <div class="space-y-1">
@@ -103,12 +103,12 @@
   <% else %>
     <!-- Empty State -->
     <div class="text-center py-12">
-      <%= icon_archive size: "2xl", class: "mx-auto text-gray-400" %>
-      <h3 class="mt-2 text-sm font-medium text-gray-900">No series</h3>
-      <p class="mt-1 text-sm text-gray-500">Get started by creating a new series to organize your documents.</p>
+      <%= icon_archive size: "2xl", class: "mx-auto text-gray-400 dark:text-gray-600" %>
+      <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No series</h3>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by creating a new series to organize your documents.</p>
       <div class="mt-6">
         <%= link_to new_author_series_path,
-                    class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700" do %>
+                    class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors" do %>
           <%= icon_plus size: :md, class: "mr-2" %>
           New Series
         <% end %>

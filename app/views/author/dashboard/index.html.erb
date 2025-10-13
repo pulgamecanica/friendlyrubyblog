@@ -2,65 +2,65 @@
   <!-- Overview Stats Grid -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     <!-- Total Documents -->
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6 transition-colors">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-gray-500 text-sm font-medium">Total Documents</p>
-          <p class="text-3xl font-bold mt-2"><%= @stats.total_documents %></p>
+          <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Documents</p>
+          <p class="text-3xl font-bold mt-2 dark:text-white"><%= @stats.total_documents %></p>
         </div>
-        <div class="text-blue-500">
+        <div class="text-blue-500 dark:text-blue-400">
           <%= icon_document size: "2xl", color: :blue %>
         </div>
       </div>
-      <div class="mt-4 text-sm text-gray-600">
+      <div class="mt-4 text-sm text-gray-600 dark:text-gray-300">
         <%= @stats.documents_this_week %> created this week
       </div>
     </div>
 
     <!-- Total Views -->
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6 transition-colors">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-gray-500 text-sm font-medium">Total Views</p>
-          <p class="text-3xl font-bold mt-2"><%= @stats.total_views %></p>
+          <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Views</p>
+          <p class="text-3xl font-bold mt-2 dark:text-white"><%= @stats.total_views %></p>
         </div>
-        <div class="text-green-500">
+        <div class="text-green-500 dark:text-green-400">
           <%= icon_eye size: "2xl", color: :green %>
         </div>
       </div>
-      <div class="mt-4 text-sm text-gray-600">
+      <div class="mt-4 text-sm text-gray-600 dark:text-gray-300">
         <%= @stats.views_this_week %> this week
       </div>
     </div>
 
     <!-- Unique Visitors -->
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6 transition-colors">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-gray-500 text-sm font-medium">Unique Visitors</p>
-          <p class="text-3xl font-bold mt-2"><%= @stats.unique_visitors %></p>
+          <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Unique Visitors</p>
+          <p class="text-3xl font-bold mt-2 dark:text-white"><%= @stats.unique_visitors %></p>
         </div>
-        <div class="text-purple-500">
+        <div class="text-purple-500 dark:text-purple-400">
           <%= icon_users size: "2xl", color: :purple %>
         </div>
       </div>
-      <div class="mt-4 text-sm text-gray-600">
+      <div class="mt-4 text-sm text-gray-600 dark:text-gray-300">
         <%= @stats.views_today %> views today
       </div>
     </div>
 
     <!-- Total Blocks -->
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6 transition-colors">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-gray-500 text-sm font-medium">Total Blocks</p>
-          <p class="text-3xl font-bold mt-2"><%= @stats.total_blocks %></p>
+          <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Blocks</p>
+          <p class="text-3xl font-bold mt-2 dark:text-white"><%= @stats.total_blocks %></p>
         </div>
-        <div class="text-orange-500">
+        <div class="text-orange-500 dark:text-orange-400">
           <%= icon_blocks size: "2xl", color: :orange %>
         </div>
       </div>
-      <div class="mt-4 text-sm text-gray-600">
+      <div class="mt-4 text-sm text-gray-600 dark:text-gray-300">
         <%= @stats.blocks_this_week %> created this week
       </div>
     </div>
@@ -68,27 +68,27 @@
 
   <!-- Document Types Distribution -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-    <div class="bg-white rounded-lg shadow p-6">
-      <h3 class="text-lg font-semibold mb-4">Posts</h3>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6 transition-colors">
+      <h3 class="text-lg font-semibold mb-4 dark:text-white">Posts</h3>
       <div class="flex items-center justify-between">
-        <p class="text-4xl font-bold text-blue-600"><%= @stats.total_posts %></p>
-        <%= link_to "View All", author_posts_path, class: "text-blue-500 hover:text-blue-700 text-sm" %>
+        <p class="text-4xl font-bold text-blue-600 dark:text-blue-400"><%= @stats.total_posts %></p>
+        <%= link_to "View All", author_posts_path, class: "text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm" %>
       </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
-      <h3 class="text-lg font-semibold mb-4">Notes</h3>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6 transition-colors">
+      <h3 class="text-lg font-semibold mb-4 dark:text-white">Notes</h3>
       <div class="flex items-center justify-between">
-        <p class="text-4xl font-bold text-green-600"><%= @stats.total_notes %></p>
-        <%= link_to "View All", author_notes_path, class: "text-green-500 hover:text-green-700 text-sm" %>
+        <p class="text-4xl font-bold text-green-600 dark:text-green-400"><%= @stats.total_notes %></p>
+        <%= link_to "View All", author_notes_path, class: "text-green-500 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 text-sm" %>
       </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
-      <h3 class="text-lg font-semibold mb-4">Pages</h3>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6 transition-colors">
+      <h3 class="text-lg font-semibold mb-4 dark:text-white">Pages</h3>
       <div class="flex items-center justify-between">
-        <p class="text-4xl font-bold text-purple-600"><%= @stats.total_pages %></p>
-        <%= link_to "View All", author_pages_path, class: "text-purple-500 hover:text-purple-700 text-sm" %>
+        <p class="text-4xl font-bold text-purple-600 dark:text-purple-400"><%= @stats.total_pages %></p>
+        <%= link_to "View All", author_pages_path, class: "text-purple-500 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 text-sm" %>
       </div>
     </div>
   </div>
@@ -96,8 +96,8 @@
   <!-- Charts Row -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
     <!-- Views Over Time -->
-    <div class="bg-white rounded-lg shadow p-6">
-      <h3 class="text-lg font-semibold mb-4">Views Over Time (Last 30 Days)</h3>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6 transition-colors">
+      <h3 class="text-lg font-semibold mb-4 dark:text-white">Views Over Time (Last 30 Days)</h3>
       <div style="position: relative; height: 250px;">
         <canvas
           data-controller="chart"
@@ -127,8 +127,8 @@
     </div>
 
     <!-- Block Types Distribution -->
-    <div class="bg-white rounded-lg shadow p-6">
-      <h3 class="text-lg font-semibold mb-4">Block Types Distribution</h3>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6 transition-colors">
+      <h3 class="text-lg font-semibold mb-4 dark:text-white">Block Types Distribution</h3>
       <div style="position: relative; height: 250px;">
         <canvas
           data-controller="chart"
@@ -162,28 +162,28 @@
   <!-- Most Viewed Documents & Top Tags -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
     <!-- Most Viewed Documents -->
-    <div class="bg-white rounded-lg shadow p-6">
-      <h3 class="text-lg font-semibold mb-4">Most Viewed Documents</h3>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6 transition-colors">
+      <h3 class="text-lg font-semibold mb-4 dark:text-white">Most Viewed Documents</h3>
       <div class="space-y-3">
         <% @stats.most_viewed_documents(5).each do |doc| %>
-          <div class="flex items-center justify-between py-2 border-b">
+          <div class="flex items-center justify-between py-2 border-b dark:border-gray-700">
             <div class="flex-1 min-w-0">
-              <%= link_to doc[:title], public_document_path(doc[:slug]), class: "text-blue-600 hover:text-blue-800 truncate block", target: "_blank" %>
+              <%= link_to doc[:title], public_document_path(doc[:slug]), class: "text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 truncate block", target: "_blank" %>
             </div>
-            <span class="ml-4 text-gray-600 font-medium"><%= doc[:views] %> views</span>
+            <span class="ml-4 text-gray-600 dark:text-gray-300 font-medium"><%= doc[:views] %> views</span>
           </div>
         <% end %>
       </div>
     </div>
 
     <!-- Top Tags -->
-    <div class="bg-white rounded-lg shadow p-6">
-      <h3 class="text-lg font-semibold mb-4">Most Used Tags</h3>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6 transition-colors">
+      <h3 class="text-lg font-semibold mb-4 dark:text-white">Most Used Tags</h3>
       <div class="space-y-3">
         <% @stats.top_tags(10).each do |tag, count| %>
-          <div class="flex items-center justify-between py-2 border-b">
-            <span class="text-gray-800"><%= tag %></span>
-            <span class="text-gray-600 font-medium"><%= count %> uses</span>
+          <div class="flex items-center justify-between py-2 border-b dark:border-gray-700">
+            <span class="text-gray-800 dark:text-gray-200"><%= tag %></span>
+            <span class="text-gray-600 dark:text-gray-300 font-medium"><%= count %> uses</span>
           </div>
         <% end %>
       </div>
@@ -193,8 +193,8 @@
   <!-- Device & Browser Stats -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
     <!-- Views by Device -->
-    <div class="bg-white rounded-lg shadow p-6">
-      <h3 class="text-lg font-semibold mb-4">Views by Device</h3>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6 transition-colors">
+      <h3 class="text-lg font-semibold mb-4 dark:text-white">Views by Device</h3>
       <div style="position: relative; height: 250px;">
         <canvas
           data-controller="chart"
@@ -222,8 +222,8 @@
     </div>
 
     <!-- Views by Browser -->
-    <div class="bg-white rounded-lg shadow p-6">
-      <h3 class="text-lg font-semibold mb-4">Views by Browser</h3>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6 transition-colors">
+      <h3 class="text-lg font-semibold mb-4 dark:text-white">Views by Browser</h3>
       <div style="position: relative; height: 250px;">
         <canvas
           data-controller="chart"
@@ -252,14 +252,14 @@
   </div>
 
   <!-- Quick Actions -->
-  <div class="bg-white rounded-lg shadow p-6">
-    <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6 transition-colors">
+    <h3 class="text-lg font-semibold mb-4 dark:text-white">Quick Actions</h3>
     <div class="flex flex-wrap gap-4">
-      <%= link_to "New Post", new_author_post_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded" %>
-      <%= link_to "New Note", new_author_note_path, class: "bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded" %>
-      <%= link_to "New Page", new_author_page_path, class: "bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded" %>
-      <%= link_to "All Documents", author_documents_path, class: "bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded" %>
-      <%= link_to "View Analytics", author_analytics_path, class: "bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded" %>
+      <%= link_to "New Post", new_author_post_path, class: "bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors" %>
+      <%= link_to "New Note", new_author_note_path, class: "bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white font-medium py-2 px-4 rounded transition-colors" %>
+      <%= link_to "New Page", new_author_page_path, class: "bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600 text-white font-medium py-2 px-4 rounded transition-colors" %>
+      <%= link_to "All Documents", author_documents_path, class: "bg-gray-600 hover:bg-gray-700 dark:bg-gray-500 dark:hover:bg-gray-600 text-white font-medium py-2 px-4 rounded transition-colors" %>
+      <%= link_to "View Analytics", author_analytics_path, class: "bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded transition-colors" %>
     </div>
   </div>
 </div>

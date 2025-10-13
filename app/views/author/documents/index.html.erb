@@ -14,8 +14,8 @@
   <div class="mb-8">
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900"><%= page_title %></h1>
-        <p class="mt-1 text-sm text-gray-500">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white"><%= page_title %></h1>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
           <%= @documents.count %> <%= @documents.count == 1 ? 'document' : 'documents' %>
         </p>
       </div>
@@ -23,11 +23,11 @@
         <!-- View Toggle -->
         <div class="inline-flex rounded-md shadow-sm" role="group">
           <button type="button" data-documents-view-toggle-target="gridButton" data-action="click->documents-view-toggle#showGrid"
-                  class="px-3 py-2 text-sm font-medium rounded-l-md border border-gray-300 bg-white hover:bg-gray-50">
+                  class="px-3 py-2 text-sm font-medium rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 dark:text-white transition-colors">
             <%= icon_grid size: :md %>
           </button>
           <button type="button" data-documents-view-toggle-target="tableButton" data-action="click->documents-view-toggle#showTable"
-                  class="px-3 py-2 text-sm font-medium rounded-r-md border border-l-0 border-gray-300 bg-white hover:bg-gray-50">
+                  class="px-3 py-2 text-sm font-medium rounded-r-md border border-l-0 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 dark:text-white transition-colors">
             <%= icon_list size: :md %>
           </button>
         </div>
@@ -35,13 +35,13 @@
         <!-- New Document Button -->
         <% if @kind %>
           <%= link_to send("new_author_#{@kind}_path"),
-                      class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700" do %>
+                      class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors" do %>
             <%= icon_plus size: :md, class: "mr-2" %>
             New <%= @kind.capitalize %>
           <% end %>
         <% else %>
           <%= link_to new_author_document_path,
-                      class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700" do %>
+                      class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors" do %>
             <%= icon_plus size: :md, class: "mr-2" %>
             New Document
           <% end %>
@@ -50,33 +50,33 @@
     </div>
 
     <!-- Filter Tabs -->
-    <div class="border-b border-gray-200">
+    <div class="border-b border-gray-200 dark:border-gray-700">
       <nav class="-mb-px flex space-x-8">
         <%= link_to author_documents_path,
-            class: "#{@kind.nil? ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex items-center" do %>
+            class: "#{@kind.nil? ? 'border-indigo-500 dark:border-indigo-400 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex items-center transition-colors" do %>
           All
-          <span class="ml-2 py-0.5 px-2 rounded-full text-xs bg-gray-100 text-gray-700">
+          <span class="ml-2 py-0.5 px-2 rounded-full text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
             <%= current_author.documents.count %>
           </span>
         <% end %>
         <%= link_to author_posts_path,
-            class: "#{@kind == 'post' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex items-center" do %>
+            class: "#{@kind == 'post' ? 'border-indigo-500 dark:border-indigo-400 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex items-center transition-colors" do %>
           Posts
-          <span class="ml-2 py-0.5 px-2 rounded-full text-xs bg-blue-100 text-blue-800">
+          <span class="ml-2 py-0.5 px-2 rounded-full text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
             <%= current_author.documents.posts.count %>
           </span>
         <% end %>
         <%= link_to author_notes_path,
-            class: "#{@kind == 'note' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex items-center" do %>
+            class: "#{@kind == 'note' ? 'border-indigo-500 dark:border-indigo-400 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex items-center transition-colors" do %>
           Notes
-          <span class="ml-2 py-0.5 px-2 rounded-full text-xs bg-green-100 text-green-800">
+          <span class="ml-2 py-0.5 px-2 rounded-full text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
             <%= current_author.documents.notes.count %>
           </span>
         <% end %>
         <%= link_to author_pages_path,
-            class: "#{@kind == 'page' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex items-center" do %>
+            class: "#{@kind == 'page' ? 'border-indigo-500 dark:border-indigo-400 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm inline-flex items-center transition-colors" do %>
           Pages
-          <span class="ml-2 py-0.5 px-2 rounded-full text-xs bg-purple-100 text-purple-800">
+          <span class="ml-2 py-0.5 px-2 rounded-full text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200">
             <%= current_author.documents.pages.count %>
           </span>
         <% end %>
@@ -88,15 +88,15 @@
     <!-- Grid View -->
     <div data-documents-view-toggle-target="gridView" class="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
       <% @documents.each do |doc| %>
-        <div class="group relative bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-200 hover:border-indigo-300">
+        <div class="group relative bg-white dark:bg-gray-800 rounded-lg shadow-sm dark:shadow-gray-900 hover:shadow-md dark:hover:shadow-gray-900/50 transition-shadow duration-200 overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-500">
           <%= link_to edit_author_document_path(doc), class: "block" do %>
             <!-- Portrait Image -->
-            <div class="aspect-video w-full overflow-hidden bg-gray-100">
+            <div class="aspect-video w-full overflow-hidden bg-gray-100 dark:bg-gray-700">
               <% if doc.portrait.attached? %>
                 <%= image_tag doc.portrait, class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-200", alt: doc.title %>
               <% else %>
-                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-                  <%= icon_document size: "3xl", class: "text-gray-300" %>
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800">
+                  <%= icon_document size: "3xl", class: "text-gray-300 dark:text-gray-600" %>
                 </div>
               <% end %>
             </div>
@@ -107,20 +107,20 @@
             <div class="flex items-center gap-2 mb-2">
               <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium <%=
                 case doc.kind
-                when 'post' then 'bg-blue-100 text-blue-800'
-                when 'note' then 'bg-green-100 text-green-800'
-                when 'page' then 'bg-purple-100 text-purple-800'
+                when 'post' then 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
+                when 'note' then 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
+                when 'page' then 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200'
                 end
               %>">
                 <%= doc.kind.capitalize %>
               </span>
               <% if doc.published? %>
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
                   <%= icon_checkmark_circle size: :xs, class: "mr-1" %>
                   Published
                 </span>
               <% else %>
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
                   <%= icon_x_circle size: :xs, class: "mr-1" %>
                   Draft
                 </span>
@@ -128,19 +128,19 @@
             </div>
 
             <!-- Title -->
-            <h3 class="text-lg font-semibold text-gray-900 group-hover:text-indigo-600 mb-2 overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 mb-2 overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
               <%= doc.title %>
             </h3>
 
             <!-- Description -->
             <% if doc.description.present? %>
-              <p class="text-sm text-gray-500 mb-3 overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+              <p class="text-sm text-gray-500 dark:text-gray-400 mb-3 overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
                 <%= doc.description %>
               </p>
             <% end %>
 
             <!-- Meta -->
-            <div class="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-gray-100">
+            <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-700">
               <div class="flex items-center gap-3">
                 <span class="flex items-center">
                   <%= icon_clock size: :sm, class: "mr-1" %>
@@ -154,7 +154,7 @@
               <div class="flex items-center gap-2">
                 <% if doc.published? %>
                   <%= link_to public_document_path(doc),
-                      class: "inline-flex items-center text-indigo-600 hover:text-indigo-800",
+                      class: "inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300",
                       target: "_blank",
                       title: "View published",
                       onclick: "event.stopPropagation();" do %>
@@ -163,7 +163,7 @@
                 <% end %>
                 <%= button_to author_document_path(doc),
                     method: :delete,
-                    class: "inline-flex items-center text-red-600 hover:text-red-800",
+                    class: "inline-flex items-center text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300",
                     title: "Delete document",
                     onclick: "event.stopPropagation(); return confirm('Are you sure you want to delete this document?');",
                     form: { data: { turbo_confirm: "Are you sure you want to delete '#{doc.title}'?" } } do %>
@@ -174,14 +174,14 @@
 
               <!-- Tags -->
               <% if doc.tags.any? %>
-                <div class="flex flex-wrap gap-1 mt-3 pt-3 border-t border-gray-100">
+                <div class="flex flex-wrap gap-1 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
                   <% doc.tags.first(3).each do |tag| %>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs bg-gray-50 text-gray-600">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
                       #<%= tag.title %>
                     </span>
                   <% end %>
                   <% if doc.tags.count > 3 %>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs text-gray-400">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs text-gray-400 dark:text-gray-500">
                       +<%= doc.tags.count - 3 %>
                     </span>
                   <% end %>
@@ -194,36 +194,36 @@
     </div>
 
     <!-- Table View -->
-    <div data-documents-view-toggle-target="tableView" class="hidden bg-white rounded-lg shadow overflow-hidden">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
+    <div data-documents-view-toggle-target="tableView" class="hidden bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 overflow-hidden transition-colors">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-50 dark:bg-gray-900">
           <tr>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Document</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Blocks</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Updated</th>
-            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Document</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Type</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Blocks</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Updated</th>
+            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
+        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
           <% @documents.each do |doc| %>
-            <tr class="hover:bg-gray-50 cursor-pointer" onclick="window.location='<%= edit_author_document_path(doc) %>'">
+            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors" onclick="window.location='<%= edit_author_document_path(doc) %>'">
               <td class="px-6 py-4">
                 <div class="flex items-center">
                   <div class="flex-shrink-0 h-10 w-10">
                     <% if doc.portrait.attached? %>
                       <%= image_tag doc.portrait, class: "h-10 w-10 rounded object-cover", alt: doc.title %>
                     <% else %>
-                      <div class="h-10 w-10 rounded bg-gray-200 flex items-center justify-center">
-                        <%= icon_document size: :lg, class: "text-gray-400" %>
+                      <div class="h-10 w-10 rounded bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                        <%= icon_document size: :lg, class: "text-gray-400 dark:text-gray-500" %>
                       </div>
                     <% end %>
                   </div>
                   <div class="ml-4">
-                    <div class="text-sm font-medium text-gray-900"><%= doc.title %></div>
+                    <div class="text-sm font-medium text-gray-900 dark:text-white"><%= doc.title %></div>
                     <% if doc.description.present? %>
-                      <div class="text-sm text-gray-500 truncate max-w-md"><%= doc.description %></div>
+                      <div class="text-sm text-gray-500 dark:text-gray-400 truncate max-w-md"><%= doc.description %></div>
                     <% end %>
                   </div>
                 </div>
@@ -231,9 +231,9 @@
               <td class="px-6 py-4 whitespace-nowrap">
                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%=
                   case doc.kind
-                  when 'post' then 'bg-blue-100 text-blue-800'
-                  when 'note' then 'bg-green-100 text-green-800'
-                  when 'page' then 'bg-purple-100 text-purple-800'
+                  when 'post' then 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
+                  when 'note' then 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
+                  when 'page' then 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200'
                   end
                 %>">
                   <%= doc.kind.capitalize %>
@@ -241,31 +241,31 @@
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <% if doc.published? %>
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
                     Published
                   </span>
                 <% else %>
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
                     Draft
                   </span>
                 <% end %>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                 <%= doc.blocks.count %>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                 <%= time_ago_in_words(doc.updated_at) %> ago
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" onclick="event.stopPropagation()">
                 <div class="flex items-center justify-end gap-3">
                   <% if doc.published? %>
-                    <%= link_to public_document_path(doc), class: "text-indigo-600 hover:text-indigo-900", target: "_blank", title: "View" do %>
+                    <%= link_to public_document_path(doc), class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300", target: "_blank", title: "View" do %>
                       <%= icon_external_link size: :md %>
                     <% end %>
                   <% end %>
                   <%= button_to author_document_path(doc),
                       method: :delete,
-                      class: "text-red-600 hover:text-red-900",
+                      class: "text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300",
                       title: "Delete",
                       form: { data: { turbo_confirm: "Are you sure you want to delete '#{doc.title}'?" } } do %>
                     <%= icon_trash size: :md %>
@@ -280,19 +280,19 @@
   <% else %>
     <!-- Empty State -->
     <div class="text-center py-12">
-      <%= icon_document size: "2xl", class: "mx-auto text-gray-400" %>
-      <h3 class="mt-2 text-sm font-medium text-gray-900">No documents</h3>
-      <p class="mt-1 text-sm text-gray-500">Get started by creating a new <%= @kind || 'document' %>.</p>
+      <%= icon_document size: "2xl", class: "mx-auto text-gray-400 dark:text-gray-600" %>
+      <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No documents</h3>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by creating a new <%= @kind || 'document' %>.</p>
       <div class="mt-6">
         <% if @kind %>
           <%= link_to send("new_author_#{@kind}_path"),
-                      class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700" do %>
+                      class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors" do %>
             <%= icon_plus size: :md, class: "mr-2" %>
             New <%= @kind.capitalize %>
           <% end %>
         <% else %>
           <%= link_to new_author_document_path,
-                      class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700" do %>
+                      class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors" do %>
             <%= icon_plus size: :md, class: "mr-2" %>
             New Document
           <% end %>
