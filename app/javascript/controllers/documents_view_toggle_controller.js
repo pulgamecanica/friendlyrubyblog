@@ -28,17 +28,17 @@ export default class extends Controller {
     if (viewMode === "grid") {
       this.gridViewTarget.classList.remove("hidden")
       this.tableViewTarget.classList.add("hidden")
-      this.gridButtonTarget.classList.add("bg-indigo-100", "dark:bg-indigo-900", "text-indigo-700", "dark:text-indigo-300")
-      this.gridButtonTarget.classList.remove("text-gray-500", "dark:text-gray-400", "hover:text-gray-700", "dark:hover:text-gray-300")
-      this.tableButtonTarget.classList.remove("bg-indigo-100", "dark:bg-indigo-900", "text-indigo-700", "dark:text-indigo-300")
-      this.tableButtonTarget.classList.add("text-gray-500", "dark:text-gray-400", "hover:text-gray-700", "dark:hover:text-gray-300")
+      this.gridButtonTarget.classList.add("text-green-600", "dark:text-green-500")
+      this.gridButtonTarget.classList.remove("text-gray-500", "dark:text-gray-600")
+      this.tableButtonTarget.classList.remove("text-green-600", "dark:text-green-500")
+      this.tableButtonTarget.classList.add("text-gray-500", "dark:text-gray-600")
     } else {
       this.tableViewTarget.classList.remove("hidden")
       this.gridViewTarget.classList.add("hidden")
-      this.tableButtonTarget.classList.add("bg-indigo-100", "dark:bg-indigo-900", "text-indigo-700", "dark:text-indigo-300")
-      this.tableButtonTarget.classList.remove("text-gray-500", "dark:text-gray-400", "hover:text-gray-700", "dark:hover:text-gray-300")
-      this.gridButtonTarget.classList.remove("bg-indigo-100", "dark:bg-indigo-900", "text-indigo-700", "dark:text-indigo-300")
-      this.gridButtonTarget.classList.add("text-gray-500", "dark:text-gray-400", "hover:text-gray-700", "dark:hover:text-gray-300")
+      this.tableButtonTarget.classList.add("text-green-600", "dark:text-green-500")
+      this.tableButtonTarget.classList.remove("text-gray-500", "dark:text-gray-600")
+      this.gridButtonTarget.classList.remove("text-green-600", "dark:text-green-500")
+      this.gridButtonTarget.classList.add("text-gray-500", "dark:text-gray-600")
     }
   }
 }

@@ -57,7 +57,11 @@ Rails.application.routes.draw do
     get "analytics", to: "analytics#index", as: :analytics
     get "analytics/visitor/:id", to: "analytics#visitor", as: :analytics_visitor
 
-    resources :series
+    resources :series do
+      member do
+        delete :remove_portrait
+      end
+    end
     resources :documents do
       member do
         patch :publish

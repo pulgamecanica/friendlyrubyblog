@@ -11,35 +11,30 @@
 %>
 
 <div data-controller="documents-view-toggle" data-documents-view-toggle-storage-key-value="<%= storage_key %>">
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-    <div class="flex items-center gap-3">
-      <h2 class="text-3xl font-bold text-gray-900"><%= title %></h2>
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 border-b border-gray-200 dark:border-gray-800 pb-4">
+    <div class="flex items-center gap-3 font-mono">
+      <h2 class="text-2xl font-normal text-gray-700 dark:text-gray-400"># <%= title %></h2>
       <% if show_count %>
-        <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm font-semibold">
-          <%= series_list.count %>
+        <span class="text-sm text-gray-500 dark:text-gray-600">
+          (<%= series_list.count %>)
         </span>
       <% end %>
     </div>
 
     <!-- View Switcher -->
-    <div class="flex items-center gap-2 bg-white rounded-xl p-1 border border-gray-200 shadow-sm">
+    <div class="flex items-center gap-1 text-xs font-mono">
       <button data-action="click->documents-view-toggle#showGrid"
               data-documents-view-toggle-target="gridButton"
-              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all"
+              class="px-3 py-1 transition-colors"
               aria-label="Grid view">
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-        </svg>
-        <span class="hidden sm:inline">Grid</span>
+        [grid]
       </button>
+      <span class="text-gray-400 dark:text-gray-700">|</span>
       <button data-action="click->documents-view-toggle#showTable"
               data-documents-view-toggle-target="tableButton"
-              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all"
+              class="px-3 py-1 transition-colors"
               aria-label="Table view">
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-        </svg>
-        <span class="hidden sm:inline">Table</span>
+        [list]
       </button>
     </div>
   </div>

@@ -3,6 +3,7 @@ class Series < ApplicationRecord
   friendly_id :title, use: [ :slugged, :history ]
 
   has_many :documents, -> { order(:series_position, :published_at) }
+  has_one_attached :portrait
 
   validates :title, :slug, presence: true
   validates :slug, uniqueness: true

@@ -19,38 +19,31 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body id="public" class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-gray-100 antialiased transition-colors" data-controller="theme" data-theme-default-value="light">
+  <body id="public" class="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-300 antialiased transition-colors" data-controller="theme" data-theme-default-value="dark" style="background-image: url('data:image/svg+xml,%3Csvg width=\"30\" height=\"30\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cpath d=\"M0 0h30v30H0z\" fill=\"none\"/%3E%3Ccircle cx=\"1\" cy=\"1\" r=\"0.5\" fill=\"%23374151\" opacity=\"0.15\"/%3E%3C/svg%3E');">
     <!-- Top nav -->
-    <header class="sticky top-0 z-50 border-b border-gray-200/80 dark:border-gray-700/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-sm transition-colors">
-      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="flex h-16 items-center justify-between">
+    <header class="sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm transition-colors">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <div class="flex h-14 items-center justify-between">
           <!-- Logo -->
-          <%= link_to root_path, class: "group flex items-center gap-2 transition-transform hover:scale-105" do %>
-            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-lg">
-              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-              </svg>
-            </div>
-            <div class="flex flex-col">
-              <span class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">FriendlyRubyBlog</span>
-              <span class="text-xs text-gray-500 hidden sm:block">Ruby on Rails insights & tutorials</span>
-            </div>
+          <%= link_to root_path, class: "group flex items-center gap-3 hover:text-green-500 transition-colors font-mono" do %>
+            <span class="text-green-600 dark:text-green-500 text-lg">~</span>
+            <span class="text-base text-gray-700 dark:text-gray-400 group-hover:text-green-600 dark:group-hover:text-green-500 transition-colors">/home/pulgamecanica</span>
           <% end %>
 
           <!-- Navigation -->
-          <nav class="flex items-center gap-1">
-            <%= link_to public_posts_path, class: "px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-gray-700 rounded-lg transition-colors" do %>
-              Posts
+          <nav class="flex items-center gap-6 text-sm font-mono">
+            <%= link_to public_posts_path, class: "text-gray-600 dark:text-gray-500 hover:text-green-600 dark:hover:text-green-500 transition-colors" do %>
+              posts
             <% end %>
 
             <% if author_signed_in? %>
-              <%= link_to public_notes_path, class: "px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-gray-700 rounded-lg transition-colors" do %>
-                Notes
+              <%= link_to public_notes_path, class: "text-gray-600 dark:text-gray-500 hover:text-green-600 dark:hover:text-green-500 transition-colors" do %>
+                notes
               <% end %>
             <% end %>
 
-            <%= link_to public_series_index_path, class: "px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-gray-700 rounded-lg transition-colors" do %>
-              Series
+            <%= link_to public_series_index_path, class: "text-gray-600 dark:text-gray-500 hover:text-green-600 dark:hover:text-green-500 transition-colors" do %>
+              series
             <% end %>
 
             <!-- Pages Dropdown -->
@@ -58,10 +51,10 @@
               <button type="button"
                       data-action="click->collapsible#toggle"
                       data-collapsible-target="trigger"
-                      class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
-                <span>Pages</span>
+                      class="inline-flex items-center gap-1 text-sm font-mono text-gray-600 dark:text-gray-500 hover:text-green-600 dark:hover:text-green-500 transition-colors">
+                <span>pages</span>
                 <svg data-collapsible-target="icon"
-                     class="h-4 w-4 transition-transform duration-200"
+                     class="h-3 w-3 transition-transform duration-200"
                      fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
@@ -69,10 +62,10 @@
 
               <!-- Dropdown Menu -->
               <div data-collapsible-target="content"
-                   class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 py-2 z-50 max-h-96 overflow-y-auto">
-                <div class="px-4 py-2 border-b border-gray-100">
-                  <%= link_to public_pages_path, class: "text-sm font-semibold text-indigo-600 hover:text-indigo-700" do %>
-                    View All Pages →
+                   class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 py-2 z-50 max-h-96 overflow-y-auto shadow-xl transition-colors">
+                <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-800">
+                  <%= link_to public_pages_path, class: "text-xs font-mono text-green-600 dark:text-green-500 hover:text-green-700 dark:hover:text-green-400" do %>
+                    → all pages
                   <% end %>
                 </div>
 
@@ -80,29 +73,21 @@
                   <% pages = series.documents.published.where(kind: "page").order(:series_position) %>
                   <% next if pages.empty? %>
 
-                  <div class="px-4 py-3 border-b border-gray-50 last:border-0">
+                  <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-800 last:border-0">
                     <!-- Series Name -->
-                    <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 flex items-center gap-2">
-                      <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                      </svg>
-                      <%= series.title %>
+                    <div class="text-xs font-mono text-gray-500 dark:text-gray-600 mb-2">
+                      # <%= series.title %>
                     </div>
 
                     <!-- Pages -->
                     <div class="space-y-1">
                       <% pages.limit(5).each do |page| %>
-                        <%= link_to public_page_path(page), class: "block px-3 py-2 text-sm text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" do %>
-                          <div class="flex items-center gap-2">
-                            <svg class="h-3.5 w-3.5 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            <span class="truncate"><%= page.title %></span>
-                          </div>
+                        <%= link_to public_page_path(page), class: "block px-2 py-1 text-sm text-gray-700 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-500 transition-colors font-mono" do %>
+                          <span class="text-green-600 dark:text-green-500 mr-1">›</span><%= page.title %>
                         <% end %>
                       <% end %>
                       <% if pages.count > 5 %>
-                        <div class="px-3 py-1 text-xs text-gray-500">
+                        <div class="px-2 py-1 text-xs text-gray-500 dark:text-gray-600 font-mono">
                           +<%= pages.count - 5 %> more...
                         </div>
                       <% end %>
@@ -112,13 +97,14 @@
               </div>
             </div>
 
+            <span class="text-gray-400 dark:text-gray-700">|</span>
+
             <!-- Theme Toggle -->
             <button data-action="click->theme#toggle"
-                    class="p-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors ml-2"
+                    class="text-xs font-mono text-gray-500 dark:text-gray-600 hover:text-green-600 dark:hover:text-green-500 transition-colors"
                     title="Toggle theme">
-              <svg class="w-5 h-5 text-gray-700 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-              </svg>
+              <span class="hidden dark:inline">[light]</span>
+              <span class="inline dark:hidden">[dark]</span>
             </button>
           </nav>
         </div>
@@ -155,54 +141,19 @@
     </main>
 
     <!-- Footer -->
-    <footer class="mt-20 border-t border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm transition-colors">
-      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <!-- Brand -->
-          <div class="md:col-span-2">
-            <div class="flex items-center gap-2 mb-4">
-              <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 text-white">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-              </div>
-              <span class="text-lg font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">FriendlyRubyBlog</span>
-            </div>
-            <p class="text-sm text-gray-600 max-w-md">
-              Your friendly guide to Ruby on Rails development. Learn, build, and grow with comprehensive tutorials and insights.
-            </p>
+    <footer class="mt-20 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 transition-colors">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 py-8">
+        <div class="flex flex-col items-center gap-3 text-sm font-mono">
+          <div class="flex items-center gap-4 text-gray-600 dark:text-gray-500">
+            <a href="https://github.com/pulgamecanica" target="_blank" rel="noopener" class="hover:text-green-600 dark:hover:text-green-500 transition-colors flex items-center gap-2">
+              <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+              </svg>
+              github
+            </a>
           </div>
-
-          <!-- Quick Links -->
-          <div>
-            <h3 class="font-semibold text-gray-900 mb-4">Explore</h3>
-            <ul class="space-y-2 text-sm">
-              <li><%= link_to "Articles", public_documents_path, class: "text-gray-600 hover:text-indigo-600 transition-colors" %></li>
-              <li><%= link_to "Series", public_series_index_path, class: "text-gray-600 hover:text-indigo-600 transition-colors" %></li>
-            </ul>
-          </div>
-
-          <!-- Connect -->
-          <div>
-            <h3 class="font-semibold text-gray-900 mb-4">Connect</h3>
-            <div class="flex gap-3">
-              <a href="#" class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-indigo-600 hover:text-white transition-colors">
-                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                </svg>
-              </a>
-              <a href="#" class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-indigo-600 hover:text-white transition-colors">
-                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="mt-8 pt-8 border-t border-gray-200 text-center">
-          <p class="text-sm text-gray-500">
-            © <%= Time.current.year %> FriendlyRubyBlog. Built with <%= link_to "Ruby on Rails", "https://rubyonrails.org", class: "text-indigo-600 hover:underline", target: "_blank" %> and ❤️
+          <p class="text-xs text-gray-500 dark:text-gray-600">
+            made with <span class="text-red-500">♥</span> by pulgamecanica
           </p>
         </div>
       </div>

@@ -1,27 +1,28 @@
-<div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-  <table class="min-w-full divide-y divide-gray-200">
-    <thead class="bg-gradient-to-r from-indigo-50 to-purple-50">
-      <tr>
-        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-          Title
+<div class="overflow-hidden border border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-900">
+  <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-800">
+    <thead class="bg-gray-50 dark:bg-gray-900">
+      <tr class="font-mono text-xs">
+        <th scope="col" class="hidden sm:table-cell px-4 py-3 w-16">
+          <!-- image column -->
         </th>
-        <th scope="col" class="hidden md:table-cell px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-          Series
+        <th scope="col" class="px-4 py-3 text-left text-gray-600 dark:text-gray-500">
+          title
         </th>
-        <th scope="col" class="hidden lg:table-cell px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-          Tags
+        <th scope="col" class="hidden md:table-cell px-4 py-3 text-left text-gray-600 dark:text-gray-500">
+          series
         </th>
-        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-          Date
+        <th scope="col" class="hidden lg:table-cell px-4 py-3 text-left text-gray-600 dark:text-gray-500">
+          tags
         </th>
-        <th scope="col" class="hidden sm:table-cell px-6 py-4 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">
-          <svg class="h-4 w-4 inline" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-          </svg>
+        <th scope="col" class="px-4 py-3 text-left text-gray-600 dark:text-gray-500">
+          date
+        </th>
+        <th scope="col" class="hidden sm:table-cell px-4 py-3 text-right text-gray-600 dark:text-gray-500">
+          ♥
         </th>
       </tr>
     </thead>
-    <tbody class="bg-white divide-y divide-gray-100">
+    <tbody class="bg-white dark:bg-gray-800">
       <% documents.each do |doc| %>
         <%
           # Only use specific routes for published documents
@@ -37,79 +38,88 @@
             public_document_path(doc)
           end
         %>
-        <tr class="group hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-purple-50/50 transition-colors cursor-pointer" onclick="window.location='<%= path %>'">
-          <!-- Title -->
-          <td class="px-6 py-4">
-            <div class="flex items-center">
-              <div>
-                <div class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
-                  <%= doc.title %>
-                </div>
-                <% if doc.description.present? %>
-                  <div class="text-xs text-gray-500 line-clamp-1 mt-1">
-                    <%= doc.description %>
-                  </div>
-                <% end %>
+        <tr class="group border-l-2 border-transparent hover:border-green-500 odd:bg-gray-50 dark:odd:bg-gray-900/75 even:bg-white dark:even:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800/70 transition-all cursor-pointer" onclick="window.location='<%= path %>'">
+          <!-- Image -->
+          <td class="hidden sm:table-cell px-4 py-3">
+            <% if doc.portrait.attached? %>
+              <div class="w-12 h-12 overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <%= image_tag doc.portrait, class: "w-full h-full object-cover", alt: doc.title %>
               </div>
+            <% elsif doc.series && doc.series.portrait.attached? && doc.series_position.present? %>
+              <div class="relative w-12 h-12 overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <%= image_tag doc.series.portrait, class: "w-full h-full object-cover opacity-40", alt: doc.series.title %>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-lg font-mono font-bold text-gray-700 dark:text-gray-300">
+                    <%= doc.series_position %>
+                  </span>
+                </div>
+              </div>
+            <% end %>
+          </td>
+
+          <!-- Title -->
+          <td class="px-4 py-3">
+            <div>
+              <div class="text-sm text-gray-900 dark:text-gray-200 group-hover:text-green-600 dark:group-hover:text-green-500 transition-colors line-clamp-1">
+                <%= doc.title %>
+              </div>
+              <% if doc.description.present? %>
+                <div class="text-xs text-gray-500 dark:text-gray-600 line-clamp-1 mt-1">
+                  <%= doc.description %>
+                </div>
+              <% end %>
             </div>
           </td>
 
           <!-- Series -->
-          <td class="hidden md:table-cell px-6 py-4">
+          <td class="hidden md:table-cell px-4 py-3">
             <% if doc.series && doc.series.title != "Uncategorized" %>
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">
-                <%= doc.series.title %>
+              <span class="text-xs font-mono text-gray-600 dark:text-gray-500">
+                ~ <%= doc.series.title %>
               </span>
             <% else %>
-              <span class="text-xs text-gray-400">—</span>
+              <span class="text-xs text-gray-400 dark:text-gray-700">—</span>
             <% end %>
           </td>
 
           <!-- Tags -->
-          <td class="hidden lg:table-cell px-6 py-4" onclick="event.stopPropagation()">
+          <td class="hidden lg:table-cell px-4 py-3" onclick="event.stopPropagation()">
             <% if doc.tags.any? %>
-              <div class="flex flex-wrap gap-1">
+              <div class="flex flex-wrap gap-2 font-mono text-xs">
                 <% doc.tags.limit(3).each do |tag| %>
-                  <%= link_to public_tag_path(tag), class: "inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors" do %>
+                  <%= link_to public_tag_path(tag), class: "text-gray-500 dark:text-gray-600 hover:text-green-600 dark:hover:text-green-500 transition-colors" do %>
                     #<%= tag.title %>
                   <% end %>
                 <% end %>
                 <% if doc.tags.count > 3 %>
-                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500">
+                  <span class="text-gray-500 dark:text-gray-600">
                     +<%= doc.tags.count - 3 %>
                   </span>
                 <% end %>
               </div>
             <% else %>
-              <span class="text-xs text-gray-400">—</span>
+              <span class="text-xs text-gray-400 dark:text-gray-700">—</span>
             <% end %>
           </td>
 
           <!-- Date -->
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            <div class="flex items-center gap-1.5">
-              <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <% if doc.published_at.present? %>
-                <time datetime="<%= doc.published_at.iso8601 %>">
-                  <%= format_date(doc.published_at) %>
-                </time>
-              <% elsif doc.published %>
-                <time datetime="<%= doc.created_at.iso8601 %>">
-                  <%= format_date(doc.created_at) %>
-                </time>
-              <% else %>
-                <span>Draft</span>
-              <% end %>
-            </div>
+          <td class="px-4 py-3 whitespace-nowrap text-xs font-mono text-gray-500 dark:text-gray-600">
+            <% if doc.published_at.present? %>
+              <time datetime="<%= doc.published_at.iso8601 %>">
+                <%= time_ago_in_words(doc.published_at) %> ago
+              </time>
+            <% elsif doc.published %>
+              <time datetime="<%= doc.created_at.iso8601 %>">
+                <%= time_ago_in_words(doc.created_at) %> ago
+              </time>
+            <% else %>
+              <span>draft</span>
+            <% end %>
           </td>
 
           <!-- Likes -->
-          <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
-            <span class="inline-flex items-center gap-1 text-pink-600 font-medium">
-              <%= doc.likes.count %>
-            </span>
+          <td class="hidden sm:table-cell px-4 py-3 whitespace-nowrap text-xs font-mono text-gray-500 dark:text-gray-600 text-right">
+            <%= doc.likes.count %>
           </td>
         </tr>
       <% end %>
@@ -117,12 +127,8 @@
   </table>
 
   <% if documents.empty? %>
-    <div class="text-center py-12">
-      <svg class="h-16 w-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-      </svg>
-      <h3 class="text-lg font-semibold text-gray-900 mb-1">No documents found</h3>
-      <p class="text-gray-600">Check back soon for new content!</p>
+    <div class="text-center py-12 font-mono">
+      <p class="text-gray-500 dark:text-gray-600 text-sm">nothing here yet...</p>
     </div>
   <% end %>
 </div>
