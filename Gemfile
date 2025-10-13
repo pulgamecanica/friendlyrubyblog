@@ -77,3 +77,5 @@ gem "capybara", "~> 3.40"
 gem "cuprite", "~> 0.17"
 
 gem "zip-zip", "~> 0.3"
+
+gem "aws-sdk-s3", require: false

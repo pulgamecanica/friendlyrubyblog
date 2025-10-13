@@ -1,1 +1,180 @@
-<%= render "public/documents/show" %>
+<% content_for :title, "#{@document.title} · Friendlyrubyblog" %>
+
+<article class="mx-auto max-w-4xl">
+  <!-- Breadcrumb/Series -->
+  <div class="border-b border-gray-700 mb-4">
+    <%= link_to public_series_index_path, class: "inline-flex items-center gap-2 text-sm font-mono text-gray-500 dark:text-gray-600 hover:text-green-600 dark:hover:text-green-500 transition-colors mb-4" do %>
+      ← <%= @document.series.title %> · <%= @document.series_position %></span>
+    <% end %>
+  </div>
+  
+  <!-- Header -->
+  <header class="mb-8">
+    <!-- Title -->
+    <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-gray-200 mb-3 font-mono">
+      <%= @document.title %>
+    </h1>
+
+    <!-- Description -->
+    <% if @document.description.present? %>
+      <p class="text-lg text-gray-800 dark:text-gray-400 mb-4">
+        <%= @document.description %>
+      </p>
+    <% end %>
+
+    <!-- Featured Image with Meta Overlay -->
+    <% if @document.portrait.attached? %>
+      <div class="relative rounded-xl overflow-hidden shadow-lg mb-4" style="max-height: 400px;">
+        <%= image_tag @document.portrait,
+                     class: "w-full h-full object-cover",
+                     style: "max-height: 400px;",
+                     alt: @document.title %>
+
+        <!-- Meta Overlay -->
+        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+          <div class="flex flex-wrap items-center gap-3 text-sm">
+            <% if @document.published_at %>
+              <div class="flex items-center gap-1.5 text-white/90">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <time datetime="<%= @document.published_at.iso8601 %>">
+                  <%= format_date(@document.published_at) %>
+                </time>
+              </div>
+            <% end %>
+
+            <!-- Tags -->
+            <% if @document.tags.any? %>
+              <div class="flex flex-wrap items-center gap-2">
+                <% @document.tags.each do |t| %>
+                  <%= link_to public_tag_path(t), class: "px-2 py-1 rounded bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors text-xs font-medium" do %>
+                    #<%= t.title %>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <!-- Meta (when no featured image) -->
+      <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-4">
+        <% if @document.published_at %>
+          <div class="flex items-center gap-1.5">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <time datetime="<%= @document.published_at.iso8601 %>">
+              <%= format_date(@document.published_at) %>
+            </time>
+          </div>
+        <% end %>
+
+        <!-- Tags -->
+        <% if @document.tags.any? %>
+          <div class="flex items-center gap-2">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+            </svg>
+            <div class="flex flex-wrap gap-2">
+              <% @document.tags.each do |t| %>
+                <%= link_to public_tag_path(t), class: "px-2 py-0.5 rounded bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors text-xs font-medium" do %>
+                  #<%= t.title %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </header>
+
+  <!-- Body -->
+  <section class="text-gray-800 dark:text-gray-400 prose prose-lg prose-slate max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-indigo-600 prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl prose-img:shadow-lg prose-pre:!bg-white prose-pre:!p-0 prose-code:!bg-transparent">
+    <% @blocks.each do |block| %>
+      <%= render_block(block) %>
+    <% end %>
+  </section>
+
+  <!-- Divider -->
+  <div class="my-8 border-t border-gray-200"></div>
+
+  <!-- Reactions -->
+  <section class="bg-gray-50 rounded-lg p-4 border border-gray-200 mb-8">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <%= button_to public_document_like_path(@document), method: :post, class: "inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-pink-500 text-white text-sm font-medium hover:bg-pink-600 transition-colors" do %>
+          <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+          </svg>
+          Like
+        <% end %>
+
+        <%= button_to public_document_like_path(@document), method: :delete, class: "inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors" do %>
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+          Unlike
+        <% end %>
+      </div>
+
+      <div class="flex items-center gap-2 text-gray-700 text-sm">
+        <svg class="h-4 w-4 text-pink-500" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+        </svg>
+        <span class="font-medium"><%= @document.likes.count %> <%= 'like'.pluralize(@document.likes.count) %></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comments -->
+  <section>
+    <div class="flex items-center gap-2 mb-4">
+      <h2 class="text-2xl font-bold text-gray-900">Comments</h2>
+      <span class="px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 text-sm font-medium">
+        <%= @document.comments.visible.count %>
+      </span>
+    </div>
+
+    <% if @document.comments.visible.any? %>
+      <ul class="space-y-3 mb-6">
+        <% @document.comments.visible.order(created_at: :asc).each do |c| %>
+          <li class="border border-gray-200 rounded-lg p-4 bg-white hover:border-gray-300 transition-colors">
+            <div class="flex items-start gap-3 mb-2">
+              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500 text-white font-medium text-sm">
+                <%= (c.name.presence || "A")[0].upcase %>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <p class="font-medium text-gray-900 text-sm">
+                    <%= c.name.presence || "Anonymous" %>
+                  </p>
+                  <time class="text-xs text-gray-500" datetime="<%= c.created_at.iso8601 %>">
+                    <%= format_date(c.created_at) %>
+                  </time>
+                </div>
+                <div class="prose prose-sm max-w-none text-gray-700 mt-1">
+                  <%= simple_format(c.body_markdown) %>
+                </div>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <div class="text-center py-8 bg-gray-50 rounded-lg border border-gray-200 mb-6">
+        <svg class="h-12 w-12 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+        <p class="text-sm text-gray-600">No comments yet. Be the first to share your thoughts!</p>
+      </div>
+    <% end %>
+
+    <!-- Comment Form -->
+    <div class="bg-indigo-50 rounded-lg p-6 border border-indigo-100">
+      <h3 class="text-lg font-bold text-gray-900 mb-4">Leave a Comment</h3>
+      <%= render "public/comments/form", document: @document %>
+    </div>
+  </section>
+</article>

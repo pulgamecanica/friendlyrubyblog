@@ -21,7 +21,7 @@ module PublicHelper
         }
       end
 
-      content_tag(:div, enhanced_html.html_safe, class: "prose prose-neutral max-w-none prose-p:my-0 prose-p:mb-2 prose-headings:my-0 prose-headings:mb-1 prose-ul:my-0 prose-ul:mb-2 prose-ol:my-0 prose-ol:mb-2 prose-li:my-0 prose-code:bg-gray-100 prose-code:text-gray-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-pre:!bg-white prose-code:!bg-transparent")
+      content_tag(:div, enhanced_html.html_safe, class: "text-gray-800 dark:text-gray-400 prose prose-neutral max-w-none prose-p:my-0 prose-p:mb-2 prose-headings:my-0 prose-headings:mb-1 prose-ul:my-0 prose-ul:mb-2 prose-ol:my-0 prose-ol:mb-2 prose-li:my-0 prose-code:bg-gray-100 prose-code:text-gray-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-pre:!bg-white prose-code:!bg-transparent")
     when CodeBlock
       render_code_block(block)
     when HtmlBlock
