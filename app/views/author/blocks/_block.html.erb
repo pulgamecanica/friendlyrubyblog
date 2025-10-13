@@ -47,14 +47,22 @@
                 <div class="p-4" data-code-executor-target="console">
                   <% if block.execution_result.present? %>
                     <div class="text-sm font-mono">
-                      <% if block.execution_result['success'] %>
+                      <% has_error = block.execution_result['error'].present? %>
+                      <% has_output = block.execution_result['output'].present? %>
+                      <% exit_code = block.execution_result['exit_code'] %>
+
+                      <% if has_error %>
+                        <div class="text-red-400 text-xs mb-2">❌ Error (exit code: <%= exit_code %>)</div>
+                        <pre class="whitespace-pre-wrap text-red-300"><%= block.execution_result['error'] %></pre>
+                      <% elsif has_output %>
                         <div class="text-green-400 text-xs mb-2">
-                          ✅ Executed in <%= block.execution_result['execution_time'] %>s
+                          ✅ Executed in <%= block.execution_result['execution_time'] %>s (exit code: <%= exit_code %>)
                         </div>
                         <pre class="whitespace-pre-wrap text-gray-100"><%= block.execution_result['output'] %></pre>
                       <% else %>
-                        <div class="text-red-400 text-xs mb-2">❌ Error</div>
-                        <pre class="whitespace-pre-wrap text-red-300"><%= block.execution_result['error'] %></pre>
+                        <div class="text-gray-400 text-xs mb-2">
+                          ℹ️ No output (exit code: <%= exit_code %>)
+                        </div>
                       <% end %>
                     </div>
                   <% else %>
@@ -301,7 +309,7 @@
                         class: "space-y-3" do |f| %>
 
             <%= f.text_area :text,
-                value: block.text,
+                value: block.text || "#include <MLX42/MLX42.h>\n\nvoid user_main(int argc, char **argv) {\n  extern mlx_t *mlx;\n  // Your MLX42 code here\n}",
                 data: {
                   block_editor_target: "textarea",
                   action: "input->block-editor#autoResize",

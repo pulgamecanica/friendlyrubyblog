@@ -279,15 +279,19 @@ module PublicHelper
             %(<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>).html_safe
           end
 
-          # Indicators
-          indicators = content_tag(:div, class: "absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10") do
-            images.map.with_index do |_, index|
-              content_tag(:button,
-                         "",
-                         type: "button",
-                         data: { action: "image-carousel#goTo", index: index, image_carousel_target: "indicator" },
-                         class: "h-2 w-2 rounded-full bg-white/50 transition-colors")
-            end.join.html_safe
+          # Indicators (only in public view, toolbar has them in author view)
+          indicators = if clickable
+            content_tag(:div, class: "absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10") do
+              images.map.with_index do |_, index|
+                content_tag(:button,
+                           "",
+                           type: "button",
+                           data: { action: "image-carousel#goTo", index: index, image_carousel_target: "indicator" },
+                           class: "h-2 w-2 rounded-full bg-gray-300 transition-colors")
+              end.join.html_safe
+            end
+          else
+            "".html_safe
           end
 
           images_container + prev_btn + next_btn + indicators

@@ -17,8 +17,11 @@ class CodeExecutionJob < ApplicationJob
         executable_command: block.language.executable_command
       )
 
-      # Store result in block data
-      block.set_execution_result(result.merge(status: "completed", executed_at: Time.current))
+      # Store result in block data - if successful, clear any previous error
+      execution_result = result.merge(status: "completed", executed_at: Time.current)
+      execution_result[:error] = nil if result[:success]
+
+      block.set_execution_result(execution_result)
       block.save!
 
       # Broadcast the result to the user via ActionCable

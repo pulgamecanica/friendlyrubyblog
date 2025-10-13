@@ -7,6 +7,9 @@ export default class extends Controller {
   connect() {
     this.currentIndex = 0
     this.updateIndicators()
+    requestAnimationFrame(() => {
+        this.updateIndicators()
+  }) 
   }
 
   previous() {
@@ -43,15 +46,16 @@ export default class extends Controller {
     container.style.transform = `translateX(${translateX}%)`
     this.updateIndicators()
   }
-
   updateIndicators() {
+    if (!this.hasIndicatorTarget) return
+
     this.indicatorTargets.forEach((indicator, index) => {
       if (index === this.currentIndex) {
-        indicator.classList.remove("bg-white/50")
-        indicator.classList.add("bg-white")
+        indicator.classList.remove("bg-gray-300")
+        indicator.classList.add("bg-gray-600")
       } else {
-        indicator.classList.remove("bg-white")
-        indicator.classList.add("bg-white/50")
+        indicator.classList.remove("bg-gray-600")
+        indicator.classList.add("bg-gray-300")
       }
     })
   }
