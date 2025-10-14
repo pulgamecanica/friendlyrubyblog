@@ -43,25 +43,9 @@ export default class extends Controller {
     const style = document.createElement('style')
     style.id = 'prism-theme'
 
-    // Check if we're in public view (has id="public" on body)
-    const isPublicView = document.body.id === 'public'
-
+    // Always use dark theme for code blocks (both public and author views)
     style.textContent = `
-      /* Context-aware code block styling */
-      ${isPublicView ? `
-      /* Light theme for public view */
-      pre[class*="language-"],
-      code[class*="language-"] {
-        background: white !important;
-        color: #1f2937 !important;
-      }
-
-      code[class*="language-"] {
-        background: transparent !important;
-      }
-
-      /* Light Prism Theme Tokens */` : `
-      /* Dark theme for author view */
+      /* Dark theme for all code blocks */
       pre[class*="language-"],
       code[class*="language-"] {
         background: #111827 !important;
@@ -72,18 +56,23 @@ export default class extends Controller {
         background: transparent !important;
       }
 
-      /* Dark Prism Theme Tokens */`}
+      /* DO NOT reset padding - respect Tailwind classes */
+      pre[class*="language-"] {
+        margin: 0 !important;
+      }
+
+      /* Dark Prism Theme Tokens */
       .token.comment,
       .token.prolog,
       .token.doctype,
       .token.cdata {
-        color: ${isPublicView ? '#6b7280' : '#9ca3af'};
+        color: #9ca3af;
         font-style: italic;
         background: transparent !important;
       }
 
       .token.punctuation {
-        color: ${isPublicView ? '#374151' : '#d1d5db'};
+        color: #d1d5db;
         background: transparent !important;
       }
 
@@ -92,13 +81,13 @@ export default class extends Controller {
       .token.constant,
       .token.symbol,
       .token.deleted {
-        color: ${isPublicView ? '#db2777' : '#ec4899'};
+        color: #ec4899;
         background: transparent !important;
       }
 
       .token.boolean,
       .token.number {
-        color: ${isPublicView ? '#7c3aed' : '#a78bfa'};
+        color: #a78bfa;
         background: transparent !important;
       }
 
@@ -108,7 +97,7 @@ export default class extends Controller {
       .token.char,
       .token.builtin,
       .token.inserted {
-        color: ${isPublicView ? '#059669' : '#34d399'};
+        color: #34d399;
         background: transparent !important;
       }
 
@@ -118,7 +107,7 @@ export default class extends Controller {
       .language-css .token.string,
       .style .token.string,
       .token.variable {
-        color: ${isPublicView ? '#1f2937' : '#e5e7eb'};
+        color: #e5e7eb;
         background: transparent !important;
       }
 
@@ -126,19 +115,19 @@ export default class extends Controller {
       .token.attr-value,
       .token.function,
       .token.class-name {
-        color: ${isPublicView ? '#d97706' : '#fbbf24'};
+        color: #fbbf24;
         background: transparent !important;
       }
 
       .token.keyword {
-        color: ${isPublicView ? '#2563eb' : '#60a5fa'};
+        color: #60a5fa;
         font-weight: bold;
         background: transparent !important;
       }
 
       .token.regex,
       .token.important {
-        color: ${isPublicView ? '#dc2626' : '#f87171'};
+        color: #f87171;
         background: transparent !important;
       }
 
@@ -160,6 +149,13 @@ export default class extends Controller {
       /* Ensure no token has a background */
       .token {
         background: transparent !important;
+        position: static !important;
+        display: inline !important;
+      }
+
+      /* Fix token wrapping */
+      pre[class*="language-"] .token {
+        white-space: pre !important;
       }
     `
     document.head.appendChild(style)

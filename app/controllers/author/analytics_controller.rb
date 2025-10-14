@@ -4,7 +4,6 @@ class Author::AnalyticsController < Author::BaseController
     @end_date = params[:end_date]&.to_date || Date.today
 
     @analytics = AnalyticsService.new(
-      author: current_author,
       start_date: @start_date,
       end_date: @end_date
     )
@@ -16,7 +15,6 @@ class Author::AnalyticsController < Author::BaseController
     @end_date = params[:end_date]&.to_date || Date.today
 
     @analytics = AnalyticsService.new(
-      author: current_author,
       start_date: @start_date,
       end_date: @end_date
     )

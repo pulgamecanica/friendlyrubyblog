@@ -37,8 +37,7 @@
 
   <!-- Technical Info -->
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6 mb-8">
-    <h3 class="text-lg font-semibold dark:text-white mb-4">Technical Details</h3>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
       <div>
         <p class="text-sm text-gray-500 dark:text-gray-400">Device</p>
         <p class="text-lg font-medium dark:text-gray-200"><%= @visitor_info[:device].capitalize %></p>
@@ -51,6 +50,11 @@
         <p class="text-sm text-gray-500 dark:text-gray-400">Operating System</p>
         <p class="text-lg font-medium dark:text-gray-200"><%= @visitor_info[:os] %></p>
       </div>
+      <div>
+        <p class="text-sm text-gray-500 dark:text-gray-400">IP Address</p>
+        <p class="text-lg font-medium dark:text-gray-200"><%= @visitor_info[:ip_address] %></p>
+      </div>
+      
     </div>
   </div>
 

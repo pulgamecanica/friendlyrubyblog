@@ -1,17 +1,14 @@
 class AnalyticsService
   attr_reader :start_date, :end_date, :author
 
-  def initialize(author: nil, start_date: 30.days.ago, end_date: Time.current)
-    @author = author
+  def initialize(start_date: 30.days.ago, end_date: Time.current)
     @start_date = start_date.beginning_of_day
     @end_date = end_date.end_of_day
   end
 
   def page_views_scope
-    scope = PageView.joins(:document)
+    PageView.joins(:document)
                     .where("page_views.visited_at BETWEEN ? AND ?", start_date, end_date)
-    scope = scope.merge(documents_scope) if author
-    scope
   end
 
   # Top documents by views
@@ -139,6 +136,7 @@ class AnalyticsService
       device: first_view.device,
       browser: first_view.browser,
       os: first_view.os,
+      ip_address: first_view.ip_address,
       total_views: page_views_scope.where(unique_visitor_id: visitor_id).count,
       unique_pages: page_views_scope.where(unique_visitor_id: visitor_id).distinct.count(:document_id)
     }
@@ -161,10 +159,6 @@ class AnalyticsService
   end
 
   private
-
-  def documents_scope
-    author ? author.documents : Document.all
-  end
 
   def extract_domain(url)
     return nil if url.blank?
