@@ -7,7 +7,7 @@ module MarkdownHelper
     Commonmarker.to_html(
       str,
       options: { render: { unsafe: true } },
-      plugins: { syntax_highlighter: { theme: "InspiredGitHub" } }
+      plugins: { syntax_highlighter: { theme: "base16-ocean.light" } }
     )
   end
 

@@ -5,84 +5,84 @@
   <div class="mb-8">
     <div class="flex items-center justify-between mb-4">
       <div>
-        <h1 class="text-4xl font-bold">Visitor Activity</h1>
-        <p class="text-gray-600 mt-1 font-mono text-sm"><%= @visitor_id %></p>
+        <h1 class="text-4xl font-bold dark:text-white">Visitor Activity</h1>
+        <p class="text-gray-600 dark:text-gray-400 mt-1 font-mono text-sm"><%= @visitor_id %></p>
       </div>
-      <%= link_to "← Back to Analytics", author_analytics_path(start_date: @start_date, end_date: @end_date), class: "text-indigo-600 hover:text-indigo-800" %>
+      <%= link_to "← Back to Analytics", author_analytics_path(start_date: @start_date, end_date: @end_date), class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300" %>
     </div>
   </div>
 
   <!-- Visitor Info Summary -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <div class="bg-white rounded-lg shadow p-6">
-      <p class="text-gray-500 text-sm font-medium">Total Views</p>
-      <p class="text-3xl font-bold mt-2"><%= @visitor_info[:total_views] %></p>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6">
+      <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Views</p>
+      <p class="text-3xl font-bold dark:text-white mt-2"><%= @visitor_info[:total_views] %></p>
     </div>
-    <div class="bg-white rounded-lg shadow p-6">
-      <p class="text-gray-500 text-sm font-medium">Unique Pages</p>
-      <p class="text-3xl font-bold mt-2"><%= @visitor_info[:unique_pages] %></p>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6">
+      <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Unique Pages</p>
+      <p class="text-3xl font-bold dark:text-white mt-2"><%= @visitor_info[:unique_pages] %></p>
     </div>
-    <div class="bg-white rounded-lg shadow p-6">
-      <p class="text-gray-500 text-sm font-medium">First Visit</p>
-      <p class="text-lg font-bold mt-2"><%= @visitor_info[:first_visit].strftime("%b %d, %Y") %></p>
-      <p class="text-sm text-gray-500"><%= time_ago_in_words(@visitor_info[:first_visit]) %> ago</p>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6">
+      <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">First Visit</p>
+      <p class="text-lg font-bold dark:text-white mt-2"><%= @visitor_info[:first_visit].strftime("%b %d, %Y") %></p>
+      <p class="text-sm text-gray-500 dark:text-gray-400"><%= time_ago_in_words(@visitor_info[:first_visit]) %> ago</p>
     </div>
-    <div class="bg-white rounded-lg shadow p-6">
-      <p class="text-gray-500 text-sm font-medium">Location</p>
-      <p class="text-lg font-bold mt-2">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6">
+      <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Location</p>
+      <p class="text-lg font-bold dark:text-white mt-2">
         <%= [@visitor_info[:city], @visitor_info[:country]].reject { |v| v.blank? || v == "Unknown" }.join(", ").presence || "Unknown" %>
       </p>
     </div>
   </div>
 
   <!-- Technical Info -->
-  <div class="bg-white rounded-lg shadow p-6 mb-8">
-    <h3 class="text-lg font-semibold mb-4">Technical Details</h3>
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6 mb-8">
+    <h3 class="text-lg font-semibold dark:text-white mb-4">Technical Details</h3>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div>
-        <p class="text-sm text-gray-500">Device</p>
-        <p class="text-lg font-medium"><%= @visitor_info[:device].capitalize %></p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Device</p>
+        <p class="text-lg font-medium dark:text-gray-200"><%= @visitor_info[:device].capitalize %></p>
       </div>
       <div>
-        <p class="text-sm text-gray-500">Browser</p>
-        <p class="text-lg font-medium"><%= @visitor_info[:browser] %></p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Browser</p>
+        <p class="text-lg font-medium dark:text-gray-200"><%= @visitor_info[:browser] %></p>
       </div>
       <div>
-        <p class="text-sm text-gray-500">Operating System</p>
-        <p class="text-lg font-medium"><%= @visitor_info[:os] %></p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Operating System</p>
+        <p class="text-lg font-medium dark:text-gray-200"><%= @visitor_info[:os] %></p>
       </div>
     </div>
   </div>
 
   <!-- Activity Timeline -->
-  <div class="bg-white rounded-lg shadow p-6">
-    <h3 class="text-lg font-semibold mb-4">Activity Timeline</h3>
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6">
+    <h3 class="text-lg font-semibold dark:text-white mb-4">Activity Timeline</h3>
     <div class="space-y-4">
       <% @visitor_activity.group_by { |v| v.visited_at.to_date }.each do |date, views| %>
-        <div class="border-l-4 border-indigo-500 pl-4">
-          <h4 class="font-semibold text-gray-800 mb-2">
+        <div class="border-l-4 border-indigo-500 dark:border-indigo-400 pl-4">
+          <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-2">
             <%= date.strftime("%B %d, %Y") %>
-            <span class="text-sm text-gray-500 font-normal">(<%= views.count %> views)</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400 font-normal">(<%= views.count %> views)</span>
           </h4>
           <div class="space-y-2">
             <% views.each do |view| %>
-              <div class="flex items-start justify-between py-2 border-b border-gray-100">
+              <div class="flex items-start justify-between py-2 border-b border-gray-100 dark:border-gray-700">
                 <div class="flex-1">
                   <div class="flex items-center gap-2">
-                    <span class="text-sm text-gray-500"><%= view.visited_at.strftime("%H:%M:%S") %></span>
+                    <span class="text-sm text-gray-500 dark:text-gray-400"><%= view.visited_at.strftime("%H:%M:%S") %></span>
                     <%= link_to view.document.title, public_document_path(view.document),
-                        class: "text-indigo-600 hover:text-indigo-800 font-medium", target: "_blank" %>
+                        class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium", target: "_blank" %>
                   </div>
                   <% if view.referrer.present? %>
-                    <div class="mt-1 text-xs text-gray-500">
+                    <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                       <span class="font-medium">From:</span>
-                      <a href="<%= view.referrer %>" target="_blank" class="text-indigo-500 hover:underline">
+                      <a href="<%= view.referrer %>" target="_blank" class="text-indigo-500 dark:text-indigo-400 hover:underline">
                         <%= view.referrer.truncate(80) %>
                       </a>
                     </div>
                   <% end %>
                   <% if view.next_page.present? %>
-                    <div class="mt-1 text-xs text-gray-500">
+                    <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                       <span class="font-medium">To:</span> <%= view.next_page.truncate(80) %>
                     </div>
                   <% end %>
@@ -95,7 +95,7 @@
     </div>
 
     <% if @visitor_activity.empty? %>
-      <p class="text-gray-500 text-center py-8">No activity found for this visitor in the selected date range.</p>
+      <p class="text-gray-500 dark:text-gray-400 text-center py-8">No activity found for this visitor in the selected date range.</p>
     <% end %>
   </div>
 </div>

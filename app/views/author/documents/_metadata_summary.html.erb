@@ -1,9 +1,9 @@
-<div id="metadata_summary" class="text-sm text-gray-600 flex items-center space-x-4">
-  <span>Kind: <span class="font-medium"><%= document.kind.capitalize %></span></span>
+<div id="metadata_summary" class="text-sm text-gray-600 dark:text-gray-400 flex items-center space-x-4">
+  <span>Kind: <span class="font-medium text-gray-800 dark:text-gray-200"><%= document.kind.capitalize %></span></span>
   <% if document.series %>
-    <span>Series: <span class="font-medium"><%= document.series.title %></span></span>
+    <span>Series: <span class="font-medium text-gray-800 dark:text-gray-200"><%= document.series.title %></span></span>
   <% end %>
   <% if document.tags.any? %>
-    <span>Tags: <span class="font-medium"><%= document.tags.count %></span></span>
+    <span>Tags: <span class="font-medium text-gray-800 dark:text-gray-200"><%= document.tags.count %></span></span>
   <% end %>
 </div>

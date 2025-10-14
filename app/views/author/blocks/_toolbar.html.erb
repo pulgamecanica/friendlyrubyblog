@@ -4,8 +4,8 @@
      id="<%= dom_id(block) %>_toolbar">
 
   <!-- Block Info -->
-  <div class="bg-white rounded-lg border border-gray-200 p-4">
-    <div class="text-xs font-medium text-gray-500 uppercase tracking-wider">
+  <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+    <div class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
       <%= block.type %>
     </div>
     <%= render "author/blocks/position", block: block %>
@@ -13,25 +13,25 @@
 
   <!-- Normal Mode Tools -->
   <div data-block-editor-target="normalTools"
-       class="bg-white rounded-lg border border-gray-200 p-4 space-y-3 flex flex-col">
+       class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 space-y-3 flex flex-col">
 
     <div class="flex gap-2">
       <button data-block-editor-target="collapseBtn"
               data-action="click->block-editor#toggleCollapse"
-              class="flex-1 px-2 py-1.5 text-xs border border-gray-300 rounded hover:bg-gray-50 transition-colors">
+              class="flex-1 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-300 transition-colors">
         Collapse
       </button>
 
-      <button class="drag-handle px-2 py-1.5 text-xs border border-gray-300 rounded hover:bg-gray-50 transition-colors cursor-move focus:outline-none focus:ring-0"
+      <button class="drag-handle px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-move focus:outline-none focus:ring-0"
               title="Drag to reorder">
-        <%= icon_drag_handle size: :xs, class: "text-gray-600" %>
+        <%= icon_drag_handle size: :xs, class: "text-gray-600 dark:text-gray-400" %>
       </button>
     </div>
 
     <!-- Code Block Controls (only for CodeBlock) -->
     <% if block.is_a?(CodeBlock) %>
-      <div class="border-t pt-3">
-        <div class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
+      <div class="border-t dark:border-gray-600 pt-3">
+        <div class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
           Code Controls
         </div>
 
@@ -46,9 +46,9 @@
                         local: false,
                         class: "mb-2" do |f| %>
             <div class="flex items-center justify-between">
-              <span class="text-xs text-gray-700">Interactive Mode</span>
+              <span class="text-xs text-gray-700 dark:text-gray-300">Interactive Mode</span>
               <button type="submit"
-                      class="<%= block.interactive? ? 'bg-blue-600' : 'bg-gray-300' %> relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                      class="<%= block.interactive? ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600' %> relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                 <span class="<%= block.interactive? ? 'translate-x-6' : 'translate-x-1' %> inline-block h-4 w-4 transform rounded-full bg-white transition-transform"></span>
               </button>
             </div>
@@ -63,7 +63,7 @@
             ▶ Run Code
           </button>
         <% elsif block.interactive? %>
-          <div class="text-xs text-gray-500 text-center py-1">
+          <div class="text-xs text-gray-500 dark:text-gray-400 text-center py-1">
             Interactive mode enabled but execution not configured
           </div>
         <% end %>
@@ -72,17 +72,17 @@
 
     <!-- Image Carousel Controls (only for ImageBlock with multiple images) -->
     <% if block.is_a?(ImageBlock) && block.images.count > 1 %>
-      <div class="border-t pt-3">
-        <div class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
+      <div class="border-t dark:border-gray-600 pt-3">
+        <div class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
           Image Navigation
         </div>
         <div class="flex gap-2">
           <button data-action="click->image-carousel#previous"
-                  class="flex-1 px-2 py-1.5 text-xs border border-gray-300 rounded hover:bg-gray-50 transition-colors">
+                  class="flex-1 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-300 transition-colors">
             ← Previous
           </button>
           <button data-action="click->image-carousel#next"
-                  class="flex-1 px-2 py-1.5 text-xs border border-gray-300 rounded hover:bg-gray-50 transition-colors">
+                  class="flex-1 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-300 transition-colors">
             Next →
           </button>
         </div>
@@ -93,7 +93,7 @@
             <button data-action="click->image-carousel#goTo"
                     data-image-carousel-target="indicator"
                     data-index="<%= index %>"
-                    class="w-2 h-2 rounded-full bg-gray-300 hover:bg-gray-500 transition-colors focus:outline-none focus:ring-0">
+                    class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-500 dark:hover:bg-gray-400 transition-colors focus:outline-none focus:ring-0">
             </button>
           <% end %>
         </div>
@@ -102,8 +102,8 @@
 
     <!-- MLX42 Controls (only for Mlx42Block) -->
     <% if block.is_a?(Mlx42Block) %>
-      <div class="border-t pt-3" data-controller="mlx42-compiler">
-        <div class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
+      <div class="border-t dark:border-gray-600 pt-3" data-controller="mlx42-compiler">
+        <div class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
           MLX42 Controls
         </div>
 
@@ -171,39 +171,39 @@
         author_document_block_path(block.document, block),
         method: :delete,
         form: { data: { turbo_confirm: "Delete this block?" } },
-        class: "w-full px-2 py-1.5 text-xs border border-red-300 text-red-700 rounded hover:bg-red-50 transition-colors" %>
+        class: "w-full px-2 py-1.5 text-xs border border-red-300 dark:border-red-700 text-red-700 dark:text-red-400 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" %>
   </div>
 
   <!-- Edit Mode Tools -->
   <div data-block-editor-target="editTools"
-       class="bg-white rounded-lg border border-gray-200 p-4 pt-2 flex flex-col gap-2"
+       class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 pt-2 flex flex-col gap-2"
        style="display: none;">
     <% if block.is_a?(MarkdownBlock) %>
-      <div class="text-xs text-center text-gray-400">Markdown Preview</div>
+      <div class="text-xs text-center text-gray-400 dark:text-gray-500">Markdown Preview</div>
 
-      <div class="flex flex-row gap-1 pb-2 border-b border-gray-300">
+      <div class="flex flex-row gap-1 pb-2 border-b border-gray-300 dark:border-gray-600">
         <button data-block-editor-target="previewBtn"
                 data-action="click->block-editor#togglePreview"
-                class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded hover:bg-gray-50 transition-colors">
+                class="w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-300 transition-colors">
           Hide
         </button>
 
         <button data-block-editor-target="layoutBtn"
                 data-action="click->block-editor#toggleLayout"
-                class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded hover:bg-gray-50 transition-colors">
+                class="w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-300 transition-colors">
           Stack
         </button>
       </div>
     <% end %>
     <button data-action="click->block-editor#exitEditMode"
-            class="w-full px-2 py-2 text-xs bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors">
+            class="w-full px-2 py-2 text-xs bg-gray-600 dark:bg-gray-700 text-white rounded hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors">
       Close
     </button>
   </div>
 
   <!-- Update Button (Edit Mode Only) -->
   <div data-block-editor-target="updateButton"
-       class="bg-white rounded-lg border border-gray-200 p-4"
+       class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4"
        style="display: none;">
 
     <button data-block-editor-target="submitButton"

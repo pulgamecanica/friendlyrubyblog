@@ -12,36 +12,36 @@
            data-block-editor-preview-url-value="<%= preview_author_document_blocks_path(block.document) %>">
 
     <!-- Main Content Column -->
-    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
 
       <!-- Normal Mode: Rendered Content (shown by default) -->
       <div data-block-editor-target="content"
            data-action="click->block-editor#handleContentClick"
-           class="relative cursor-pointer hover:bg-gray-50 transition-colors h-full focus:outline-none">
+           class="relative cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors h-full focus:outline-none">
 
         <div class="p-4 h-full">
           <% if block.is_a?(MarkdownBlock) %>
-            <div class="prose prose-neutral max-w-none h-full">
+            <div class="prose prose-neutral dark:prose-invert max-w-none h-full prose-pre:!bg-gray-900 prose-pre:!text-gray-100">
               <%= safe_html(text_to_markdown(block.data["markdown"].to_s)) %>
             </div>
           <% elsif block.is_a?(CodeBlock) %>
             <!-- Interactive Mode: Side-by-side layout - ALWAYS PRESENT -->
             <div data-block-editor-target="interactiveLayout" class="grid grid-cols-2 gap-4 h-full" style="<%= block.interactive? ? '' : 'display: none;' %>">
               <!-- Code Column -->
-              <div class="bg-gray-900 text-gray-100 rounded-lg overflow-hidden"
+              <div class="bg-gray-900 text-gray-100 rounded-lg overflow-hidden flex flex-col"
                    data-controller="syntax-highlighter"
                    data-syntax-highlighter-language-value="<%= block.language_name %>">
                 <% if block.filename.present? %>
-                  <div class="bg-gray-800 px-4 py-2 text-xs text-gray-400 border-b border-gray-700">
+                  <div class="bg-gray-950 px-4 py-2 text-xs text-gray-300 border-b border-gray-700">
                     <%= block.filename %>
                   </div>
                 <% end %>
-                <pre class="p-4 overflow-x-auto text-sm"><code class="language-<%= block.language&.extension || block.data["language"] %>"><%= block.data["code"] %></code></pre>
+                <pre class="p-4 overflow-x-auto text-sm flex-1 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-gray-800 [&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-500"><code class="language-<%= block.language&.extension || block.data["language"] %>"><%= block.data["code"] %></code></pre>
               </div>
 
               <!-- Console Column -->
               <div class="bg-gray-900 text-gray-100 rounded-lg overflow-hidden">
-                <div class="bg-gray-800 px-4 py-2 text-xs text-gray-400 border-b border-gray-700">
+                <div class="bg-gray-950 px-4 py-2 text-xs text-gray-300 border-b border-gray-700">
                   Console Output
                 </div>
                 <div class="p-4" data-code-executor-target="console">
@@ -76,16 +76,16 @@
             </div>
 
             <!-- Non-interactive Mode: Single code block - ALWAYS PRESENT -->
-            <div data-block-editor-target="singleLayout" class="bg-gray-900 text-gray-100 rounded-lg overflow-hidden"
+            <div data-block-editor-target="singleLayout" class="bg-gray-900 text-gray-100 rounded-lg overflow-hidden h-full flex flex-col"
                  data-controller="syntax-highlighter"
                  data-syntax-highlighter-language-value="<%= block.language_name %>"
                  style="<%= block.interactive? ? 'display: none;' : '' %>">
               <% if block.filename.present? %>
-                <div class="bg-gray-800 px-4 py-2 text-xs text-gray-400 border-b border-gray-700">
+                <div class="bg-gray-950 px-4 py-2 text-xs text-gray-300 border-b border-gray-700">
                   <%= block.filename %>
                 </div>
               <% end %>
-              <pre class="p-4 overflow-x-auto text-sm"><code class="language-<%= block.language&.extension || block.data["language"] %>" data-syntax-highlighter-target="code"><%= block.data["code"] %></code></pre>
+              <pre class="p-4 overflow-x-auto text-sm flex-1 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-gray-800 [&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-500"><code class="language-<%= block.language&.extension || block.data["language"] %>" data-syntax-highlighter-target="code"><%= block.data["code"] %></code></pre>
             </div>
           <% elsif block.is_a?(ImageBlock) %>
             <%= render_image_block(block, clickable: false) %>
@@ -93,23 +93,23 @@
             <div>
               <!-- Content Preview (code, assets) -->
               <div data-mlx42-preview-target="contentView" class="space-y-4">
-                <h3 class="text-sm font-medium text-gray-700">MLX42 Code</h3>
-                <pre class="bg-gray-900 text-gray-100 p-4 rounded font-mono text-sm overflow-auto max-h-96"><%= block.text %></pre>
+                <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">MLX42 Code</h3>
+                <pre class="bg-gray-900 text-gray-100 p-4 rounded font-mono text-sm overflow-auto max-h-96 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-gray-800 [&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-500"><%= block.text %></pre>
 
                 <% if block.assets.attached? %>
                   <div>
-                    <h3 class="text-sm font-medium text-gray-700 mb-2">Assets</h3>
+                    <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Assets</h3>
                     <div class="space-y-1">
                       <% block.assets.each do |asset| %>
-                        <div class="text-sm font-mono text-purple-600">assets/<%= asset.filename %></div>
+                        <div class="text-sm font-mono text-purple-600 dark:text-purple-400">assets/<%= asset.filename %></div>
                       <% end %>
                     </div>
                   </div>
                 <% end %>
 
                 <% unless block.compiled? %>
-                  <div class="p-3 bg-yellow-50 border border-yellow-200 rounded">
-                    <p class="text-sm text-yellow-800">⚠️ Not compiled yet. Click "Compile" to build.</p>
+                  <div class="p-3 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded">
+                    <p class="text-sm text-yellow-800 dark:text-yellow-200">⚠️ Not compiled yet. Click "Compile" to build.</p>
                   </div>
                 <% end %>
               </div>
@@ -128,7 +128,7 @@
 
         <!-- Fade overlay for collapsed state -->
         <div data-block-editor-target="fadeOverlay"
-             class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none transition-opacity duration-300"
+             class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white dark:from-gray-800 via-white/80 dark:via-gray-800/80 to-transparent pointer-events-none transition-opacity duration-300"
              style="opacity: 0;"></div>
       </div>
 
@@ -155,18 +155,18 @@
                       block_editor_target: "textarea",
                       action: "input->block-editor#renderPreview input->block-editor#autoResize"
                     },
-                    class: "w-full border border-gray-300 rounded-lg overflow-hidden p-3 font-mono text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+                    class: "w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg overflow-hidden p-3 font-mono text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
                     placeholder: "Write your markdown here...",
                     rows: 8 %>
               </div>
 
               <!-- Preview (positioned dynamically) -->
               <div data-block-editor-target="preview"
-                   class="border border-gray-200 rounded-lg bg-gray-50">
-                <div class="p-3 border-b border-gray-200 text-xs font-medium text-gray-600 uppercase tracking-wider">
+                   class="border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-900">
+                <div class="p-3 border-b border-gray-200 dark:border-gray-600 text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                   Preview
                 </div>
-                <div class="p-4 prose prose-neutral max-w-none">
+                <div class="p-4 prose prose-neutral dark:prose-invert max-w-none prose-pre:!bg-gray-900 prose-pre:!text-gray-100">
                   <%= safe_html(text_to_markdown(block.data["markdown"].to_s)) %>
                 </div>
               </div>
@@ -189,11 +189,11 @@
             <div class="space-y-3">
               <!-- Language Selection -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Language</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Language</label>
                 <%= f.text_field :language_name,
                     value: block.language_name,
                     list: "languages_#{block.id}",
-                    class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+                    class: "w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
                     placeholder: "Language (e.g., ruby, javascript)" %>
 
                 <datalist id="languages_<%= block.id %>">
@@ -205,10 +205,10 @@
 
               <!-- Filename (Optional) -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Filename (optional)</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Filename (optional)</label>
                 <%= f.text_field :data_filename,
                     value: block.filename,
-                    class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+                    class: "w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
                     placeholder: "e.g., main.rb, app.js, hello.py" %>
               </div>
 
@@ -216,14 +216,14 @@
               <%= f.hidden_field :interactive, value: block.interactive? ? "1" : "0" %>
 
               <% if block.language && !block.language.interactive? %>
-                <p class="text-xs text-gray-500">This language doesn't support interactive mode yet.</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">This language doesn't support interactive mode yet.</p>
               <% end %>
             </div>
 
             <%= f.text_area :data_code,
                 value: block.data["code"],
                 data: { controller: "textarea-tab" },
-                class: "w-full border border-gray-300 rounded-lg p-3 font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+                class: "w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg p-3 font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
                 placeholder: "Enter your code here...",
                 rows: 12 %>
 
@@ -243,17 +243,17 @@
             <!-- Caption -->
             <%= f.text_field :data_caption,
                 value: block.data["caption"],
-                class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+                class: "w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
                 placeholder: "Caption (optional)..." %>
 
             <!-- Current Images -->
             <% if block.persisted? && block.images.any? %>
               <div class="space-y-3">
-                <label class="block text-sm font-medium text-gray-700">Current Images</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Current Images</label>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
                   <% block.images.each_with_index do |image, index| %>
                     <div class="relative group">
-                      <%= image_tag image, class: "w-full h-20 object-cover rounded border", alt: "Image #{index + 1}" %>
+                      <%= image_tag image, class: "w-full h-20 object-cover rounded border dark:border-gray-600", alt: "Image #{index + 1}" %>
                       <%= link_to "×", remove_image_author_document_block_path(block.document, block, image.id),
                           method: :delete,
                           data: {
@@ -269,14 +269,14 @@
 
             <!-- Image Upload -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 <%= block.persisted? ? "Add More Images" : "Upload Images" %>
               </label>
               <%= f.file_field :images,
                   multiple: true,
                   accept: "image/*",
-                  class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100" %>
-              <p class="text-xs text-gray-500 mt-1">Select multiple images. PNG, JPG, JPEG up to 10MB each</p>
+                  class: "block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-orange-50 dark:file:bg-orange-900 file:text-orange-700 dark:file:text-orange-300 hover:file:bg-orange-100 dark:hover:file:bg-orange-800" %>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Select multiple images. PNG, JPG, JPEG up to 10MB each</p>
             </div>
 
             <%= f.hidden_field :type %>
@@ -293,7 +293,7 @@
             <%= f.text_area :data_html,
                 value: block.data["html"],
                 data: { controller: "textarea-tab" },
-                class: "w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+                class: "w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
                 placeholder: "Enter HTML content...",
                 rows: 12 %>
 
@@ -336,7 +336,7 @@
             <%= f.text_area :data_html,
                 value: block.data["html"],
                 data: { controller: "textarea-tab" },
-                class: "w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+                class: "w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
                 placeholder: "Content not yet supported...",
                 rows: 12 %>
 

@@ -47,3 +47,5 @@ yarn-error.log*
 coverage/
 
 CLAUDE.md
+
+/config/credentials/production.key

@@ -21,7 +21,7 @@ module PublicHelper
         }
       end
 
-      content_tag(:div, enhanced_html.html_safe, class: "text-gray-800 dark:text-gray-400 prose prose-neutral max-w-none prose-p:my-0 prose-p:mb-2 prose-headings:my-0 prose-headings:mb-1 prose-ul:my-0 prose-ul:mb-2 prose-ol:my-0 prose-ol:mb-2 prose-li:my-0 prose-code:bg-gray-100 prose-code:text-gray-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-pre:!bg-white prose-code:!bg-transparent")
+      content_tag(:div, enhanced_html.html_safe, class: "text-gray-800 dark:text-gray-400 prose prose-neutral max-w-none prose-p:my-0 prose-p:mb-2 prose-headings:my-0 prose-headings:mb-1 prose-ul:my-0 prose-ul:mb-2 prose-ol:my-0 prose-ol:mb-2 prose-li:my-0 prose-code:bg-gray-100 dark:prose-code:bg-gray-700 prose-code:text-gray-800 dark:prose-code:text-gray-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-pre:!bg-gray-900 prose-pre:!text-gray-100 prose-code:!bg-transparent")
     when CodeBlock
       render_code_block(block)
     when HtmlBlock
@@ -263,25 +263,26 @@ module PublicHelper
             end
           end
 
-          # Previous button
-          prev_btn = content_tag(:button,
-                                type: "button",
-                                data: { action: "image-carousel#previous" },
-                                class: "absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors z-10") do
-            %(<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>).html_safe
-          end
+          # Carousel controls (only in public view, toolbar has them in author view)
+          if clickable
+            # Previous button
+            prev_btn = content_tag(:button,
+                                  type: "button",
+                                  data: { action: "image-carousel#previous" },
+                                  class: "absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors z-10") do
+              %(<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>).html_safe
+            end
 
-          # Next button
-          next_btn = content_tag(:button,
-                                type: "button",
-                                data: { action: "image-carousel#next" },
-                                class: "absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors z-10") do
-            %(<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>).html_safe
-          end
+            # Next button
+            next_btn = content_tag(:button,
+                                  type: "button",
+                                  data: { action: "image-carousel#next" },
+                                  class: "absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors z-10") do
+              %(<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>).html_safe
+            end
 
-          # Indicators (only in public view, toolbar has them in author view)
-          indicators = if clickable
-            content_tag(:div, class: "absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10") do
+            # Indicators
+            indicators = content_tag(:div, class: "absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10") do
               images.map.with_index do |_, index|
                 content_tag(:button,
                            "",
@@ -290,15 +291,15 @@ module PublicHelper
                            class: "h-2 w-2 rounded-full bg-gray-300 transition-colors")
               end.join.html_safe
             end
-          else
-            "".html_safe
-          end
 
-          images_container + prev_btn + next_btn + indicators
+            images_container + prev_btn + next_btn + indicators
+          else
+            images_container
+          end
         end
       end
 
-      caption_html = caption ? content_tag(:figcaption, caption, class: "text-center text-sm text-gray-600 mt-3") : "".html_safe
+      caption_html = caption ? content_tag(:figcaption, caption, class: "text-center text-sm text-gray-600 dark:text-gray-400 mt-3") : "".html_safe
 
       # Render modal (only if clickable is true)
       modal_html = if clickable

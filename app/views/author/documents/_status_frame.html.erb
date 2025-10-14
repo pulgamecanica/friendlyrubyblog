@@ -1,22 +1,22 @@
 <turbo-frame id="document_status">
   <div class="flex items-center space-x-2">
     <% if document.published? %>
-      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
         <%= icon_checkmark_circle size: "sm", class: "mr-1" %>
         Published
       </span>
       <%= button_to "Unpublish", unpublish_author_document_path(document),
           method: :patch,
-          class: "text-sm text-gray-600 hover:text-gray-800",
+          class: "px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors",
           form: { data: { turbo_frame: "document_status" } } %>
     <% else %>
-      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">
         <%= icon_x_circle size: "sm", class: "mr-1" %>
         Draft
       </span>
       <%= button_to "Publish", publish_author_document_path(document),
           method: :patch,
-          class: "px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700",
+          class: "px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors",
           form: { data: { turbo_frame: "document_status" } } %>
     <% end %>
   </div>

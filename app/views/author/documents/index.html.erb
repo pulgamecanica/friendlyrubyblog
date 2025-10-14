@@ -265,7 +265,7 @@
                   <% end %>
                   <%= button_to author_document_path(doc),
                       method: :delete,
-                      class: "text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300",
+                      class: "text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 flex justify-center",
                       title: "Delete",
                       form: { data: { turbo_confirm: "Are you sure you want to delete '#{doc.title}'?" } } do %>
                     <%= icon_trash size: :md %>

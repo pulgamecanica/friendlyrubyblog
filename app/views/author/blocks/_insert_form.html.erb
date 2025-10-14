@@ -16,77 +16,77 @@
   </div>
 
   <!-- Block type selection form (hidden by default) -->
-  <div class="insert-form hidden bg-white border border-gray-300 rounded-lg shadow-lg p-4 my-2 -mx-4"
+  <div class="insert-form hidden bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg p-4 my-2 -mx-4"
        data-block-insert-target="form">
 
-    <div class="text-sm font-medium text-gray-700 mb-3">Choose block type:</div>
+    <div class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Choose block type:</div>
 
     <div class="grid grid-cols-3 gap-3 mb-4">
       <!-- Markdown Block -->
       <button type="button"
               data-action="click->block-insert#selectType"
               data-type="MarkdownBlock"
-              class="block-type-btn p-3 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all group cursor-pointer">
-        <div class="text-blue-600 mb-2">
+              class="block-type-btn p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group cursor-pointer">
+        <div class="text-blue-600 dark:text-blue-400 mb-2">
           <%= icon_markdown size: :lg, class: "mx-auto" %>
         </div>
-        <div class="text-xs font-medium">Markdown</div>
-        <div class="text-xs text-gray-500">Rich text content</div>
+        <div class="text-xs font-medium dark:text-gray-300">Markdown</div>
+        <div class="text-xs text-gray-500 dark:text-gray-400">Rich text content</div>
       </button>
 
       <!-- Code Block -->
       <button type="button"
               data-action="click->block-insert#selectType"
               data-type="CodeBlock"
-              class="block-type-btn p-3 border border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 transition-all group cursor-pointer">
-        <div class="text-green-600 mb-2">
+              class="block-type-btn p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all group cursor-pointer">
+        <div class="text-green-600 dark:text-green-400 mb-2">
           <%= icon_code size: :lg, class: "mx-auto" %>
         </div>
-        <div class="text-xs font-medium">Code</div>
-        <div class="text-xs text-gray-500">Syntax highlighted</div>
+        <div class="text-xs font-medium dark:text-gray-300">Code</div>
+        <div class="text-xs text-gray-500 dark:text-gray-400">Syntax highlighted</div>
       </button>
 
       <!-- HTML Block -->
       <button type="button"
               data-action="click->block-insert#selectType"
               data-type="HtmlBlock"
-              class="block-type-btn p-3 border border-gray-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-all group cursor-pointer">
-        <div class="text-purple-600 mb-2">
+              class="block-type-btn p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all group cursor-pointer">
+        <div class="text-purple-600 dark:text-purple-400 mb-2">
           <%= icon_monitor size: :lg, class: "mx-auto" %>
         </div>
-        <div class="text-xs font-medium">HTML</div>
-        <div class="text-xs text-gray-500">Raw HTML content</div>
+        <div class="text-xs font-medium dark:text-gray-300">HTML</div>
+        <div class="text-xs text-gray-500 dark:text-gray-400">Raw HTML content</div>
       </button>
 
       <!-- Image Block -->
       <button type="button"
               data-action="click->block-insert#selectType"
               data-type="ImageBlock"
-              class="block-type-btn p-3 border border-gray-200 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-all group cursor-pointer">
-        <div class="text-orange-600 mb-2">
+              class="block-type-btn p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-all group cursor-pointer">
+        <div class="text-orange-600 dark:text-orange-400 mb-2">
           <%= icon_image size: :lg, class: "mx-auto" %>
         </div>
-        <div class="text-xs font-medium">Images</div>
-        <div class="text-xs text-gray-500">Photo collection</div>
+        <div class="text-xs font-medium dark:text-gray-300">Images</div>
+        <div class="text-xs text-gray-500 dark:text-gray-400">Photo collection</div>
       </button>
 
       <!-- MLX42 Block -->
       <button type="button"
               data-action="click->block-insert#selectType"
               data-type="Mlx42Block"
-              class="block-type-btn p-3 border border-gray-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-all group cursor-pointer">
-        <div class="text-purple-600 mb-2">
+              class="block-type-btn p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all group cursor-pointer">
+        <div class="text-purple-600 dark:text-purple-400 mb-2">
           <%= icon_mlx42 size: :lg, class: "mx-auto" %>
         </div>
-        <div class="text-xs font-medium">MLX42</div>
-        <div class="text-xs text-gray-500">Graphics canvas</div>
+        <div class="text-xs font-medium dark:text-gray-300">MLX42</div>
+        <div class="text-xs text-gray-500 dark:text-gray-400">Graphics canvas</div>
       </button>
     </div>
 
     <div class="flex justify-end gap-2">
       <button type="button"
               data-action="click->block-insert#cancel"
-              class="px-3 py-1.5 text-xs text-gray-600 hover:text-gray-800">
+              class="px-3 py-1.5 text-xs text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">
         Cancel
       </button>
     </div>

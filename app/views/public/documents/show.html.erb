@@ -91,7 +91,7 @@
   </header>
 
   <!-- Body -->
-  <section class="text-gray-800 dark:text-gray-400 prose prose-lg prose-slate max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-indigo-600 prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl prose-img:shadow-lg prose-pre:!bg-white prose-pre:!p-0 prose-code:!bg-transparent">
+  <section class="text-gray-800 dark:text-gray-400 prose prose-lg prose-slate dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-indigo-600 prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl prose-img:shadow-lg prose-pre:!bg-gray-900 prose-pre:!text-gray-100 prose-pre:!p-0 prose-code:!bg-transparent">
     <% @blocks.each do |block| %>
       <%= render_block(block) %>
     <% end %>

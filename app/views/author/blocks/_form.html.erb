@@ -8,7 +8,7 @@
      when "MarkdownBlock" %>
     <div data-controller="markdown-preview">
       <%= f.text_area :data_markdown, value: data["markdown"], rows: 6,
-          class: "w-full rounded border px-3 py-2 font-mono",
+          class: "w-full rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 px-3 py-2 font-mono",
           data: {
             controller: "textarea-tab",
             action: "input->markdown-preview#update",
@@ -16,7 +16,7 @@
           } %>
 
       <div data-markdown-preview-target="preview"
-          class="mt-2 p-2 border rounded bg-gray-50 text-sm font-mono"></div>
+          class="mt-2 p-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-900 text-sm font-mono dark:text-gray-300"></div>
     </div>
 
   <% when "CodeBlock" %>
@@ -24,7 +24,7 @@
     <div class="space-y-2">
       <%= f.text_field :language_name, value: block.language_name,
           list: "languages_form_#{block.object_id}",
-          class: "w-full rounded border px-3 py-2",
+          class: "w-full rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 px-3 py-2",
           placeholder: "Language (e.g., ruby)" %>
 
       <datalist id="languages_form_<%= block.object_id %>">
@@ -34,7 +34,7 @@
       </datalist>
 
       <%= f.text_field :data_filename, value: block.filename,
-          class: "w-full rounded border px-3 py-2",
+          class: "w-full rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 px-3 py-2",
           placeholder: "Filename (optional)" %>
 
       <!-- Hidden Interactive Toggle (controlled from toolbar) -->
@@ -42,13 +42,13 @@
     </div>
 
     <%= f.text_area :data_code, value: data["code"], rows: 6,
-        class: "w-full rounded border px-3 py-2 font-mono",
+        class: "w-full rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 px-3 py-2 font-mono",
         data: { controller: "textarea-tab" },
         placeholder: "Code snippet..." %>
 
   <% when "HtmlBlock" %>
     <%= f.text_area :data_html, value: data["html"], rows: 6,
-        class: "w-full rounded border px-3 py-2",
+        class: "w-full rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 px-3 py-2",
         data: { controller: "textarea-tab" },
         placeholder: "HTML text here..." %>
 
@@ -56,17 +56,17 @@
     <div class="space-y-4">
       <!-- Caption -->
       <%= f.text_field :data_caption, value: data["caption"],
-          class: "w-full rounded border px-3 py-2",
+          class: "w-full rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 px-3 py-2",
           placeholder: "Caption (optional)..." %>
 
       <!-- Current Images -->
       <% if block.persisted? && block.images.any? %>
         <div class="space-y-3">
-          <label class="block text-sm font-medium text-gray-700">Current Images</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Current Images</label>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             <% block.images.each_with_index do |image, index| %>
               <div class="relative group">
-                <%= image_tag image, class: "w-full h-24 object-cover rounded border", alt: "Image #{index + 1}" %>
+                <%= image_tag image, class: "w-full h-24 object-cover rounded border dark:border-gray-600", alt: "Image #{index + 1}" %>
                 <%= link_to "×", remove_image_author_document_block_path(document, block, image.id),
                     method: :delete,
                     data: {
@@ -82,14 +82,14 @@
 
       <!-- Image Upload -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           <%= block.persisted? ? "Add More Images" : "Upload Images" %>
         </label>
         <%= f.file_field :images,
             multiple: true,
             accept: "image/*",
-            class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100" %>
-        <p class="text-xs text-gray-500 mt-1">Select multiple images. PNG, JPG, JPEG up to 10MB each</p>
+            class: "block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-orange-50 dark:file:bg-orange-900 file:text-orange-700 dark:file:text-orange-300 hover:file:bg-orange-100 dark:hover:file:bg-orange-800" %>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Select multiple images. PNG, JPG, JPEG up to 10MB each</p>
       </div>
     </div>
 
@@ -101,7 +101,7 @@
           data: { controller: "textarea-tab" },
           class: "w-full font-mono text-sm bg-gray-900 text-gray-100 p-4 rounded border-0",
           placeholder: "void user_main(int argc, char **argv) {\n  extern mlx_t *mlx;\n  // Your MLX42 code here\n}" %>
-      <p class="text-xs text-gray-500">Entry point: <code class="bg-gray-100 px-1 rounded">void user_main(int argc, char **argv)</code></p>
+      <p class="text-xs text-gray-500 dark:text-gray-400">Entry point: <code class="bg-gray-100 dark:bg-gray-800 dark:text-gray-300 px-1 rounded">void user_main(int argc, char **argv)</code></p>
     </div>
   <% end %>
 
@@ -109,6 +109,6 @@
     <%= f.hidden_field :type %>
     <%= f.hidden_field :position, value: block.position || document.blocks.count %>
     <%= f.submit block.persisted? ? "Update Block" : "Add Block",
-          class: "rounded bg-indigo-600 text-white px-4 py-2 hover:bg-indigo-700" %>
+          class: "rounded bg-indigo-600 dark:bg-indigo-700 text-white px-4 py-2 hover:bg-indigo-700 dark:hover:bg-indigo-600" %>
   </div>
 <% end %>

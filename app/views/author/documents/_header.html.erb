@@ -1,9 +1,9 @@
-<div class="sticky top-0 z-10 bg-white border-b shadow-sm text-">
+<div class="sticky top-0 z-10 bg-white dark:bg-gray-800 border-b dark:border-gray-700 shadow-sm text-">
   <div class="px-6 py-4">
   <div class="grid grid-cols-3 gap-6">
       <!-- Left: Navigation -->
       <div class="flex items-center space-x-4">
-        <%= link_to author_documents_path, class: "flex items-center text-gray-600 hover:text-gray-900" do %>
+        <%= link_to author_documents_path, class: "flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200" do %>
           <%= icon_arrow_left size: :md, class: "mr-1" %>
           Back
         <% end %>
@@ -15,21 +15,21 @@
       <!-- Right: Status and Actions -->
       <div class="flex items-center justify-end space-x-4" data-controller="blocks-manager">
         <!-- Collapse All Button -->
-        <button type="button" data-action="click->blocks-manager#collapseAll" class="flex items-center text-gray-600 hover:text-gray-900" title="Collapse All Blocks">
+        <button type="button" data-action="click->blocks-manager#collapseAll" class="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200" title="Collapse All Blocks">
           <%= icon_collapse_all size: :md %>
         </button>
 
         <!-- Expand All Button -->
-        <button type="button" data-action="click->blocks-manager#expandAll" class="flex items-center text-gray-600 hover:text-gray-900" title="Expand All Blocks">
+        <button type="button" data-action="click->blocks-manager#expandAll" class="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200" title="Expand All Blocks">
           <%= icon_expand_all size: :md %>
         </button>
 
         <!-- Expand Editor Button -->
-        <button type="button" data-action="click->editor-width#toggle" class="flex items-center text-gray-600 hover:text-gray-900" title="Expand/Collapse Editor">
+        <button type="button" data-action="click->editor-width#toggle" class="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200" title="Expand/Collapse Editor">
           <%= icon_expand size: :md %>
         </button>
 
-        <%= link_to public_document_path(@document), target: "_blank", class: "flex items-center text-teal-600 hover:text-teal-800" do %>
+        <%= link_to public_document_path(@document), target: "_blank", class: "flex items-center text-teal-600 dark:text-teal-400 hover:text-teal-800 dark:hover:text-teal-300" do %>
           <%= icon_external_link size: :md, class: "mr-1" %>
           Preview
         <% end %>
@@ -38,7 +38,7 @@
         <%= render "status_frame", document: @document %>
 
         <!-- Auto-save Status -->
-        <div id="autosave_status" class="text-sm text-gray-500"></div>
+        <div id="autosave_status" class="text-sm text-gray-500 dark:text-gray-400"></div>
       </div>
     </div>
   </div>

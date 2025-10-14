@@ -1,6 +1,6 @@
 <% content_for :title, "Editing · #{@document.title}" %>
 
-<div class="min-h-screen bg-gray-50" data-controller="editor-width">
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900" data-controller="editor-width">
   <!-- Sticky Header -->
   <%= render "header", document: @document %>
 
@@ -13,7 +13,7 @@
     <div class="flex-1 px-6 py-6">
       <div class="mx-auto max-w-6xl" data-editor-width-target="container">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl font-semibold text-gray-900">Content Blocks</h2>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Content Blocks</h2>
         </div>
 
         <div id="blocks"
@@ -28,7 +28,7 @@
 
         <% if @document.blocks.empty? %>
         <!-- New Block Form -->
-        <div class="mt-8 p-6 bg-white rounded-lg border-2 border-dashed border-gray-300">
+        <div class="mt-8 p-6 bg-white dark:bg-gray-800 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600">
           <turbo-frame id="new_block">
             <%= render "author/blocks/form", document: @document, block: Block.new(type: "MarkdownBlock") %>
           </turbo-frame>

@@ -1,36 +1,37 @@
-<div class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-  <h4 class="text-sm font-medium text-gray-700 mb-3">Assets (Images, Files)</h4>
+<div class="mt-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+  <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Assets (Images, Files)</h4>
 
   <!-- Upload -->
   <div class="mb-3">
     <%= form.file_field :assets,
         multiple: true,
         direct_upload: true,
-        class: "block w-full text-sm text-gray-500
+        class: "block w-full text-sm text-gray-500 dark:text-gray-400
                 file:mr-4 file:py-2 file:px-4
                 file:rounded-md file:border-0
                 file:text-sm file:font-semibold
-                file:bg-purple-50 file:text-purple-700
-                hover:file:bg-purple-100 cursor-pointer" %>
-    <p class="mt-1 text-xs text-gray-500">Upload images or other files to use in your MLX42 program</p>
+                file:bg-purple-50 dark:file:bg-purple-900
+                file:text-purple-700 dark:file:text-purple-300
+                hover:file:bg-purple-100 dark:hover:file:bg-purple-800 cursor-pointer" %>
+    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Upload images or other files to use in your MLX42 program</p>
   </div>
 
   <!-- Existing Assets -->
   <% if block.assets.attached? %>
     <div class="space-y-2">
-      <div class="text-xs font-medium text-gray-600 uppercase tracking-wide mb-2">Uploaded Assets:</div>
+      <div class="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">Uploaded Assets:</div>
       <% block.assets.each do |asset| %>
-        <div class="flex items-center justify-between bg-white p-2 rounded border border-gray-200">
-          <code class="text-sm text-purple-600 font-mono">assets/<%= asset.filename %></code>
+        <div class="flex items-center justify-between bg-white dark:bg-gray-800 p-2 rounded border border-gray-200 dark:border-gray-600">
+          <code class="text-sm text-purple-600 dark:text-purple-400 font-mono">assets/<%= asset.filename %></code>
           <button type="button"
                   onclick="navigator.clipboard.writeText('assets/<%= asset.filename %>'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy Path', 1000)"
-                  class="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors">
+                  class="text-xs px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded hover:bg-purple-200 dark:hover:bg-purple-800 transition-colors">
             Copy Path
           </button>
         </div>
       <% end %>
     </div>
   <% else %>
-    <p class="text-xs text-gray-500 italic">No assets uploaded yet</p>
+    <p class="text-xs text-gray-500 dark:text-gray-400 italic">No assets uploaded yet</p>
   <% end %>
 </div>

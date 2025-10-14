@@ -38,13 +38,15 @@
             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
               <td class="px-6 py-4">
                 <% if s.documents.any? %>
-                  <button type="button"
-                          data-action="click->series-toggle#toggle"
-                          data-series-toggle-target="toggleButton"
-                          data-series-id="<%= s.id %>"
-                          class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
-                    <%= icon_chevron_right size: :md, class: "transition-transform duration-200" %>
-                  </button>
+                  <div class="flex justify-center">
+                    <button type="button"
+                            data-action="click->series-toggle#toggle"
+                            data-series-toggle-target="toggleButton"
+                            data-series-id="<%= s.id %>"
+                            class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                      <%= icon_chevron_right size: :md, class: "transition-transform duration-200" %>
+                    </button>
+                  </div>
                 <% end %>
               </td>
               <td class="px-6 py-4 cursor-pointer" onclick="window.location='<%= edit_author_series_path(s) %>'">
@@ -73,7 +75,7 @@
                   <% end %>
                   <%= button_to author_series_path(s),
                       method: :delete,
-                      class: "text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300",
+                      class: "text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 flex justify-center",
                       title: "Delete",
                       form: { data: { turbo_confirm: "Are you sure you want to delete '#{s.title}'? All documents will be moved to 'Uncategorized'." } } do %>
                     <%= icon_trash size: :md %>
