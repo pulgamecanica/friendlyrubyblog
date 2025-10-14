@@ -39,6 +39,7 @@ module PublicHelper
   private
 
   def render_code_block(block)
+    filename = block.data["filename"] || nil
     lang = block.data["language"].presence || "text"
     ext = block.language.extension || lang
     code = block.data["code"].to_s
@@ -55,26 +56,27 @@ module PublicHelper
     content_tag(:div, class: "not-prose relative my-4 group") do
       # Header with language badge, interactive badge, and copy button
       header = content_tag(:div, class: "flex items-center justify-between px-4 py-2 bg-gray-800 rounded-t-lg border-b border-gray-700") do
-        left_side = content_tag(:div, class: "flex items-center gap-2") do
-          content_tag(:span, lang.upcase, class: "text-xs font-semibold text-gray-300")
-        end
+        left_side = content_tag(:div, filename, class: "text-xs text-gray-300")
 
-        copy_btn = content_tag(:button,
-          type: "button",
-          onclick: "navigator.clipboard.writeText(this.closest('.group').querySelector('code').textContent); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy', 2000)",
-          class: "flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-700 rounded transition-colors") do
-          svg = %(<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>).html_safe
-          svg + content_tag(:span, "Copy")
+        right_side = content_tag(:div, class: "flex items-center gap-2") do
+          content_tag(:span, lang.upcase, class: "text-xs font-semibold px-4 py-2 rounded-md text-gray-300 bg-gray-950 border-b border-gray-700") +
+          content_tag(:button,
+            type: "button",
+            onclick: "navigator.clipboard.writeText(this.closest('.group').querySelector('code').textContent); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy', 2000)",
+            class: "flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-700 rounded transition-colors") do
+            svg = %(<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>).html_safe
+            svg + content_tag(:span, "Copy")
+          end
         end
-        left_side + copy_btn
+        left_side + right_side
       end
 
       # Code block with syntax highlighting
       code_wrapper = content_tag(:div,
         data: { controller: "syntax-highlighter", syntax_highlighter_language_value: ext },
-        class: "#{is_interactive && output ? 'overflow-hidden' : 'rounded-b-lg overflow-hidden'} [&_pre]:!bg-gray-900 [&_code]:!bg-transparent",
+        class: "#{is_interactive && output ? '' : 'rounded-b-lg'} overflow-x-auto [&_pre]:!bg-gray-900 [&_code]:!bg-transparent",
         style: "background-color: #111827 !important;") do
-        content_tag(:pre, class: "m-0 rounded-none p-4 overflow-x-auto max-h-96 !bg-gray-900 !text-gray-100", style: "background-color: #111827 !important; color: #f3f4f6 !important;") do
+        content_tag(:pre, class: "m-0 rounded-none p-4 overflow-auto max-h-96 !bg-gray-900 !text-gray-100", style: "background-color: #111827 !important; color: #f3f4f6 !important;") do
           content_tag(:code, code, class: "language-#{ext} !bg-transparent", style: "background-color: transparent !important; color: inherit !important;", data: { syntax_highlighter_target: "code" })
         end
       end
@@ -167,7 +169,7 @@ module PublicHelper
           lang_badge = content_tag(:span, "C", class: "text-xs font-semibold text-gray-400 bg-gray-700 px-2 py-0.5 rounded")
           title + lang_badge
         end
-        code_content = content_tag(:pre, class: "bg-gray-900 text-gray-100 p-4 rounded border border-gray-700 overflow-x-auto max-h-96 text-sm") do
+        code_content = content_tag(:pre, class: "bg-gray-900 text-gray-100 p-4 rounded border border-gray-700 overflow-auto max-h-96 text-sm") do
           content_tag(:code, block.text || "// No source code available", class: "language-c")
         end
         header_code + code_content

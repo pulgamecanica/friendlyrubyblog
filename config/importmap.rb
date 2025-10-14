@@ -18,6 +18,7 @@ pin "prismjs/components/prism-ruby", to: "https://ga.jspm.io/npm:prismjs@1.30.0/
 pin "prismjs/components/prism-c", to: "https://ga.jspm.io/npm:prismjs@1.30.0/components/prism-c.js"
 pin "prismjs/components/prism-cpp", to: "https://ga.jspm.io/npm:prismjs@1.30.0/components/prism-cpp.js"
 pin "prismjs/components/prism-bash", to: "https://ga.jspm.io/npm:prismjs@1.30.0/components/prism-bash.js"
+pin "prismjs/components/prism-makefile", to: "https://ga.jspm.io/npm:prismjs@1.30.0/components/prism-makefile.js"
 
 # Chart.js
 pin "chart.js", to: "https://ga.jspm.io/npm:chart.js@4.2.0/dist/chart.js"

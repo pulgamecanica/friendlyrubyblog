@@ -6,6 +6,7 @@ import "prismjs/components/prism-python"
 import "prismjs/components/prism-ruby"
 import "prismjs/components/prism-c"
 import "prismjs/components/prism-cpp"
+import "prismjs/components/prism-makefile"
 import "prismjs/components/prism-bash"
 
 export default class extends Controller {
