@@ -64,7 +64,7 @@ gem "simplecov", "~> 0.22.0", require: false, group: :test
 gem "paper_trail", "~> 16.0"
 gem "friendly_id", "~> 5.5"
 
-gem "commonmarker", "~> 2.4"
+gem "commonmarker", "~> 2.5"
 
 gem "sanitize", "~> 7.0"
 
