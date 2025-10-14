@@ -10,7 +10,7 @@ local:
 amazon:
   service: S3
   access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] || Rails.application.credentials.dig(:aws, :access_key_id) %>
-  secret_access_key: <%= ENV['AWS_ACCESS_KEY_ID'] || Rails.application.credentials.dig(:aws, :secret_access_key) %>
+  secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] || Rails.application.credentials.dig(:aws, :secret_access_key) %>
   region: eu-west-3
   bucket: 'friendlyrubyblog'
 

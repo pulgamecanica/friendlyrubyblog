@@ -156,7 +156,7 @@
     <circle cx="620.04" cy="540.21" r="4.57" fill="#a6761d" />
     <circle cx="546.94" cy="535.94" r="4.76" fill="#a6761d" />
     <circle cx="609.47" cy="509.43" r="5.43" fill="#e6ab02" />
-    <circle cx="606.56" cy="567.60" r="5.09" fill="#a6761d" />
+    <circle cx="606.57" cy="567.60" r="5.09" fill="#a6761d" />
     <circle cx="590.18" cy="384.94" r="54.54" fill="#fff" />
     <circle cx="590.18" cy="384.94" r="54.54"
             fill="none" stroke="#222" stroke-width="1.2"
@@ -1584,39 +1584,39 @@
       <textPath href="#rim-coverage-friendlyrubyblog-598-385" startOffset="50%" text-anchor="middle">coverage</textPath>
     </text>
     <defs><path id="rim-assets-coverage-friendlyrubyblog-590-385" d="M 561.29 342.68 A 54.54 54.54 0 0 1 619.08 342.68"/></defs>
-    <text font-family="sans-serif" font-size="13.635534044864405" fill="#000">
+    <text font-family="sans-serif" font-size="13.635534044019264" fill="#000">
       <textPath href="#rim-assets-coverage-friendlyrubyblog-590-385" startOffset="50%" text-anchor="middle">assets</textPath>
     </text>
     <defs><path id="rim-0-13-2-assets-coverage-friendlyrubyblog-590-385" d="M 561.83 344.04 A 53.10 53.10 0 0 1 618.54 344.04"/></defs>
-    <text font-family="sans-serif" font-size="13.275778512605795" fill="#000">
+    <text font-family="sans-serif" font-size="13.275778511796688" fill="#000">
       <textPath href="#rim-0-13-2-assets-coverage-friendlyrubyblog-590-385" startOffset="50%" text-anchor="middle">0.13.2</textPath>
     </text>
     <defs><path id="rim-public-views-app-friendlyrubyblog-303-441" d="M 274.73 401.45 A 52.07 52.07 0 0 1 330.67 401.45"/></defs>
-    <text font-family="sans-serif" font-size="13.017439273559127" fill="#000">
+    <text font-family="sans-serif" font-size="13.017439272752908" fill="#000">
       <textPath href="#rim-public-views-app-friendlyrubyblog-303-441" startOffset="50%" text-anchor="middle">public</textPath>
     </text>
     <defs><path id="rim-javascript-app-friendlyrubyblog-387-326" d="M 349.80 294.77 A 51.61 51.61 0 0 1 425.19 294.77"/></defs>
-    <text font-family="sans-serif" font-size="12.903132713935596" fill="#000">
+    <text font-family="sans-serif" font-size="12.90313271314791" fill="#000">
       <textPath href="#rim-javascript-app-friendlyrubyblog-387-326" startOffset="50%" text-anchor="middle">javascript</textPath>
     </text>
     <defs><path id="rim-config-friendlyrubyblog-586-545" d="M 559.46 507.59 A 49 49 0 0 1 613.09 507.59"/></defs>
-    <text font-family="sans-serif" font-size="12.25083396076305" fill="#000">
+    <text font-family="sans-serif" font-size="12.250833960011013" fill="#000">
       <textPath href="#rim-config-friendlyrubyblog-586-545" startOffset="50%" text-anchor="middle">config</textPath>
     </text>
     <defs><path id="rim-controllers-app-friendlyrubyblog-450-470" d="M 414.50 446.55 A 44.23 44.23 0 0 1 484.53 446.55"/></defs>
-    <text font-family="sans-serif" font-size="11.057127149229832" fill="#000">
+    <text font-family="sans-serif" font-size="11.057127148546861" fill="#000">
       <textPath href="#rim-controllers-app-friendlyrubyblog-450-470" startOffset="50%" text-anchor="middle">controllers</textPath>
     </text>
     <defs><path id="rim-devise-views-app-friendlyrubyblog-328-532" d="M 303.95 503.11 A 40.86 40.86 0 0 1 351.41 503.11"/></defs>
-    <text font-family="sans-serif" font-size="10.214266085946008" fill="#000">
+    <text font-family="sans-serif" font-size="10.214266085293549" fill="#000">
       <textPath href="#rim-devise-views-app-friendlyrubyblog-328-532" startOffset="50%" text-anchor="middle">devise</textPath>
     </text>
     <defs><path id="rim-controllers-javascript-app-friendlyrubyblog-399-326" d="M 367.83 307.51 A 38.55 38.55 0 0 1 430.41 307.51"/></defs>
-    <text font-family="sans-serif" font-size="9.637391016360365" fill="#000">
+    <text font-family="sans-serif" font-size="9.637391015794822" fill="#000">
       <textPath href="#rim-controllers-javascript-app-friendlyrubyblog-399-326" startOffset="50%" text-anchor="middle">controllers</textPath>
     </text>
     <defs><path id="rim-db-friendlyrubyblog-539-619" d="M 524.46 587.98 A 37.60 37.60 0 0 1 553.12 587.98"/></defs>
-    <text font-family="sans-serif" font-size="9.400899058103452" fill="#000">
+    <text font-family="sans-serif" font-size="9.400899057533724" fill="#000">
       <textPath href="#rim-db-friendlyrubyblog-539-619" startOffset="50%" text-anchor="middle">db</textPath>
     </text>
     <defs><path id="rim-models-app-friendlyrubyblog-505-416" d="M 483.47 396.77 A 31.45 31.45 0 0 1 526.22 396.77"/></defs>
