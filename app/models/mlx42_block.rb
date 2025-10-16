@@ -2,6 +2,7 @@ class Mlx42Block < Block
   has_one_attached :wasm_file
   has_one_attached :js_file
   has_one_attached :data_file
+  has_one_attached :thumbnail
   has_many_attached :assets
 
   def text

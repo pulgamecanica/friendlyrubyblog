@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["canvas", "console", "loader", "captureIndicator", "consoleSection", "canvasContainer", "controlsButton", "importInput", "exportUrl"]
+  static targets = ["canvas", "console", "loader", "captureIndicator", "consoleSection", "canvasContainer", "controlsButton", "importInput", "exportUrl", "playOverlay"]
   static values = {
     jsUrl: String,
     wasmUrl: String,
@@ -12,24 +12,36 @@ export default class extends Controller {
 
   connect() {
     this.captured = false
+    this.controlsLocked = false
     this.consoleVisible = false
     this.moduleInstance = null
     this.scriptLoaded = false
     this.boundHandlePointerLockChange = this.handlePointerLockChange.bind(this)
     this.boundPreventScroll = this.preventDefault.bind(this)
+    this.boundHandleOutsideClick = this.handleOutsideClick.bind(this)
+    this.boundHandleScroll = this.handleScroll.bind(this)
+
     document.addEventListener("pointerlockchange", this.boundHandlePointerLockChange)
 
-    // Don't auto-run - user must click Run button to avoid keyboard capture issues
-    if (!this.hasJsUrlValue || !this.jsUrlValue) {
-      this.log("⚠️ No compiled WebAssembly available. Please compile your code first.")
-    } else {
-      this.log("✅ Ready to run. Click the Controls button to activate.")
+    // Lazy loading - wait for user to click "Play"
+    // Overlay will be visible by default, waiting for click
+  }
+
+  play() {
+    // Hide the play overlay and start loading the WebAssembly
+    if (this.hasPlayOverlayTarget) {
+      this.playOverlayTarget.style.display = 'none'
     }
+
+    // Start the WebAssembly module
+    this.run()
   }
 
   disconnect() {
     this.cleanup()
     document.removeEventListener("pointerlockchange", this.boundHandlePointerLockChange)
+    document.removeEventListener("click", this.boundHandleOutsideClick)
+    document.removeEventListener("scroll", this.boundHandleScroll, true)
     this.disableScrollPrevention()
   }
 
@@ -147,21 +159,74 @@ export default class extends Controller {
     document.body.appendChild(script)
   }
 
-  toggleCapture() {
+  toggleCapture(event) {
+    // Double-click to toggle lock
+    if (event && event.detail === 2) {
+      this.controlsLocked = !this.controlsLocked
+      this.log(this.controlsLocked ? "🔒 Controls locked (won't auto-release)" : "🔓 Controls unlocked")
+      this.updateCaptureIndicator()
+      return
+    }
+
     // Toggle scroll prevention (not pointer lock)
     this.captured = !this.captured
-
-    if (this.hasCaptureIndicatorTarget) {
-      this.captureIndicatorTarget.style.display = this.captured ? "block" : "none"
-    }
 
     // Prevent scrolling when controls are active
     if (this.captured) {
       this.enableScrollPrevention()
-      this.log("🎮 Controls activated")
+      this.log("🎮 Controls activated (click outside or scroll to release)")
+      document.addEventListener("click", this.boundHandleOutsideClick)
+      document.addEventListener("scroll", this.boundHandleScroll, true)
     } else {
       this.disableScrollPrevention()
       this.log("🎮 Controls deactivated")
+      document.removeEventListener("click", this.boundHandleOutsideClick)
+      document.removeEventListener("scroll", this.boundHandleScroll, true)
+      this.controlsLocked = false
+    }
+
+    this.updateCaptureIndicator()
+  }
+
+  updateCaptureIndicator() {
+    if (this.hasCaptureIndicatorTarget) {
+      if (this.captured) {
+        this.captureIndicatorTarget.style.display = "block"
+        const statusText = this.captureIndicatorTarget.querySelector('span')
+        if (statusText) {
+          statusText.textContent = this.controlsLocked
+            ? "Controls Active (Locked - Double-click to unlock)"
+            : "Controls Active (Click outside to release)"
+        }
+      } else {
+        this.captureIndicatorTarget.style.display = "none"
+      }
+    }
+  }
+
+  handleOutsideClick(event) {
+    // If controls are locked, don't auto-release
+    if (this.controlsLocked) return
+
+    // Check if click is outside the canvas container
+    if (this.hasCanvasContainerTarget && !this.canvasContainerTarget.contains(event.target)) {
+      this.log("👆 Click outside detected - releasing controls")
+      if (this.captured) {
+        this.toggleCapture()
+      }
+    }
+  }
+
+  handleScroll(event) {
+    // Auto-release on scroll (even if locked)
+    if (this.captured) {
+      this.log("📜 Scroll detected - releasing controls")
+      this.captured = false
+      this.controlsLocked = false
+      this.disableScrollPrevention()
+      document.removeEventListener("click", this.boundHandleOutsideClick)
+      document.removeEventListener("scroll", this.boundHandleScroll, true)
+      this.updateCaptureIndicator()
     }
   }
 

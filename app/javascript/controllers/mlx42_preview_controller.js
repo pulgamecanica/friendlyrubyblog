@@ -1,10 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["contentView", "canvasView", "toggleButton", "runButton", "captureButton", "exportButton", "importButton", "exportStatus"]
+  static targets = ["contentView", "canvasView", "toggleCodeButton", "exportButton", "importButton", "exportStatus"]
 
   connect() {
-    this.showingCanvas = false
+    this.showingCode = false
     this.updateView()
   }
 
@@ -12,12 +12,8 @@ export default class extends Controller {
     this.cleanupRunner()
   }
 
-  toggleView() {
-    if (this.showingCanvas) {
-      this.cleanupRunner()
-    }
-
-    this.showingCanvas = !this.showingCanvas
+  toggleCodeView() {
+    this.showingCode = !this.showingCode
     this.updateView()
   }
 
@@ -34,31 +30,35 @@ export default class extends Controller {
   }
 
   updateView() {
-    if (this.showingCanvas) {
-      this.contentViewTarget.style.display = "none"
-      this.canvasViewTarget.style.display = "block"
-      if (this.hasToggleButtonTarget) {
-        this.toggleButtonTarget.textContent = "📝 Show Content"
-      }
-      if (this.hasRunButtonTarget) {
-        this.runButtonTarget.style.display = "block"
-      }
-      if (this.hasCaptureButtonTarget) {
-        this.captureButtonTarget.style.display = "block"
-      }
-    } else {
+    if (this.showingCode) {
+      // Show code view
       this.contentViewTarget.style.display = "block"
-      this.canvasViewTarget.style.display = "none"
-      if (this.hasToggleButtonTarget) {
-        this.toggleButtonTarget.textContent = "📺 Show Canvas"
-      }
-      if (this.hasRunButtonTarget) {
-        this.runButtonTarget.style.display = "none"
-      }
-      if (this.hasCaptureButtonTarget) {
-        this.captureButtonTarget.style.display = "none"
-      }
+
+      // Trigger syntax highlighting
+      this.highlightCode()
+    } else {
+      // Hide code view (canvas always visible)
+      this.contentViewTarget.style.display = "none"
     }
+  }
+
+  highlightCode() {
+    // Find code elements and highlight them with Prism
+    const codeElements = this.contentViewTarget.querySelectorAll('code[class*="language-"]')
+
+    codeElements.forEach(codeElement => {
+      // Check if already highlighted
+      if (!codeElement.querySelector('.token')) {
+        if (window.Prism) {
+          window.Prism.highlightElement(codeElement)
+        } else {
+          // Import and highlight
+          import('prismjs').then((Prism) => {
+            Prism.default.highlightElement(codeElement)
+          })
+        }
+      }
+    })
   }
 
   triggerRun() {

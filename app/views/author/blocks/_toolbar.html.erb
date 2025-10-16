@@ -107,39 +107,22 @@
           MLX42 Controls
         </div>
 
-        <!-- Toggle View Button -->
-        <button data-action="click->mlx42-preview#toggleView"
-                data-mlx42-preview-target="toggleButton"
-                class="w-full px-2 py-1.5 text-xs border border-purple-300 text-purple-700 rounded hover:bg-purple-50 transition-colors mb-2">
-          📺 Show Canvas
-        </button>
-
-        <!-- Run Button (visible in canvas view) -->
-        <button data-action="click->mlx42-preview#triggerRun"
-                data-mlx42-preview-target="runButton"
-                style="display: none;"
-                class="w-full px-2 py-1.5 text-xs bg-green-600 text-white rounded hover:bg-green-700 transition-colors mb-2">
-          ▶️ Run
-        </button>
-
-        <!-- Enable Controls Button (visible in canvas view) -->
-        <button data-action="click->mlx42-preview#triggerCapture"
-                data-mlx42-preview-target="captureButton"
-                style="display: none;"
-                class="w-full px-2 py-1.5 text-xs border border-blue-300 text-blue-700 rounded hover:bg-blue-50 transition-colors mb-2">
-          🎮 Enable Controls
+        <!-- Edit Code Button -->
+        <button data-action="click->block-editor#enterEditMode"
+                class="w-full px-2 py-1.5 text-xs border border-purple-300 text-purple-700 rounded hover:bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-900/30 transition-colors mb-2">
+          ✏️ Edit Code
         </button>
 
         <!-- Export WASM Files -->
         <button data-action="click->mlx42-preview#triggerExport"
                 data-mlx42-preview-target="exportButton"
-                class="w-full px-2 py-1.5 text-xs border border-blue-300 text-blue-700 rounded hover:bg-blue-50 transition-colors mb-2">
+                class="w-full px-2 py-1.5 text-xs border border-blue-300 text-blue-700 rounded hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/30 transition-colors mb-2">
           📦 Export ZIP
         </button>
 
         <!-- Import WASM Files -->
         <label data-mlx42-preview-target="importButton"
-                class="w-full px-2 py-1.5 text-xs border border-blue-300 text-blue-700 rounded hover:bg-blue-50 transition-colors mb-2 cursor-pointer text-center block">
+                class="w-full px-2 py-1.5 text-xs border border-blue-300 text-blue-700 dark:border-blue-700 dark:text-blue-300 rounded hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors mb-2 cursor-pointer text-center block">
           📥 Import ZIP
           <input type="file"
                   accept=".zip"
@@ -149,7 +132,7 @@
 
         <!-- Export Status / Download Link -->
         <div data-mlx42-preview-target="exportStatus" class="mb-2"></div>
-        
+
         <!-- Compile Button -->
         <button data-action="click->mlx42-compiler#compile"
                 data-block-id="<%= block.id %>"

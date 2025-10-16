@@ -145,13 +145,26 @@ module PublicHelper
       canvas_container = content_tag(:div, class: "relative bg-black rounded-b-lg aspect-[4/3]", data: { mlx42_public_target: "canvasContainer" }) do
         content_tag(:canvas, "", data: { mlx42_public_target: "canvas" }, class: "w-full h-full") +
 
+        # Click to Play Overlay
+        content_tag(:div, data: { mlx42_public_target: "playOverlay", action: "click->mlx42-public#play" }, class: "absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center cursor-pointer hover:bg-opacity-70 transition-all group") do
+          (block.thumbnail.attached? ? image_tag(rails_blob_url(block.thumbnail), class: "absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity") : "".html_safe) +
+          content_tag(:div, class: "relative z-10 text-center") do
+            play_button = content_tag(:div, class: "inline-flex items-center justify-center w-24 h-24 rounded-full bg-purple-600 group-hover:bg-purple-500 group-hover:scale-110 transition-all shadow-2xl") do
+              %(<svg class="w-12 h-12 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>).html_safe
+            end
+            title = content_tag(:p, "Click to Play", class: "mt-4 text-white text-xl font-semibold")
+            subtitle = content_tag(:p, "MLX42 Interactive Program", class: "mt-1 text-gray-300 text-sm")
+            play_button + title + subtitle
+          end
+        end +
+
         # Control indicator
-        content_tag(:div, data: { mlx42_public_target: "controlsIndicator" }, class: "absolute top-2 left-2 bg-green-600/25 text-white text-xs px-3 py-1.5 rounded-lg shadow-lg hidden") do
+        content_tag(:div, data: { mlx42_public_target: "controlsIndicator" }, class: "absolute top-2 left-2 bg-green-600/25 text-white text-xs px-3 py-1.5 rounded-lg shadow-lg hidden z-20") do
           %(<div class="flex items-center gap-2"><svg class="h-4 w-4 animate-pulse" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg><span>Controls Active</span></div>).html_safe
         end +
 
         # Loader
-        content_tag(:div, data: { mlx42_public_target: "loader" }, class: "absolute inset-0 bg-black bg-opacity-90 flex items-center justify-center") do
+        content_tag(:div, data: { mlx42_public_target: "loader" }, class: "absolute inset-0 bg-black bg-opacity-90 flex items-center justify-center hidden z-30") do
           content_tag(:div, class: "text-center") do
             spinner = content_tag(:div, "", class: "inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent")
             text = content_tag(:p, "Loading MLX42 Program...", class: "mt-4 text-white text-sm font-medium")

@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["canvas", "console", "loader", "controlsIndicator", "consoleSection", "codeSection", "canvasContainer", "controlsButton"]
+  static targets = ["canvas", "console", "loader", "controlsIndicator", "consoleSection", "codeSection", "canvasContainer", "controlsButton", "playOverlay"]
   static values = {
     jsUrl: String,
     wasmUrl: String,
@@ -11,17 +11,38 @@ export default class extends Controller {
 
   connect() {
     this.controlsActive = false
+    this.controlsLocked = false
     this.consoleVisible = false
     this.codeVisible = false
     this.moduleInstance = null
     this.scriptLoaded = false
+    this.boundHandleOutsideClick = this.handleOutsideClick.bind(this)
+    this.boundHandleScroll = this.handleScroll.bind(this)
 
-    // Auto-run on connect
-    this.run()
+    // Lazy loading - wait for user to click "Play"
+    // Overlay will be visible by default, waiting for click
   }
 
   disconnect() {
     this.cleanup()
+    document.removeEventListener("click", this.boundHandleOutsideClick)
+    document.removeEventListener("scroll", this.boundHandleScroll, true)
+  }
+
+  play() {
+    // Hide the play overlay
+    if (this.hasPlayOverlayTarget) {
+      this.playOverlayTarget.style.display = 'none'
+    }
+
+    // Show loader
+    this.showLoader()
+
+    // Open fullscreen
+    this.openFullscreen()
+
+    // Start the WebAssembly module
+    this.run()
   }
 
   run() {
@@ -107,13 +128,43 @@ export default class extends Controller {
     document.body.appendChild(script)
   }
 
-  toggleControls() {
+  toggleControls(event) {
+    // Double-click to toggle lock
+    if (event && event.detail === 2) {
+      this.controlsLocked = !this.controlsLocked
+      this.log(this.controlsLocked ? "🔒 Controls locked (won't auto-release)" : "🔓 Controls unlocked")
+      this.updateControlsIndicator()
+      return
+    }
+
     this.controlsActive = !this.controlsActive
 
+    // Handle control listeners
+    if (this.controlsActive) {
+      this.log("🎮 Controls activated (click outside or scroll to release)")
+      document.addEventListener("click", this.boundHandleOutsideClick)
+      document.addEventListener("scroll", this.boundHandleScroll, true)
+    } else {
+      this.log("🎮 Controls deactivated")
+      document.removeEventListener("click", this.boundHandleOutsideClick)
+      document.removeEventListener("scroll", this.boundHandleScroll, true)
+      this.controlsLocked = false
+    }
+
+    this.updateControlsIndicator()
+  }
+
+  updateControlsIndicator() {
     // Update indicator
     if (this.hasControlsIndicatorTarget) {
       if (this.controlsActive) {
         this.controlsIndicatorTarget.classList.remove('hidden')
+        const statusText = this.controlsIndicatorTarget.querySelector('span')
+        if (statusText) {
+          statusText.textContent = this.controlsLocked
+            ? "Controls Active (Locked - Double-click to unlock)"
+            : "Controls Active (Click outside to release)"
+        }
       } else {
         this.controlsIndicatorTarget.classList.add('hidden')
       }
@@ -136,10 +187,34 @@ export default class extends Controller {
     // Enable/disable scroll prevention
     if (this.controlsActive) {
       this.enableScrollPrevention()
-      this.log("🎮 Controls activated - keyboard/mouse locked")
     } else {
       this.disableScrollPrevention()
-      this.log("🎮 Controls deactivated - keyboard/mouse unlocked")
+    }
+  }
+
+  handleOutsideClick(event) {
+    // If controls are locked, don't auto-release
+    if (this.controlsLocked) return
+
+    // Check if click is outside the canvas container
+    if (this.hasCanvasContainerTarget && !this.canvasContainerTarget.contains(event.target)) {
+      this.log("👆 Click outside detected - releasing controls")
+      if (this.controlsActive) {
+        this.toggleControls()
+      }
+    }
+  }
+
+  handleScroll(event) {
+    // Auto-release on scroll (even if locked)
+    if (this.controlsActive) {
+      this.log("📜 Scroll detected - releasing controls")
+      this.controlsActive = false
+      this.controlsLocked = false
+      this.disableScrollPrevention()
+      document.removeEventListener("click", this.boundHandleOutsideClick)
+      document.removeEventListener("scroll", this.boundHandleScroll, true)
+      this.updateControlsIndicator()
     }
   }
 
@@ -267,8 +342,16 @@ export default class extends Controller {
     }
   }
 
+  showLoader() {
+    if (this.hasLoaderTarget) {
+      this.loaderTarget.classList.remove('hidden')
+      this.loaderTarget.style.display = "flex"
+    }
+  }
+
   hideLoader() {
     if (this.hasLoaderTarget) {
+      this.loaderTarget.classList.add('hidden')
       this.loaderTarget.style.display = "none"
     }
   }

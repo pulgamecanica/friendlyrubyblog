@@ -90,34 +90,9 @@
           <% elsif block.is_a?(ImageBlock) %>
             <%= render_image_block(block, clickable: false) %>
           <% elsif block.is_a?(Mlx42Block) %>
-            <div>
-              <!-- Content Preview (code, assets) -->
-              <div data-mlx42-preview-target="contentView" class="space-y-4">
-                <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">MLX42 Code</h3>
-                <pre class="bg-gray-900 text-gray-100 p-4 rounded font-mono text-sm overflow-auto max-h-96 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-gray-800 [&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-500"><%= block.text %></pre>
-
-                <% if block.assets.attached? %>
-                  <div>
-                    <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Assets</h3>
-                    <div class="space-y-1">
-                      <% block.assets.each do |asset| %>
-                        <div class="text-sm font-mono text-purple-600 dark:text-purple-400">assets/<%= asset.filename %></div>
-                      <% end %>
-                    </div>
-                  </div>
-                <% end %>
-
-                <% unless block.compiled? %>
-                  <div class="p-3 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded">
-                    <p class="text-sm text-yellow-800 dark:text-yellow-200">⚠️ Not compiled yet. Click "Compile" to build.</p>
-                  </div>
-                <% end %>
-              </div>
-
-              <!-- Canvas Preview (MLX42 running) -->
-              <div data-mlx42-preview-target="canvasView" style="display: none;">
-                <%= render "author/blocks/mlx42_canvas", block: block %>
-              </div>
+            <!-- Canvas Preview (MLX42 running) - Now shown by default -->
+            <div data-mlx42-preview-target="canvasView">
+              <%= render "author/blocks/mlx42_canvas", block: block %>
             </div>
           <% else %>
             <div class="prose prose-neutral max-w-none">
