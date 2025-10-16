@@ -1,0 +1,31 @@
+/* Monaco Editor Fullscreen Styles */
+
+.monaco-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  background: white;
+  padding: 0;
+  margin: 0;
+}
+
+/* Dark mode fullscreen background */
+.dark .monaco-fullscreen {
+  background: #1e1e1e;
+}
+
+/* Ensure the editor fills the fullscreen container */
+.monaco-fullscreen [data-monaco-editor-target="editor"] {
+  width: 100% !important;
+  height: 100vh !important;
+}
+
+/* Hide other elements when in fullscreen */
+.monaco-fullscreen [data-monaco-editor-target="fallbackNotice"] {
+  display: none !important;
+}
