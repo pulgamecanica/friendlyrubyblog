@@ -5,17 +5,17 @@
   <div class="mb-8">
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900">New Series</h1>
-        <p class="mt-1 text-sm text-gray-500">Create a new series to organize your documents</p>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">New Series</h1>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Create a new series to organize your documents</p>
       </div>
-      <%= link_to author_series_index_path, class: "text-sm text-gray-600 hover:text-gray-900" do %>
+      <%= link_to author_series_index_path, class: "text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200" do %>
         ← Back to Series
       <% end %>
     </div>
   </div>
 
   <!-- Form Card -->
-  <div class="bg-white rounded-lg shadow p-6">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
     <%= render "form", series: @series %>
   </div>
 </div>

@@ -5,16 +5,16 @@
   <div class="mb-8">
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900">Edit Series</h1>
-        <p class="mt-1 text-sm text-gray-500">Update series information and organization</p>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Edit Series</h1>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Update series information and organization</p>
       </div>
       <div class="flex items-center gap-3">
         <%= link_to public_series_path(@series), target: "_blank",
-              class: "inline-flex items-center text-sm text-gray-600 hover:text-gray-900" do %>
+              class: "inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200" do %>
           <%= icon_external_link size: :sm, class: "mr-1" %>
           View Public
         <% end %>
-        <%= link_to author_series_index_path, class: "text-sm text-gray-600 hover:text-gray-900" do %>
+        <%= link_to author_series_index_path, class: "text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200" do %>
           ← Back to Series
         <% end %>
       </div>
@@ -22,16 +22,16 @@
   </div>
 
   <!-- Form Card -->
-  <div class="bg-white rounded-lg shadow p-6">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
     <%= render "form", series: @series %>
   </div>
 
   <!-- Documents in Series -->
   <% if @series.documents.any? %>
-    <div class="mt-8 bg-white rounded-lg shadow p-6">
-      <h2 class="text-lg font-semibold text-gray-900 mb-4">
+    <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
         Documents in this Series
-        <span class="text-sm font-normal text-gray-500">(<%= @series.documents.count %>)</span>
+        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">(<%= @series.documents.count %>)</span>
       </h2>
       <div class="space-y-2">
         <% @series.documents.order(:series_position).each do |doc| %>

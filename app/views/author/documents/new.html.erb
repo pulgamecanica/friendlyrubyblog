@@ -1,9 +1,9 @@
 <% content_for :title, "New Document · Author" %>
 
-<div class="mx-auto max-w-3xl my-4 p-4 rounded bg-white">
+<div class="mx-auto max-w-3xl my-4 p-4 rounded bg-white dark:bg-gray-800">
   <div class="grid md:grid-cols-3 gap-6 mb-6">
-    <%= link_to "Back", author_documents_path, class: "flex items-center text-sm text-gray-600 hover:underline" %>
-    <h1 class="flex items-center justify-center text-2xl font-semibold">New Document</h1>
+    <%= link_to "Back", author_documents_path, class: "flex items-center text-sm text-gray-600 dark:text-gray-400 hover:underline" %>
+    <h1 class="flex items-center justify-center text-2xl font-semibold text-gray-900 dark:text-gray-100">New Document</h1>
   </div>
 
   <%= render "form", document: @document %>
