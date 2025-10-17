@@ -273,6 +273,16 @@ class Author::BlocksController < Author::BaseController
     data["filename"] = params.dig(:block, :data_filename)
     data["text"]     = params.dig(:block, :text)
 
+    # Handle MLX42 multi-file support
+    if params.dig(:block, :data_files).present?
+      begin
+        data["files"] = JSON.parse(params.dig(:block, :data_files))
+      rescue JSON::ParserError
+        # If parsing fails, keep empty
+        data["files"] = []
+      end
+    end
+
     block_params = {
       type: params.dig(:block, :type),
       position: params.dig(:block, :position),

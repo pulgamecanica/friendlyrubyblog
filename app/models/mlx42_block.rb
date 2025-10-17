@@ -5,6 +5,7 @@ class Mlx42Block < Block
   has_one_attached :thumbnail
   has_many_attached :assets
 
+  # Legacy support for single text field (for backward compatibility during transition)
   def text
     data.to_h["text"]
   end
@@ -13,7 +14,38 @@ class Mlx42Block < Block
     self.data = data.to_h.merge("text" => value)
   end
 
-  def plain_text = text.to_s
+  # New multi-file support
+  def files
+    data.to_h["files"] || []
+  end
+
+  def files=(files_array)
+    self.data = data.to_h.merge("files" => files_array)
+  end
+
+  # Get all .c files for compilation
+  def c_files
+    files.select { |f| f["filename"]&.end_with?(".c") }
+  end
+
+  # Get all .h files
+  def h_files
+    files.select { |f| f["filename"]&.end_with?(".h") }
+  end
+
+  # Check if using new multi-file format
+  def multi_file?
+    files.any?
+  end
+
+  def plain_text
+    if multi_file?
+      files.map { |f| "// #{f['filename']}\n#{f['content']}" }.join("\n\n")
+    else
+      text.to_s
+    end
+  end
+
   def languages = [ "c" ]
 
   def width

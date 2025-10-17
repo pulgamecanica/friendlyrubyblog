@@ -40,7 +40,6 @@ class Mlx42CompilerService
 
   def compile
     Dir.mktmpdir do |dir|
-      user_file = File.join(dir, "user_code.c")
       wrapper_file = File.join(dir, "wrapper_main.c")
       output_base = File.join(dir, "mlx42_output")
       assets_dir = File.join(dir, "assets")
@@ -55,15 +54,34 @@ class Mlx42CompilerService
         end
       end
 
-      # Write user code
-      File.write(user_file, @block.text)
+      # Write user files (multi-file or legacy single file)
+      user_c_files = []
+
+      if @block.multi_file?
+        # New multi-file format
+        @block.files.each do |file_data|
+          filename = file_data["filename"]
+          content = file_data["content"]
+          file_path = File.join(dir, filename)
+
+          File.write(file_path, content)
+
+          # Track .c files for compilation
+          user_c_files << file_path if filename.end_with?(".c")
+        end
+      else
+        # Legacy single file format
+        user_file = File.join(dir, "user_code.c")
+        File.write(user_file, @block.text)
+        user_c_files << user_file
+      end
 
       # Write wrapper with substituted dimensions
       wrapper_code = WRAPPER_TEMPLATE % { width: @block.width, height: @block.height }
       File.write(wrapper_file, wrapper_code)
 
-      # Compile with emcc
-      compile_command = build_compile_command(wrapper_file, user_file, output_base, dir)
+      # Compile with emcc (pass all .c files)
+      compile_command = build_compile_command(wrapper_file, user_c_files, output_base, dir)
 
       stdout, stderr, status = Open3.capture3(compile_command)
 
@@ -88,16 +106,17 @@ class Mlx42CompilerService
 
   private
 
-  def build_compile_command(wrapper_file, user_file, output_base, working_dir)
+  def build_compile_command(wrapper_file, user_c_files, output_base, working_dir)
     base_args = [
       "emcc",
       "-DWEB",
       "-O3",
       "-I", "/usr/local/include",
       "-I", Rails.root.join("MLX42_headers").to_s,
+      "-I", working_dir,  # Include working directory for local headers
       "-pthread",
       wrapper_file,
-      user_file,
+      *user_c_files,  # Splat operator to include all .c files
       "-o", "#{output_base}.js",
       MLX42_LIB_PATH,
       "-s", "USE_GLFW=3",
@@ -116,8 +135,8 @@ class Mlx42CompilerService
       base_args += [ "--preload-file", "#{working_dir}/assets" ]
       puts "*"*42
       puts "\n"*5
-      puts "user file: #{user_file}"
-      puts "wrapper file: #{wrapper_file}"
+      puts "User C files: #{user_c_files.join(', ')}"
+      puts "Wrapper file: #{wrapper_file}"
       puts "Assets Loaded: [#{working_dir}/assets]"
       Dir.new("#{working_dir}/assets").each do |f|
         puts "\t-> #{f}"

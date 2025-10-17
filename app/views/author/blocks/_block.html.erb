@@ -363,40 +363,53 @@
                         data: { turbo_frame: dom_id(block) },
                         class: "space-y-3" do |f| %>
 
-            <!-- Monaco Editor Wrapper -->
-            <div data-controller="monaco-editor" data-monaco-editor-language-value="c" class="relative">
-              <!-- Fullscreen Button -->
-              <button type="button"
-                      data-monaco-editor-target="fullscreenButton"
-                      data-action="click->monaco-editor#toggleFullscreen"
-                      class="absolute top-2 right-2 z-50 p-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors border border-gray-300 dark:border-gray-600"
-                      title="Fullscreen"
-                      style="display: none;">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
-                </svg>
-              </button>
-
-              <!-- Fallback notice for small screens -->
-              <div data-monaco-editor-target="fallbackNotice" style="display: none;" class="mb-2 p-2 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded text-xs text-yellow-700 dark:text-yellow-300">
-                📱 Code editor requires a larger screen (min 768px width). Using simplified textarea.
+            <div data-controller="mlx42-file-editor" data-mlx42-file-editor-block-id-value="<%= block.id %>">
+              <!-- File Tabs -->
+              <div class="bg-gray-100 dark:bg-gray-800 p-2 rounded-t border border-gray-300 dark:border-gray-600"
+                   data-action="click->mlx42-file-editor#preventBubble">
+                <div class="flex gap-2 overflow-x-auto" data-mlx42-file-editor-target="tabsContainer">
+                  <!-- Tabs will be rendered here by Stimulus -->
+                </div>
               </div>
 
-              <!-- Monaco editor container -->
-              <div data-monaco-editor-target="editor" style="display: none;"></div>
+              <!-- Hidden field to store files JSON -->
+              <%= f.hidden_field :data_files,
+                  value: block.files.any? ? block.files.to_json : nil,
+                  data: { mlx42_file_editor_target: "filesInput" } %>
 
-              <!-- Original textarea (hidden when Monaco loads) -->
-              <%= f.text_area :text,
-                  value: block.text || "#include <MLX42/MLX42.h>\n\nvoid user_main(int argc, char **argv) {\n  extern mlx_t *mlx;\n  // Your MLX42 code here\n}",
-                  data: {
-                    monaco_editor_target: "textarea",
-                    block_editor_target: "textarea",
-                    action: "input->block-editor#autoResize",
-                    controller: "textarea-tab"
-                  },
-                  class: "w-full font-mono text-sm bg-gray-900 text-gray-100 p-4 rounded border-0 focus:ring-2 focus:ring-purple-500",
-                  placeholder: "#include <MLX42/MLX42.h>\n\nvoid user_main(int argc, char **argv) {\n  extern mlx_t *mlx;\n  // Your MLX42 code here\n}",
-                  rows: 15 %>
+              <!-- Monaco Editor Wrapper -->
+              <div data-mlx42-file-editor-target="monacoContainer">
+                <div data-controller="monaco-editor" data-monaco-editor-language-value="c" class="relative">
+                  <!-- Fullscreen Button -->
+                  <button type="button"
+                          data-monaco-editor-target="fullscreenButton"
+                          data-action="click->monaco-editor#toggleFullscreen"
+                          class="absolute top-2 right-2 z-50 p-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors border border-gray-300 dark:border-gray-600"
+                          title="Fullscreen"
+                          style="display: none;">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                    </svg>
+                  </button>
+
+                  <!-- Fallback notice for small screens -->
+                  <div data-monaco-editor-target="fallbackNotice" style="display: none;" class="mb-2 p-2 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded text-xs text-yellow-700 dark:text-yellow-300">
+                    📱 Code editor requires a larger screen (min 768px width). Using simplified textarea.
+                  </div>
+
+                  <!-- Monaco editor container -->
+                  <div data-monaco-editor-target="editor" style="display: none;"></div>
+
+                  <!-- Original textarea (hidden when Monaco loads) -->
+                  <textarea rows="15"
+                      data-monaco-editor-target="textarea"
+                      data-block-editor-target="textarea"
+                      data-action="input->block-editor#autoResize"
+                      data-controller="textarea-tab"
+                      class="w-full font-mono text-sm bg-gray-900 text-gray-100 p-4 rounded border-0 focus:ring-2 focus:ring-purple-500"
+                      placeholder="#include <MLX42/MLX42.h>\n\nvoid user_main(int argc, char **argv) {\n  extern mlx_t *mlx;\n  // Your MLX42 code here\n}"></textarea>
+                </div>
+              </div>
             </div>
 
             <%= render "author/blocks/mlx42_assets", block: block, form: f %>

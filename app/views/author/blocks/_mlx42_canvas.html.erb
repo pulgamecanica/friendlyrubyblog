@@ -108,7 +108,7 @@
     </div>
 
     <!-- Code Preview (code, assets) - Hidden by default -->
-    <div data-mlx42-preview-target="contentView" style="display: none;" class="border-t border-gray-700 bg-gray-800 dark:bg-gray-800 p-4">
+    <div data-mlx42-preview-target="contentView" style="display: none;" class="border-t border-gray-700 bg-gray-800 dark:bg-gray-800 p-4" data-controller="mlx42-code-viewer">
       <div class="flex items-center justify-between mb-2">
         <div class="flex items-center gap-2 text-sm font-medium text-gray-300">
           <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,7 +118,34 @@
         </div>
         <span class="text-xs font-semibold text-gray-400 bg-gray-700 px-2 py-0.5 rounded">C</span>
       </div>
-      <pre class="bg-gray-900 text-gray-100 p-4 rounded border border-gray-700 overflow-auto max-h-96 text-sm"><code class="language-c"><%= block.text || "// No source code available" %></code></pre>
+
+      <% if block.multi_file? %>
+        <!-- Multi-file tabs -->
+        <div class="mb-3">
+          <div class="flex gap-2 overflow-x-auto pb-2">
+            <% block.files.each_with_index do |file, index| %>
+              <button type="button"
+                      data-mlx42-code-viewer-target="tab"
+                      data-action="click->mlx42-code-viewer#switchFile"
+                      data-index="<%= index %>"
+                      class="px-3 py-1.5 text-xs rounded transition-colors whitespace-nowrap <%= index == 0 ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600' %>">
+                <%= file['filename'] %>
+              </button>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- File content containers -->
+        <% block.files.each_with_index do |file, index| %>
+          <pre data-mlx42-code-viewer-target="content"
+               data-index="<%= index %>"
+               style="<%= index == 0 ? '' : 'display: none;' %>"
+               class="bg-gray-900 text-gray-100 p-4 rounded border border-gray-700 overflow-auto max-h-96 text-sm"><code class="language-c"><%= file['content'] || "// Empty file" %></code></pre>
+        <% end %>
+      <% else %>
+        <!-- Legacy single file -->
+        <pre class="bg-gray-900 text-gray-100 p-4 rounded border border-gray-700 overflow-auto max-h-96 text-sm"><code class="language-c"><%= block.text || "// No source code available" %></code></pre>
+      <% end %>
 
       <% if block.assets.attached? %>
         <div class="mt-4">

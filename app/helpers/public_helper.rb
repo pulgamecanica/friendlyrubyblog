@@ -174,7 +174,7 @@ module PublicHelper
       end
 
       # Code section (collapsible)
-      code_section = content_tag(:div, data: { mlx42_public_target: "codeSection" }, class: "border-t border-gray-700 bg-gray-800 p-4 hidden") do
+      code_section = content_tag(:div, data: { mlx42_public_target: "codeSection", controller: "mlx42-code-viewer" }, class: "border-t border-gray-700 bg-gray-800 p-4 hidden") do
         header_code = content_tag(:div, class: "flex items-center justify-between mb-2") do
           title = content_tag(:div, class: "flex items-center gap-2 text-sm font-medium text-gray-300") do
             %(<svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg><span>Source Code</span>).html_safe
@@ -182,9 +182,48 @@ module PublicHelper
           lang_badge = content_tag(:span, "C", class: "text-xs font-semibold text-gray-400 bg-gray-700 px-2 py-0.5 rounded")
           title + lang_badge
         end
-        code_content = content_tag(:pre, class: "bg-gray-900 text-gray-100 p-4 rounded border border-gray-700 overflow-auto max-h-96 text-sm") do
-          content_tag(:code, block.text || "// No source code available", class: "language-c")
+
+        # Multi-file or single file rendering
+        code_content = if block.multi_file?
+          # Multi-file tabs
+          tabs = content_tag(:div, class: "mb-3") do
+            content_tag(:div, class: "flex gap-2 overflow-x-auto pb-2") do
+              block.files.map.with_index do |file, index|
+                content_tag(:button, file['filename'],
+                  type: "button",
+                  data: {
+                    mlx42_code_viewer_target: "tab",
+                    action: "click->mlx42-code-viewer#switchFile",
+                    index: index
+                  },
+                  class: "px-3 py-1.5 text-xs rounded transition-colors whitespace-nowrap #{index == 0 ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}"
+                )
+              end.join.html_safe
+            end
+          end
+
+          # File content containers
+          file_contents = block.files.map.with_index do |file, index|
+            content_tag(:pre,
+              data: {
+                mlx42_code_viewer_target: "content",
+                index: index
+              },
+              style: (index == 0 ? "" : "display: none;"),
+              class: "bg-gray-900 text-gray-100 p-4 rounded border border-gray-700 overflow-auto max-h-96 text-sm"
+            ) do
+              content_tag(:code, file['content'] || "// Empty file", class: "language-c")
+            end
+          end.join.html_safe
+
+          tabs + file_contents
+        else
+          # Legacy single file
+          content_tag(:pre, class: "bg-gray-900 text-gray-100 p-4 rounded border border-gray-700 overflow-auto max-h-96 text-sm") do
+            content_tag(:code, block.text || "// No source code available", class: "language-c")
+          end
         end
+
         header_code + code_content
       end
 
