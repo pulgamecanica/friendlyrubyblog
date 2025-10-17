@@ -1595,39 +1595,39 @@
       <textPath href="#rim-coverage-friendlyrubyblog-598-384" startOffset="50%" text-anchor="middle">coverage</textPath>
     </text>
     <defs><path id="rim-assets-coverage-friendlyrubyblog-590-384" d="M 561.09 341.53 A 54.66 54.66 0 0 1 618.98 341.53"/></defs>
-    <text font-family="sans-serif" font-size="13.666187423053417" fill="#000">
+    <text font-family="sans-serif" font-size="13.666187416014186" fill="#000">
       <textPath href="#rim-assets-coverage-friendlyrubyblog-590-384" startOffset="50%" text-anchor="middle">assets</textPath>
     </text>
     <defs><path id="rim-javascript-app-friendlyrubyblog-387-322" d="M 348.36 289.62 A 53.51 53.51 0 0 1 426.01 289.62"/></defs>
-    <text font-family="sans-serif" font-size="13.376848609740932" fill="#000">
+    <text font-family="sans-serif" font-size="13.376848603221545" fill="#000">
       <textPath href="#rim-javascript-app-friendlyrubyblog-387-322" startOffset="50%" text-anchor="middle">javascript</textPath>
     </text>
     <defs><path id="rim-0-13-2-assets-coverage-friendlyrubyblog-590-384" d="M 561.63 342.89 A 53.22 53.22 0 0 1 618.43 342.89"/></defs>
-    <text font-family="sans-serif" font-size="13.30541080996941" fill="#000">
+    <text font-family="sans-serif" font-size="13.305410803444998" fill="#000">
       <textPath href="#rim-0-13-2-assets-coverage-friendlyrubyblog-590-384" startOffset="50%" text-anchor="middle">0.13.2</textPath>
     </text>
     <defs><path id="rim-public-views-app-friendlyrubyblog-301-440" d="M 273.17 400.20 A 52.30 52.30 0 0 1 329.28 400.20"/></defs>
-    <text font-family="sans-serif" font-size="13.074054855636696" fill="#000">
+    <text font-family="sans-serif" font-size="13.074054848924813" fill="#000">
       <textPath href="#rim-public-views-app-friendlyrubyblog-301-440" startOffset="50%" text-anchor="middle">public</textPath>
     </text>
     <defs><path id="rim-config-friendlyrubyblog-586-544" d="M 559.25 506.80 A 49.11 49.11 0 0 1 612.97 506.80"/></defs>
-    <text font-family="sans-serif" font-size="12.278261911285878" fill="#000">
+    <text font-family="sans-serif" font-size="12.278261905135986" fill="#000">
       <textPath href="#rim-config-friendlyrubyblog-586-544" startOffset="50%" text-anchor="middle">config</textPath>
     </text>
     <defs><path id="rim-controllers-app-friendlyrubyblog-450-469" d="M 414.43 446.35 A 44.33 44.33 0 0 1 484.59 446.35"/></defs>
-    <text font-family="sans-serif" font-size="11.082302962820528" fill="#000">
+    <text font-family="sans-serif" font-size="11.082302957168906" fill="#000">
       <textPath href="#rim-controllers-app-friendlyrubyblog-450-469" startOffset="50%" text-anchor="middle">controllers</textPath>
     </text>
     <defs><path id="rim-devise-views-app-friendlyrubyblog-326-532" d="M 302.44 502.32 A 40.95 40.95 0 0 1 349.97 502.32"/></defs>
-    <text font-family="sans-serif" font-size="10.237527750544292" fill="#000">
+    <text font-family="sans-serif" font-size="10.237527744807156" fill="#000">
       <textPath href="#rim-devise-views-app-friendlyrubyblog-326-532" startOffset="50%" text-anchor="middle">devise</textPath>
     </text>
     <defs><path id="rim-controllers-javascript-app-friendlyrubyblog-399-322" d="M 366.32 302.44 A 40.41 40.41 0 0 1 431.35 302.44"/></defs>
-    <text font-family="sans-serif" font-size="10.103460324410886" fill="#000">
+    <text font-family="sans-serif" font-size="10.103460320050173" fill="#000">
       <textPath href="#rim-controllers-javascript-app-friendlyrubyblog-399-322" startOffset="50%" text-anchor="middle">controllers</textPath>
     </text>
     <defs><path id="rim-db-friendlyrubyblog-539-618" d="M 524.23 587.41 A 37.69 37.69 0 0 1 552.91 587.41"/></defs>
-    <text font-family="sans-serif" font-size="9.421832636042485" fill="#000">
+    <text font-family="sans-serif" font-size="9.421832631499562" fill="#000">
       <textPath href="#rim-db-friendlyrubyblog-539-618" startOffset="50%" text-anchor="middle">db</textPath>
     </text>
     <defs><path id="rim-models-app-friendlyrubyblog-504-415" d="M 483.11 395.82 A 31.58 31.58 0 0 1 525.89 395.82"/></defs>

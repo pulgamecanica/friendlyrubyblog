@@ -189,7 +189,7 @@ module PublicHelper
           tabs = content_tag(:div, class: "mb-3") do
             content_tag(:div, class: "flex gap-2 overflow-x-auto pb-2") do
               block.files.map.with_index do |file, index|
-                content_tag(:button, file['filename'],
+                content_tag(:button, file["filename"],
                   type: "button",
                   data: {
                     mlx42_code_viewer_target: "tab",
@@ -212,7 +212,7 @@ module PublicHelper
               style: (index == 0 ? "" : "display: none;"),
               class: "bg-gray-900 text-gray-100 p-4 rounded border border-gray-700 overflow-auto max-h-96 text-sm"
             ) do
-              content_tag(:code, file['content'] || "// Empty file", class: "language-c")
+              content_tag(:code, file["content"] || "// Empty file", class: "language-c")
             end
           end.join.html_safe
 
