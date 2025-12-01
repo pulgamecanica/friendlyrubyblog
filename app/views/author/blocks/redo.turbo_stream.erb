@@ -1,0 +1,5 @@
+<%= turbo_stream.replace dom_id(@block) do %>
+  <%= render "author/blocks/block", block: @block %>
+<% end %>
+
+<%= success_toast @message || "Restored to newer version" %>

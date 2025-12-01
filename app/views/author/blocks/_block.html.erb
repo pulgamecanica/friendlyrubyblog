@@ -1,19 +1,24 @@
 <turbo-frame id="<%= dom_id(block) %>">
-  <article class="grid grid-cols-[1fr_200px] gap-4 group"
-           data-controller="block-editor<%= ' image-carousel' if block.is_a?(ImageBlock) && block.images.count > 1 %><%= ' code-executor' if block.is_a?(CodeBlock) %><%= ' mlx42-preview' if block.is_a?(Mlx42Block) %>"
-           <% if block.is_a?(ImageBlock) && block.images.count > 1 %>
-             data-image-carousel-count-value="<%= block.images.count %>"
-           <% end %>
-           <% if block.is_a?(CodeBlock) %>
-             data-code-executor-block-id-value="<%= block.id %>"
-             data-code-executor-document-id-value="<%= block.document.id %>"
-           <% end %>
-           data-block-editor-block-id-value="<%= block.id %>"
-           data-block-editor-preview-url-value="<%= preview_author_document_blocks_path(block.document) %>">
+  <article class="flex gap-4 group relative">
 
-    <!-- Main Content Column -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <%= turbo_frame_tag "block_#{block.id}_versions_panel",
+                      class: "h-full w-80 bg-white dark:bg-gray-800 shadow-2xl border-l border-gray-200 dark:border-gray-700 transform translate-x-full transition-transform duration-300 overflow-hidden hidden z-10" %>
 
+    <div id="<%= dom_id(block, :content) %>"
+         class="flex-1 flex gap-4"
+         data-controller="block-editor<%= ' image-carousel' if block.is_a?(ImageBlock) && block.images.count > 1 %><%= ' code-executor' if block.is_a?(CodeBlock) %><%= ' mlx42-preview' if block.is_a?(Mlx42Block) %>"
+         <% if block.is_a?(ImageBlock) && block.images.count > 1 %>
+           data-image-carousel-count-value="<%= block.images.count %>"
+         <% end %>
+         <% if block.is_a?(CodeBlock) %>
+           data-code-executor-block-id-value="<%= block.id %>"
+           data-code-executor-document-id-value="<%= block.document.id %>"
+         <% end %>
+         data-block-editor-block-id-value="<%= block.id %>"
+         data-block-editor-preview-url-value="<%= preview_author_document_blocks_path(block.document) %>">
+
+      <!-- Main Content Column -->
+    <div class="flex-1 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
       <!-- Normal Mode: Rendered Content (shown by default) -->
       <div data-block-editor-target="content"
            data-action="click->block-editor#handleContentClick"
@@ -443,6 +448,7 @@
       </div>
     </div>
 
-    <%= render "author/blocks/toolbar", block: block %>
+      <%= render "author/blocks/toolbar", block: block %>
+    </div><!-- end content wrapper -->
   </article>
 </turbo-frame>

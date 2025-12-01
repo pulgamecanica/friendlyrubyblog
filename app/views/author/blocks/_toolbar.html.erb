@@ -1,6 +1,6 @@
 <!-- Sticky Toolbar Column -->
 <div data-block-editor-target="toolbar"
-     class="sticky top-20 h-fit flex flex-col gap-3"
+     class="w-52 flex-shrink-0 sticky top-20 h-fit flex flex-col gap-3"
      id="<%= dom_id(block) %>_toolbar">
 
   <!-- Block Info -->
@@ -10,6 +10,9 @@
     </div>
     <%= render "author/blocks/position", block: block %>
   </div>
+
+  <!-- Version Controls -->
+  <%= render "author/blocks/version_controls", block: block %>
 
   <!-- Normal Mode Tools -->
   <div data-block-editor-target="normalTools"

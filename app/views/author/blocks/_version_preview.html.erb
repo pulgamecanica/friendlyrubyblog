@@ -1,0 +1,73 @@
+<turbo-frame id="<%= dom_id(block) %>">
+  <article class="flex gap-4 group relative opacity-75">
+
+    <%= turbo_frame_tag "block_#{block.id}_versions_panel",
+                      class: "h-full w-80 bg-white dark:bg-gray-800 shadow-2xl border-l border-gray-200 dark:border-gray-700 transform translate-x-full transition-transform duration-300 overflow-hidden hidden z-10" %>
+
+    <div id="<%= dom_id(block, :content) %>" class="flex-1 flex gap-4">
+      <!-- Version Preview Banner and Content -->
+      <div class="flex-1 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <!-- Preview Banner -->
+        <div class="bg-blue-100 dark:bg-blue-900/30 border-b border-blue-300 dark:border-blue-700 p-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
+                Previewing Version <%= version_number %>
+              </h3>
+              <p class="text-xs text-blue-700 dark:text-blue-300">
+                From <%= time_ago_in_words(version.created_at) %> ago
+                <% if version.changeset.present? %>
+                  - Changed: <%= version.changeset.keys.join(', ') %>
+                <% end %>
+              </p>
+            </div>
+            <div class="flex gap-2">
+              <%= button_to "Restore",
+                            restore_version_author_document_block_path(block.document, block, version),
+                            method: :patch,
+                            data: {
+                              turbo: true,
+                              turbo_confirm: "Restore this version? This will revert the block to this state."
+                            },
+                            class: "px-3 py-2 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors" %>
+
+              <%= link_to "Exit Preview",
+                          author_document_block_path(block.document, block),
+                          data: { turbo: true, turbo_prefetch: false },
+                          class: "px-3 py-2 text-xs border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-300 transition-colors" %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview Content -->
+        <div class="p-4 prose prose-sm dark:prose-invert max-w-none">
+          <% if version_block.is_a?(MarkdownBlock) %>
+            <%= text_to_markdown version_block.data["markdown"] %>
+          <% elsif version_block.is_a?(CodeBlock) %>
+            <div class="code-block">
+              <pre><code class="language-<%= version_block.data["language"] %>"><%= version_block.data["code"] %></code></pre>
+            </div>
+          <% elsif version_block.is_a?(HtmlBlock) %>
+            <%= safe_html version_block.data["html"] %>
+          <% elsif version_block.is_a?(ImageBlock) %>
+            <p class="text-gray-500 dark:text-gray-400">Image block (images not available in preview)</p>
+          <% elsif version_block.is_a?(Mlx42Block) %>
+            <p class="text-gray-500 dark:text-gray-400">MLX42 block (not available in preview)</p>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Simplified Toolbar -->
+      <div class="w-52 flex-shrink-0 sticky top-20 h-fit">
+        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+          <div class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+            <%= version_block.type %>
+          </div>
+          <div class="text-xs text-blue-600 dark:text-blue-400">
+            Preview Mode
+          </div>
+        </div>
+      </div>
+    </div><!-- end content wrapper -->
+  </article>
+</turbo-frame>

@@ -1,0 +1,31 @@
+<div class="flex flex-col h-full" data-controller="block-version"
+     data-block-version-panel-id-value="block_<%= block.id %>_versions_panel">
+  <!-- Panel Header -->
+  <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+    <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">
+      Block Version History
+    </h3>
+    <button data-action="click->block-version#closeVersionPanel"
+            class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
+      <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Version List (Scrollable) -->
+  <div class="flex-1 overflow-y-auto p-4 space-y-3">
+    <% if versions.any? %>
+      <% versions.each_with_index do |version, index| %>
+        <%= render "author/blocks/version_item",
+                   version: version,
+                   block: block,
+                   is_current: index == 0 %>
+      <% end %>
+    <% else %>
+      <div class="text-sm text-gray-500 dark:text-gray-400 text-center py-8">
+        No version history available yet.
+      </div>
+    <% end %>
+  </div>
+</div>

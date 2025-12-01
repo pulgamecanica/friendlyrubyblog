@@ -1,0 +1,8 @@
+<%
+  version_number = @block.versions.count - @block.versions.reorder(created_at: :desc).index(@version)
+%>
+<%= turbo_stream.replace dom_id(@block) do %>
+  <%= render "author/blocks/version_preview", block: @block, version_block: @version_block, version: @version, version_number: version_number %>
+<% end %>
+
+<%= info_toast "Previewing version #{version_number} from #{time_ago_in_words(@version.created_at)} ago" %>

@@ -80,6 +80,12 @@ Rails.application.routes.draw do
           post :compile_mlx42
           post :import_mlx42_files
           post :export_mlx42_files
+          get :versions
+          get :show
+          get "versions/:version_id/preview", to: "blocks#preview_version", as: :preview_version
+          patch "versions/:version_id/restore", to: "blocks#restore_version", as: :restore_version
+          patch :undo
+          patch :redo
         end
       end
     end

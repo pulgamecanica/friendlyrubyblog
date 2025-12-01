@@ -2,7 +2,7 @@ require "zip/zip"
 
 class Author::BlocksController < Author::BaseController
   before_action :set_document
-  before_action :set_block, only: %i[update destroy remove_image execute toggle_interactive compile_mlx42 import_mlx42_files export_mlx42_files]
+  before_action :set_block, only: %i[show update destroy remove_image execute toggle_interactive compile_mlx42 import_mlx42_files export_mlx42_files versions preview_version restore_version undo redo]
 
   # POST /author/documents/:document_id/blocks
   # Params:
@@ -258,10 +258,194 @@ class Author::BlocksController < Author::BaseController
     end
   end
 
+  # GET /author/documents/:document_id/blocks/:id/versions
+  def versions
+    @versions = @block.versions.reorder(created_at: :desc)
+    respond_to do |format|
+      format.turbo_stream # renders versions.turbo_stream.erb
+      format.html { redirect_to edit_author_document_path(@document) }
+    end
+  end
+
+  # GET /author/documents/:document_id/blocks/:id/show
+  # Returns the block to normal view (exit preview mode)
+  def show
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          dom_id(@block),
+          partial: "author/blocks/block",
+          locals: { block: @block }
+        )
+      end
+      format.html { redirect_to edit_author_document_path(@document) }
+    end
+  end
+
+  # GET /author/documents/:document_id/blocks/:id/versions/:version_id/preview
+  def preview_version
+    version = @block.versions.find(params[:version_id])
+    @version_block = safe_reify(version) || @block
+    @version = version
+
+    respond_to do |format|
+      format.turbo_stream # renders preview_version.turbo_stream.erb
+      format.html { redirect_to edit_author_document_path(@document) }
+    end
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
+  end
+
+  # PATCH /author/documents/:document_id/blocks/:id/versions/:version_id/restore
+  def restore_version
+    version = @block.versions.find(params[:version_id])
+    version_object = safe_reify(version)
+
+    if version_object
+      # Update the block with the version's attributes
+      # We need to be careful about which attributes to restore
+      attributes_to_restore = version_object.attributes.slice('data', 'type', 'position', 'interactive', 'language_id')
+
+      # Ensure data is a hash (convert from string if needed)
+      if attributes_to_restore['data'].is_a?(String)
+        attributes_to_restore['data'] = JSON.parse(attributes_to_restore['data'])
+      end
+
+      # IMPORTANT: Disable versioning during restore to avoid creating new versions
+      success = false
+      PaperTrail.request(enabled: false) do
+        success = @block.update(attributes_to_restore)
+      end
+
+      if success
+        respond_to do |format|
+          format.turbo_stream # renders restore_version.turbo_stream.erb
+          format.html { redirect_to edit_author_document_path(@document) }
+        end
+      else
+        head :unprocessable_entity
+      end
+    else
+      head :not_found
+    end
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
+  end
+
+  # PATCH /author/documents/:document_id/blocks/:id/undo
+  def undo
+    # PaperTrail stores the BEFORE state in each version
+    # So versions.first contains the state before the most recent change
+    versions = @block.versions.reorder(created_at: :desc)
+
+    Rails.logger.info "Undo requested for block #{@block.id}, #{versions.count} versions available"
+
+    if versions.count > 0
+      # The most recent version's object contains the previous state
+      previous_version = versions.first
+      version_object = safe_reify(previous_version)
+
+      if version_object
+        Rails.logger.info "Restoring attributes from version #{previous_version.id}"
+        attributes_to_restore = version_object.attributes.slice('data', 'type', 'position', 'interactive', 'language_id')
+
+        # Ensure data is a hash (convert from string if needed)
+        if attributes_to_restore['data'].is_a?(String)
+          attributes_to_restore['data'] = JSON.parse(attributes_to_restore['data'])
+        end
+
+        # IMPORTANT: Disable versioning during undo to avoid creating new versions
+        success = false
+        PaperTrail.request(enabled: false) do
+          success = @block.update(attributes_to_restore)
+        end
+
+        if success
+          @message = "Reverted to previous version"
+          respond_to do |format|
+            format.turbo_stream # renders undo.turbo_stream.erb
+            format.html { redirect_to edit_author_document_path(@document) }
+          end
+        else
+          Rails.logger.error "Failed to update block: #{@block.errors.full_messages.join(', ')}"
+          head :unprocessable_entity
+        end
+      else
+        Rails.logger.error "Failed to reify version #{previous_version.id}"
+        head :not_found
+      end
+    else
+      Rails.logger.warn "No versions available for undo"
+      head :not_found
+    end
+  end
+
+  # PATCH /author/documents/:document_id/blocks/:id/redo
+  def redo
+    # Redo is complex with PaperTrail and requires tracking current position in version history
+    # Since we're now preventing undo from creating new versions, we don't have a natural
+    # "forward" history to redo to. This would require session-based undo/redo stack tracking.
+    # For now, redo is not supported - use the version history panel to jump to any version.
+
+    Rails.logger.info "Redo requested for block #{@block.id} - not yet implemented"
+    head :not_implemented
+  end
+
   private
 
   def set_document = @document = Document.friendly.find(params[:document_id])
   def set_block    = @block    = @document.blocks.find(params[:id])
+
+  # Helper method to safely reify a version, handling both YAML and JSON serialization
+  def safe_reify(version)
+    Rails.logger.info "Attempting to reify version #{version.id}, event: #{version.event}"
+
+    # Detect if the object is YAML or JSON
+    is_yaml = version.object.to_s.start_with?('---')
+    Rails.logger.info "Version #{version.id} appears to be #{is_yaml ? 'YAML' : 'JSON'}"
+
+    begin
+      # If it's YAML, manually deserialize with permitted classes
+      if is_yaml
+        object_data = YAML.safe_load(
+          version.object,
+          permitted_classes: [
+            Symbol,
+            Date,
+            Time,
+            ActiveSupport::TimeWithZone,
+            ActiveSupport::TimeZone,
+            ActiveSupport::HashWithIndifferentAccess,
+            BigDecimal
+          ],
+          aliases: true
+        )
+
+        if object_data.is_a?(Hash)
+          obj = @block.class.new(object_data)
+          Rails.logger.info "Successfully reified YAML version #{version.id}"
+          return obj
+        end
+      else
+        # Try JSON deserialization
+        version_object = version.reify
+        if version_object
+          Rails.logger.info "Successfully reified JSON version #{version.id}"
+          return version_object
+        end
+      end
+    rescue Psych::DisallowedClass => e
+      Rails.logger.error "YAML deserialization blocked: #{e.message}"
+    rescue JSON::ParserError => e
+      Rails.logger.error "JSON parsing failed: #{e.message}"
+    rescue => e
+      Rails.logger.error "Failed to reify version: #{e.class.name} - #{e.message}"
+      Rails.logger.error e.backtrace.first(5).join("\n")
+    end
+
+    Rails.logger.error "All reification attempts failed for version #{version.id}"
+    nil
+  end
 
   def permitted_params
     data = {}

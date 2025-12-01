@@ -1,0 +1,3 @@
+<%= turbo_stream.update "block_#{@block.id}_versions_panel" do %>
+  <%= render "author/blocks/version_panel", versions: @versions, block: @block %>
+<% end %>
