@@ -304,11 +304,11 @@ class Author::BlocksController < Author::BaseController
     if version_object
       # Update the block with the version's attributes
       # We need to be careful about which attributes to restore
-      attributes_to_restore = version_object.attributes.slice('data', 'type', 'position', 'interactive', 'language_id')
+      attributes_to_restore = version_object.attributes.slice("data", "type", "position", "interactive", "language_id")
 
       # Ensure data is a hash (convert from string if needed)
-      if attributes_to_restore['data'].is_a?(String)
-        attributes_to_restore['data'] = JSON.parse(attributes_to_restore['data'])
+      if attributes_to_restore["data"].is_a?(String)
+        attributes_to_restore["data"] = JSON.parse(attributes_to_restore["data"])
       end
 
       # IMPORTANT: Disable versioning during restore to avoid creating new versions
@@ -347,11 +347,11 @@ class Author::BlocksController < Author::BaseController
 
       if version_object
         Rails.logger.info "Restoring attributes from version #{previous_version.id}"
-        attributes_to_restore = version_object.attributes.slice('data', 'type', 'position', 'interactive', 'language_id')
+        attributes_to_restore = version_object.attributes.slice("data", "type", "position", "interactive", "language_id")
 
         # Ensure data is a hash (convert from string if needed)
-        if attributes_to_restore['data'].is_a?(String)
-          attributes_to_restore['data'] = JSON.parse(attributes_to_restore['data'])
+        if attributes_to_restore["data"].is_a?(String)
+          attributes_to_restore["data"] = JSON.parse(attributes_to_restore["data"])
         end
 
         # IMPORTANT: Disable versioning during undo to avoid creating new versions
@@ -401,7 +401,7 @@ class Author::BlocksController < Author::BaseController
     Rails.logger.info "Attempting to reify version #{version.id}, event: #{version.event}"
 
     # Detect if the object is YAML or JSON
-    is_yaml = version.object.to_s.start_with?('---')
+    is_yaml = version.object.to_s.start_with?("---")
     Rails.logger.info "Version #{version.id} appears to be #{is_yaml ? 'YAML' : 'JSON'}"
 
     begin
