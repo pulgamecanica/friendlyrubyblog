@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Post-deploy hook - runs after successful deployment
+# This hook sends a notification and can be used for monitoring
+
+echo "========================================="
+echo "Deployment completed successfully!"
+echo "========================================="
+echo "Server: evil-penguin.com"
+echo "Time: $(date)"
+echo "========================================="
+
+# You can add monitoring notifications here, e.g.:
+# - Send to Slack
+# - Send to Discord
+# - Update monitoring dashboard
+# - Send email notification

@@ -1,19 +1,27 @@
-<% content_for :title, "Analytics · Author" %>
+<% content_for :title, "#{@document.title} · Analytics" %>
 
 <div class="container mx-auto px-4 py-8">
-  <!-- Header with Date Range Picker -->
+  <!-- Header -->
   <div class="mb-8">
     <div class="flex items-center justify-between mb-4">
-      <div>
-        <h1 class="text-4xl font-bold dark:text-white">Analytics</h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-1">Track your blog's performance and visitor behavior</p>
+      <div class="flex-1">
+        <div class="flex items-center gap-3 mb-2">
+          <%= link_to "← Back to Analytics", author_analytics_path, class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300" %>
+          <span class="text-gray-400">·</span>
+          <%= link_to "Edit Document", edit_author_document_path(@document), class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300" %>
+          <span class="text-gray-400">·</span>
+          <%= link_to "View Live", public_document_path(@document), class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300", target: "_blank" %>
+        </div>
+        <h1 class="text-4xl font-bold dark:text-white"><%= @document.title %></h1>
+        <p class="text-gray-600 dark:text-gray-400 mt-1">
+          Analytics for this <%= @document.kind || "document" %>
+        </p>
       </div>
-      <%= link_to "← Back to Dashboard", author_dashboard_path, class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300" %>
     </div>
 
     <!-- Date Range Filter -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-4">
-      <%= form_with url: author_analytics_path, method: :get, class: "flex items-end gap-4" do |f| %>
+      <%= form_with url: author_document_path(@document), method: :get, class: "flex items-end gap-4" do |f| %>
         <div>
           <%= f.date_field :start_date, value: @start_date, class: "border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded px-3 py-2" %>
         </div>
@@ -21,9 +29,9 @@
           <%= f.date_field :end_date, value: @end_date, class: "border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded px-3 py-2" %>
         </div>
         <%= f.submit "Apply", class: "bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded cursor-pointer" %>
-        <%= link_to "Last 7 Days", author_analytics_path(start_date: 7.days.ago.to_date, end_date: Date.today), class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 py-2 px-4" %>
-        <%= link_to "Last 30 Days", author_analytics_path(start_date: 30.days.ago.to_date, end_date: Date.today), class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 py-2 px-4" %>
-        <%= link_to "Last 90 Days", author_analytics_path(start_date: 90.days.ago.to_date, end_date: Date.today), class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 py-2 px-4" %>
+        <%= link_to "Last 7 Days", author_document_path(@document, start_date: 7.days.ago.to_date, end_date: Date.today), class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 py-2 px-4" %>
+        <%= link_to "Last 30 Days", author_document_path(@document, start_date: 30.days.ago.to_date, end_date: Date.today), class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 py-2 px-4" %>
+        <%= link_to "Last 90 Days", author_document_path(@document, start_date: 90.days.ago.to_date, end_date: Date.today), class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 py-2 px-4" %>
       <% end %>
     </div>
   </div>
@@ -80,61 +88,12 @@
     </div>
   </div>
 
-  <!-- Top Documents & Sources -->
+  <!-- Traffic Sources & Locations -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-    <!-- Top Documents -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold dark:text-white">Top Documents</h3>
-      </div>
-
-      <!-- Universal Search Component -->
-      <div class="mb-4">
-        <%= render "shared/universal_search",
-            search_url: author_documents_search_path,
-            placeholder: "Search documents by title or slug...",
-            position: "left",
-            width: "full",
-            debounce: 300,
-            min_chars: 2,
-            container_class: "w-full"
-        %>
-      </div>
-
-      <div class="space-y-3 mt-4">
-        <% @analytics.top_documents(10).each do |doc| %>
-          <div class="flex items-center justify-between py-2 border-b dark:border-gray-700">
-            <div class="flex-1 min-w-0">
-              <%= link_to doc[:title], author_document_path(doc[:id], start_date: @start_date, end_date: @end_date),
-                  class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 truncate block" %>
-            </div>
-            <span class="ml-4 text-gray-600 dark:text-gray-400 font-medium"><%= number_with_delimiter(doc[:views]) %> views</span>
-          </div>
-        <% end %>
-      </div>
-    </div>
-
     <!-- Top Sources -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold dark:text-white">Top Traffic Sources</h3>
-      </div>
-
-      <!-- Universal Search Component -->
-      <div class="mb-4">
-        <%= render "shared/universal_search",
-            search_url: author_analytics_sources_search_path,
-            placeholder: "Search traffic sources...",
-            position: "right",
-            width: "full",
-            debounce: 300,
-            min_chars: 2,
-            turbo_frame: "sources_search_results",
-            container_class: "w-full"
-        %>
-      </div>
-
-      <div class="space-y-3 mt-4">
+      <h3 class="text-lg font-semibold dark:text-white mb-4">Top Traffic Sources</h3>
+      <div class="space-y-3">
         <% if @analytics.top_sources.any? %>
           <% @analytics.top_sources(10).each do |source, count| %>
             <div class="flex items-center justify-between py-2 border-b dark:border-gray-700">
@@ -147,59 +106,20 @@
         <% end %>
       </div>
     </div>
-  </div>
 
-  <!-- Referrers & Next Pages -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-    <!-- Top Referrers -->
+    <!-- Top Locations -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold dark:text-white">Top Referrers</h3>
-      </div>
-
-      <!-- Universal Search Component -->
-      <div class="mb-4">
-        <%= render "shared/universal_search",
-            search_url: author_analytics_referrers_search_path,
-            placeholder: "Search referrer URLs...",
-            position: "left",
-            width: "full",
-            debounce: 300,
-            min_chars: 3,
-            turbo_frame: "referrers_search_results",
-            container_class: "w-full"
-        %>
-      </div>
-
-      <div class="space-y-2 max-h-96 pr-2 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-gray-700 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-gray-500">
-        <% if @analytics.top_referrers.any? %>
-          <% @analytics.top_referrers(15).each do |referrer, count| %>
-            <div class="flex items-start justify-between py-2 border-b dark:border-gray-700 text-sm">
-              <a href="<%= referrer %>" target="_blank" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 truncate flex-1 mr-2">
-                <%= referrer.truncate(60) %>
-              </a>
-              <span class="text-gray-600 dark:text-gray-400 font-medium whitespace-nowrap"><%= count %></span>
+      <h3 class="text-lg font-semibold dark:text-white mb-4">Top Locations</h3>
+      <div class="space-y-3">
+        <% if @analytics.location_breakdown.any? %>
+          <% @analytics.location_breakdown.each do |country, count| %>
+            <div class="flex items-center justify-between py-2 border-b dark:border-gray-700">
+              <span class="text-gray-800 dark:text-gray-200 truncate"><%= country %></span>
+              <span class="text-gray-600 dark:text-gray-400 font-medium"><%= number_with_delimiter(count) %> visits</span>
             </div>
           <% end %>
         <% else %>
-          <p class="text-gray-500 dark:text-gray-400 text-sm">No referrer data available</p>
-        <% end %>
-      </div>
-    </div>
-
-    <!-- Top Next Pages -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6">
-      <h3 class="text-lg font-semibold dark:text-white mb-4">Where Visitors Go Next</h3>
-      <div class="space-y-2 max-h-96 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-gray-700 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-gray-500">
-        <% if @analytics.top_next_pages.any? %>
-          <% @analytics.top_next_pages(15).each do |next_page, count| %>
-            <div class="flex items-start justify-between py-2 border-b dark:border-gray-700 text-sm">
-              <span class="text-gray-700 dark:text-gray-300 truncate flex-1 mr-2"><%= next_page.truncate(60) %></span>
-              <span class="text-gray-600 dark:text-gray-400 font-medium whitespace-nowrap"><%= count %></span>
-            </div>
-          <% end %>
-        <% else %>
-          <p class="text-gray-500 dark:text-gray-400 text-sm">No next page data available</p>
+          <p class="text-gray-500 dark:text-gray-400 text-sm">No location data available yet</p>
         <% end %>
       </div>
     </div>
@@ -280,40 +200,22 @@
     </div>
   </div>
 
-  <!-- Top Visitors -->
+  <!-- Top Referrers -->
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900 p-6 mb-8">
-    <h3 class="text-lg font-semibold dark:text-white mb-4">Top Visitors</h3>
-    <div class="overflow-x-auto [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-gray-700 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-gray-500">
-      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-        <thead class="bg-gray-50 dark:bg-gray-900">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Visitor ID</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">View Count</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Last Visit</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Actions</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-          <% @analytics.top_visitors(20).each do |visitor| %>
-            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900 dark:text-gray-200">
-                <%= visitor[:visitor_id].truncate(16) %>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                <%= visitor[:view_count] %> views
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                <%= time_ago_in_words(visitor[:last_visit]) %> ago
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm">
-                <%= link_to "View Activity",
-                    author_analytics_visitor_path(visitor[:visitor_id], start_date: @start_date, end_date: @end_date),
-                    class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium" %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+    <h3 class="text-lg font-semibold dark:text-white mb-4">Top Referrers</h3>
+    <div class="space-y-2 max-h-96 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-gray-700 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-gray-500">
+      <% if @analytics.top_referrers.any? %>
+        <% @analytics.top_referrers(15).each do |referrer, count| %>
+          <div class="flex items-start justify-between py-2 border-b dark:border-gray-700 text-sm">
+            <a href="<%= referrer %>" target="_blank" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 truncate flex-1 mr-2">
+              <%= referrer.truncate(80) %>
+            </a>
+            <span class="text-gray-600 dark:text-gray-400 font-medium whitespace-nowrap"><%= count %></span>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">No referrer data available</p>
+      <% end %>
     </div>
   </div>
 
@@ -325,7 +227,6 @@
         <thead class="bg-gray-50 dark:bg-gray-900">
           <tr>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Time</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Document</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Visitor</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Location</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Device</th>
@@ -336,10 +237,6 @@
             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                 <%= view.visited_at.strftime("%b %d, %H:%M") %>
-              </td>
-              <td class="px-6 py-4 text-sm">
-                <%= link_to view.document.title, public_document_path(view.document),
-                    class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300", target: "_blank" %>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-mono">
                 <%= link_to view.unique_visitor_id.truncate(12),

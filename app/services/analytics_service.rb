@@ -15,10 +15,10 @@ class AnalyticsService
   def top_documents(limit = 10)
     page_views_scope
       .group("documents.id", "documents.title", "documents.slug")
-      .select("documents.title, documents.slug, COUNT(page_views.id) as view_count")
+      .select("documents.id, documents.title, documents.slug, COUNT(page_views.id) as view_count")
       .order("view_count DESC")
       .limit(limit)
-      .map { |result| { title: result.title, slug: result.slug, views: result.view_count } }
+      .map { |result| { id: result.id, title: result.title, slug: result.slug, views: result.view_count } }
   end
 
   # Top referrers

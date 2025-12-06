@@ -1,0 +1,60 @@
+<%= turbo_stream.update "universal_search_results" do %>
+  <div class="max-h-96 overflow-y-auto universal-search-results">
+    <% if @results.any? %>
+      <div class="divide-y divide-gray-200 dark:divide-gray-700">
+        <% @results.each do |doc| %>
+          <%= link_to public_document_path(doc[:slug]),
+              class: "block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150",
+              data: { turbo_frame: "_top" } do %>
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2">
+                  <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    <%= doc[:title] %>
+                  </h4>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
+                    <%= doc[:kind]&.titleize || "Post" %>
+                  </span>
+                </div>
+                <% if doc[:description].present? %>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
+                    <%= doc[:description] %>
+                  </p>
+                <% end %>
+                <span class="text-xs text-gray-400 dark:text-gray-500 mt-1 block">
+                  <%= time_ago_in_words(doc[:created_at]) %> ago
+                </span>
+              </div>
+              <div class="flex-shrink-0">
+                <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="px-6 py-8 text-center universal-search-empty-state">
+        <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M12 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No posts found</h3>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          <%= [
+            "🤷 Nothing here but digital tumbleweeds...",
+            "🔍 Searched high and low, found zilch!",
+            "🎭 Your search came up empty-handed.",
+            "🦄 That content is as rare as a unicorn!",
+            "🌵 The search desert yields no results.",
+            "🎪 No matches found in this circus!",
+            "🚀 Houston, we have no results.",
+            "🎯 Missed the mark on this one!",
+            "🏜️ As barren as a desert out here!",
+            "🕵️ Not even Sherlock could find this one."
+          ].sample %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+<% end %>

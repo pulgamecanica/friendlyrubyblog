@@ -58,9 +58,20 @@ export default class extends Controller {
     this.updateToolbar()
     this.updateLayout()
 
-    // Focus the textarea
-    if (this.hasTextareaTarget) {
-      this.textareaTarget.focus()
+    // For markdown or HTML blocks, automatically enter fullscreen
+    if (this.isMarkdownBlock() || this.isHtmlBlock()) {
+      // Use setTimeout to ensure Monaco editor is initialized
+      setTimeout(() => {
+        const monacoController = this.getMonacoController()
+        if (monacoController && !monacoController.isFullscreen) {
+          monacoController.toggleFullscreen()
+        }
+      }, 100)
+    } else {
+      // Focus the textarea for other blocks
+      if (this.hasTextareaTarget) {
+        this.textareaTarget.focus()
+      }
     }
   }
 
@@ -136,6 +147,15 @@ export default class extends Controller {
 
   handleEscapeKey(event) {
     if (event.key === "Escape") {
+      // Check if Monaco editor is in fullscreen - if so, let it handle the ESC first
+      const monacoController = this.getMonacoController()
+      if (monacoController && monacoController.isFullscreen) {
+        // Monaco will handle this ESC to exit fullscreen
+        // Don't exit edit mode
+        return
+      }
+
+      // Not in fullscreen, so exit edit mode normally
       this.exitEditMode()
     }
   }
@@ -297,6 +317,8 @@ export default class extends Controller {
         this.editorTarget.style.display = "block"
         this.updateEditorLayout()
       }
+      // Constrain the element width to prevent overflow
+      this.element.style.maxWidth = "100%"
       this.autoResize()
     } else {
       // NORMAL MODE: Show content, hide editor
@@ -306,6 +328,8 @@ export default class extends Controller {
       if (this.hasEditorTarget) {
         this.editorTarget.style.display = "none"
       }
+      // Remove width constraint in view mode
+      this.element.style.maxWidth = ""
 
       // Handle collapsed state (normal mode only)
       if (this.collapsedValue) {
@@ -364,6 +388,28 @@ export default class extends Controller {
   removeGlobalListeners() {
     document.removeEventListener("click", this.boundClickOutside)
     document.removeEventListener("keydown", this.boundEscapeKey)
+  }
+
+  // Helper methods
+  isMarkdownBlock() {
+    // Check if this block has a monaco-editor controller with markdown language
+    const monacoElement = this.element.querySelector('[data-monaco-editor-language-value="markdown"]')
+    return monacoElement !== null
+  }
+
+  isHtmlBlock() {
+    // Check if this block has a monaco-editor controller with html language
+    const monacoElement = this.element.querySelector('[data-monaco-editor-language-value="html"]')
+    return monacoElement !== null
+  }
+
+  getMonacoController() {
+    const monacoElement = this.element.querySelector('[data-controller*="monaco-editor"]')
+    if (!monacoElement) return null
+
+    // Get the Stimulus controller instance
+    const application = this.application
+    return application.getControllerForElementAndIdentifier(monacoElement, "monaco-editor")
   }
 
   // localStorage state management

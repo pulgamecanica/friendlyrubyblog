@@ -1,12 +1,24 @@
 class Author::DocumentsController < Author::BaseController
   include ToastHelper
-  before_action :set_document, only: %i[edit update destroy publish unpublish remove_portrait]
+  before_action :set_document, only: %i[show edit update destroy publish unpublish remove_portrait]
 
   def index
     @kind = params[:kind]
     @documents = current_author.documents
     @documents = @documents.where(kind: @kind) if @kind.present?
     @documents = @documents.order(updated_at: :desc)
+  end
+
+  def show
+    # Document analytics page
+    @start_date = params[:start_date]&.to_date || 30.days.ago
+    @end_date = params[:end_date]&.to_date || Date.today
+
+    @analytics = DocumentAnalyticsService.new(
+      document: @document,
+      start_date: @start_date,
+      end_date: @end_date
+    )
   end
 
   def new

@@ -20,6 +20,9 @@ Rails.application.routes.draw do
   namespace :public, path: "" do
     root "documents#index", defaults: { kind: "post" }
 
+    # Public search
+    get "search", to: "search#index", as: :search
+
     resources :series,    only: [ :index, :show ]
     resources :tags,      only: [ :show ] # /tags/:id => tag documents
 
@@ -56,6 +59,16 @@ Rails.application.routes.draw do
     get "dashboard", to: "dashboard#index", as: :dashboard
     get "analytics", to: "analytics#index", as: :analytics
     get "analytics/visitor/:id", to: "analytics#visitor", as: :analytics_visitor
+
+    # Search endpoints for analytics
+    namespace :documents do
+      get "search", to: "search#index", as: :search
+    end
+
+    namespace :analytics do
+      get "referrers/search", to: "referrers_search#index", as: :referrers_search
+      get "sources/search", to: "sources_search#index", as: :sources_search
+    end
 
     resources :series do
       member do

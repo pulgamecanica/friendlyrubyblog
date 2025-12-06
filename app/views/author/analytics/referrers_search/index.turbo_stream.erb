@@ -1,0 +1,33 @@
+<%= turbo_stream.update "referrers_search_results" do %>
+  <div class="space-y-2 max-h-96 overflow-y-auto universal-search-results pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-gray-700 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-gray-500">
+    <% if @results.any? %>
+      <div class="divide-y divide-gray-200 dark:divide-gray-700">
+        <% @results.each do |referrer, count| %>
+          <div class="flex items-start justify-between py-3 px-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
+            <a href="<%= referrer %>" target="_blank" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 truncate flex-1 mr-2 text-sm">
+              <%= referrer.truncate(70) %>
+            </a>
+            <span class="text-gray-600 dark:text-gray-400 font-medium whitespace-nowrap text-sm"><%= number_with_delimiter(count) %></span>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="px-6 py-8 text-center universal-search-empty-state">
+        <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No referrers found</h3>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          <%= [
+            "🔗 No links found matching that query!",
+            "🕵️ That URL is playing hide and seek.",
+            "🌐 Lost in the web, nowhere to be found!",
+            "🎣 Cast your net wider, nothing here!",
+            "🗺️ No traffic from that route found.",
+            "🚦 No visitors from that path."
+          ].sample %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+<% end %>

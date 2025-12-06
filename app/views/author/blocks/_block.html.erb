@@ -129,7 +129,11 @@
               <!-- Textarea -->
               <div data-block-editor-target="textareaContainer">
                 <!-- Monaco Editor Wrapper -->
-                <div data-controller="monaco-editor" data-monaco-editor-language-value="markdown" class="relative">
+                <div data-controller="monaco-editor"
+                     data-monaco-editor-language-value="markdown"
+                     data-monaco-editor-block-id-value="<%= block.id %>"
+                     data-monaco-editor-preview-url-value="<%= preview_author_document_blocks_path(block.document) %>"
+                     class="relative">
                   <!-- Fullscreen Button -->
                   <button type="button"
                           data-monaco-editor-target="fullscreenButton"

@@ -30,6 +30,15 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 
+  # Trust proxy headers (X-Forwarded-For, X-Forwarded-Proto, etc.) to get real client IP
+  # This is required for proper geolocation when behind Kamal proxy/load balancers
+  config.action_dispatch.trusted_proxies = [
+    "127.0.0.1",       # localhost
+    "::1",              # IPv6 localhost
+    "172.16.0.0/12",   # Docker private network range
+    "192.168.0.0/16"   # Private network range
+  ]
+
   # Skip http-to-https redirect for the default health check endpoint.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 

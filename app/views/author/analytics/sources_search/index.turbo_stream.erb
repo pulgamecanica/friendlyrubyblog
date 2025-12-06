@@ -1,0 +1,36 @@
+<%= turbo_stream.update "sources_search_results" do %>
+  <div class="max-h-96 overflow-y-auto universal-search-results">
+    <% if @results.any? %>
+      <div class="divide-y divide-gray-200 dark:divide-gray-700">
+        <% @results.each do |source, count| %>
+          <div class="flex items-center justify-between py-3 px-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
+            <div class="flex items-center gap-2 flex-1 min-w-0">
+              <svg class="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+              </svg>
+              <span class="text-gray-800 dark:text-gray-200 truncate text-sm"><%= source || "Direct" %></span>
+            </div>
+            <span class="text-gray-600 dark:text-gray-400 font-medium whitespace-nowrap text-sm ml-3"><%= number_with_delimiter(count) %> visits</span>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="px-6 py-8 text-center universal-search-empty-state">
+        <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No sources found</h3>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          <%= [
+            "🌍 No traffic from that source!",
+            "🚀 That domain hasn't sent visitors yet.",
+            "🎯 No hits from that website found.",
+            "📡 Signal lost, no sources detected!",
+            "🗺️ That territory is uncharted.",
+            "🔍 Can't find that traffic source anywhere!"
+          ].sample %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+<% end %>

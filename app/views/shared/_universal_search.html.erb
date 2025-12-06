@@ -1,0 +1,77 @@
+<%
+  # Universal Search Component
+  #
+  # Usage:
+  #   render "shared/universal_search",
+  #       search_url: author_documents_search_path,
+  #       placeholder: "Search documents...",
+  #       position: "auto",     # left, right, center, auto (default: auto)
+  #       width: "full",        # full, input, or custom width like "400px" (default: full)
+  #       debounce: 300,        # milliseconds (default: 300)
+  #       min_chars: 2,         # minimum characters to trigger search (default: 2)
+  #       turbo_frame: "search_results",  # turbo frame ID for results
+  #       container_class: "",  # additional classes for container
+  #       input_class: ""       # additional classes for input
+%>
+
+<div
+  data-controller="universal-search"
+  data-universal-search-url-value="<%= local_assigns.fetch(:search_url, '#') %>"
+  data-universal-search-debounce-value="<%= local_assigns.fetch(:debounce, 300) %>"
+  data-universal-search-min-chars-value="<%= local_assigns.fetch(:min_chars, 2) %>"
+  data-universal-search-position-value="<%= local_assigns.fetch(:position, 'auto') %>"
+  data-universal-search-width-value="<%= local_assigns.fetch(:width, 'full') %>"
+  class="relative <%= local_assigns.fetch(:container_class, '') %>"
+>
+  <!-- Search Input -->
+  <div class="relative">
+    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+      <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+
+    <input
+      type="text"
+      data-universal-search-target="input"
+      data-action="input->universal-search#search keydown->universal-search#keydown"
+      placeholder="<%= local_assigns.fetch(:placeholder, 'Search...') %>"
+      class="universal-search-input block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 transition-all duration-200 <%= local_assigns.fetch(:input_class, '') %>"
+      autocomplete="off"
+    >
+
+    <!-- Loading Spinner -->
+    <div
+      data-universal-search-target="spinner"
+      class="hidden absolute inset-y-0 right-0 flex items-center pr-3"
+    >
+      <svg class="animate-spin h-5 w-5 text-indigo-600 dark:text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+    </div>
+
+    <!-- Clear Button (shown when input has text) -->
+    <button
+      type="button"
+      data-action="click->universal-search#clear"
+      class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+      style="display: none;"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Results Dropdown -->
+  <div
+    data-universal-search-target="results"
+    class="hidden absolute z-50 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl dark:shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
+    style="min-width: 300px; max-width: 600px;"
+  >
+    <%= turbo_frame_tag local_assigns.fetch(:turbo_frame, 'universal_search_results'), class: "block" do %>
+      <!-- Results will be loaded here via Turbo Stream -->
+    <% end %>
+  </div>
+</div>

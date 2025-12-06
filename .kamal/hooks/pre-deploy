@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# Pre-deploy hook - runs before deployment starts
+# Use this for health checks and pre-deployment verification
+
+echo "========================================="
+echo "Starting deployment to evil-penguin.com"
+echo "========================================="
+echo "Time: $(date)"
+echo ""
+echo "Running pre-deployment checks..."
+echo ""
+
+# Check if we can reach the server
+if ! nc -z -w5 148.71.60.228 22 2>/dev/null; then
+    echo "WARNING: Cannot reach server on SSH port"
+fi
+
+# Check if we can reach HTTP/HTTPS ports
+if nc -z -w5 148.71.60.228 80 2>/dev/null; then
+    echo "✓ Port 80 (HTTP) is reachable"
+else
+    echo "⚠ Port 80 (HTTP) is not reachable"
+fi
+
+if nc -z -w5 148.71.60.228 443 2>/dev/null; then
+    echo "✓ Port 443 (HTTPS) is reachable"
+else
+    echo "⚠ Port 443 (HTTPS) is not reachable"
+fi
+
+echo ""
+echo "Pre-deployment checks complete"
+echo "========================================="

@@ -1,0 +1,182 @@
+/* Universal Search Component Styles */
+
+/* Input animations and focus states */
+.universal-search-input {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.universal-search-input:focus {
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* Dark mode focus ring */
+.dark .universal-search-input:focus {
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+/* Results container with smooth animations */
+.universal-search-results {
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom scrollbar for results */
+.universal-search-results::-webkit-scrollbar {
+  width: 8px;
+}
+
+.universal-search-results::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.universal-search-results::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 20px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.universal-search-results::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(107, 114, 128, 0.7);
+}
+
+.dark .universal-search-results::-webkit-scrollbar-thumb {
+  background-color: rgba(75, 85, 99, 0.5);
+}
+
+.dark .universal-search-results::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(75, 85, 99, 0.7);
+}
+
+/* Result item hover effect */
+.universal-search-results a {
+  transition: background-color 0.15s ease-in-out;
+  position: relative;
+}
+
+.universal-search-results a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: rgb(79, 70, 229);
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.universal-search-results a:hover::before {
+  opacity: 1;
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Pulse effect for search icon when focused */
+.universal-search-input:focus ~ .search-icon {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Enhanced shadow for dropdown */
+.universal-search-results {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.dark .universal-search-results {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.3),
+    0 4px 6px -2px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Result item text truncation with gradient fade */
+.universal-search-results .truncate-with-fade {
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Empty state animation */
+.universal-search-empty-state {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Badge styles for draft/published status */
+.universal-search-badge {
+  animation: scaleIn 0.2s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Hover effect for result items with subtle lift */
+.universal-search-results a:hover {
+  transform: translateX(2px);
+  transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+/* Focus visible styles for keyboard navigation */
+.universal-search-results a:focus-visible {
+  outline: 2px solid rgb(79, 70, 229);
+  outline-offset: -2px;
+}
+
+/* Smooth transition for hidden/shown state */
+[data-universal-search-target="results"] {
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+[data-universal-search-target="results"].hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
