@@ -25,6 +25,43 @@ print_warning() {
     echo -e "${YELLOW}⚠ $1${NC}"
 }
 
+# Load .env file if it exists
+if [ -f .env ]; then
+    print_success "Loading environment variables from .env"
+    export $(grep -v '^#' .env | xargs)
+else
+    print_warning "No .env file found, using environment variables"
+fi
+
+echo ""
+echo "Checking environment variables..."
+MISSING_VARS=0
+
+check_var() {
+    if [ -z "${!1}" ]; then
+        print_error "$1 is not set"
+        MISSING_VARS=$((MISSING_VARS + 1))
+    else
+        print_success "$1 is set"
+    fi
+}
+
+check_var "KAMAL_REGISTRY_PASSWORD"
+check_var "POSTGRES_PASSWORD"
+check_var "DATABASE_URL"
+check_var "SECRET_KEY_BASE"
+check_var "AWS_ACCESS_KEY_ID"
+check_var "AWS_SECRET_ACCESS_KEY"
+
+echo ""
+
+if [ $MISSING_VARS -gt 0 ]; then
+    print_error "Missing $MISSING_VARS required environment variable(s)"
+    echo ""
+    echo "Please run ./setup_production.sh for setup instructions"
+    exit 1
+fi
+
 # Check if this is the first deployment
 FIRST_DEPLOY=false
 if ! ssh ssh_pt "docker ps | grep -q friendlyrubyblog" 2>/dev/null; then

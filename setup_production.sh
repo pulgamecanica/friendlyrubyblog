@@ -6,6 +6,16 @@ echo "Friendly Ruby Blog - Production Setup"
 echo "========================================="
 echo ""
 
+# Load .env file if it exists
+if [ -f .env ]; then
+    echo "✓ Loading environment variables from .env"
+    export $(grep -v '^#' .env | xargs)
+    echo ""
+else
+    echo "⚠ No .env file found, using environment variables"
+    echo ""
+fi
+
 # Check if required environment variables are set
 check_env_var() {
     if [ -z "${!1}" ]; then
