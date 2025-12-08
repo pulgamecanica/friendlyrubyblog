@@ -61,7 +61,7 @@ gem "pg_search", "~> 2.3"
 gem "devise", "~> 4.9"
 gem "rspec-rails", "~> 8.0"
 gem "simplecov", "~> 0.22.0", require: false, group: :test
-gem "paper_trail", "~> 16.0"
+gem "paper_trail", "~> 17.0"
 gem "friendly_id", "~> 5.5"
 
 gem "commonmarker", "~> 2.4"
