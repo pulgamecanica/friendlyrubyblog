@@ -1,0 +1,186 @@
+<%#
+  Shared form for new / edit. `source` fields (git vs zip) only appear on
+  creation + resubmit — title/description/scoring live on the game itself.
+%>
+<%= form_with model: game,
+      url: form_url,
+      method: form_method,
+      html: { multipart: true, class: "space-y-6" },
+      data: { controller: "game-source-toggle" } do |f| %>
+
+  <% if game.errors.any? %>
+    <div class="rounded-lg border border-red-700 bg-red-900/30 p-4 font-mono text-sm text-red-300">
+      <p class="mb-2">the following errors stopped this submission:</p>
+      <ul class="list-disc list-inside space-y-1">
+        <% game.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- basic info -->
+  <section class="rounded-lg border border-gray-800 bg-gray-900 p-5 space-y-4">
+    <h2 class="font-mono text-sm text-purple-400">◉ basic info</h2>
+
+    <div>
+      <%= f.label :title, class: "block font-mono text-xs text-gray-500 mb-1" %>
+      <%= f.text_field :title,
+            required: true,
+            class: "w-full rounded bg-black border border-gray-700 px-3 py-2 font-mono text-sm text-gray-200 focus:border-purple-500 focus:outline-none" %>
+    </div>
+
+    <div>
+      <%= f.label :description, class: "block font-mono text-xs text-gray-500 mb-1" %>
+      <%= f.text_area :description,
+            rows: 4,
+            class: "w-full rounded bg-black border border-gray-700 px-3 py-2 font-mono text-sm text-gray-200 focus:border-purple-500 focus:outline-none" %>
+    </div>
+
+    <div>
+      <%= f.label :cover, "cover image (optional)", class: "block font-mono text-xs text-gray-500 mb-1" %>
+      <%= f.file_field :cover, accept: "image/*",
+            class: "block w-full text-xs font-mono text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-purple-600 file:text-white file:font-mono hover:file:bg-purple-500" %>
+    </div>
+  </section>
+
+  <!-- source (only on new / resubmit) -->
+  <% if source_editable %>
+    <section class="rounded-lg border border-gray-800 bg-gray-900 p-5 space-y-4">
+      <h2 class="font-mono text-sm text-purple-400">◉ source</h2>
+
+      <div class="flex gap-4 font-mono text-sm">
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="radio" name="game[source][kind]" value="git"
+                 <%= "checked" if (game.source.to_h["kind"] || "git") == "git" %>
+                 data-game-source-toggle-target="radio"
+                 data-action="change->game-source-toggle#sync"
+                 class="accent-purple-500">
+          <span class="text-gray-300">git URL</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="radio" name="game[source][kind]" value="zip"
+                 <%= "checked" if game.source.to_h["kind"] == "zip" %>
+                 data-game-source-toggle-target="radio"
+                 data-action="change->game-source-toggle#sync"
+                 class="accent-purple-500">
+          <span class="text-gray-300">.zip upload</span>
+        </label>
+      </div>
+
+      <!-- git panel -->
+      <div data-game-source-toggle-target="gitPanel" class="space-y-3">
+        <div>
+          <label class="block font-mono text-xs text-gray-500 mb-1">repository URL (https only)</label>
+          <input type="text" name="game[source][git_url]"
+                 value="<%= game.source.to_h['git_url'] %>"
+                 placeholder="https://github.com/you/your-mlx42-game"
+                 class="w-full rounded bg-black border border-gray-700 px-3 py-2 font-mono text-sm text-gray-200 focus:border-purple-500 focus:outline-none">
+          <p class="mt-1 text-xs font-mono text-gray-600">
+            allowed hosts: <%= GameIngestionService::ALLOWED_GIT_HOSTS.join(", ") %>
+          </p>
+        </div>
+        <div>
+          <label class="block font-mono text-xs text-gray-500 mb-1">branch / tag (optional)</label>
+          <input type="text" name="game[source][git_ref]"
+                 value="<%= game.source.to_h['git_ref'] %>"
+                 placeholder="main"
+                 class="w-full rounded bg-black border border-gray-700 px-3 py-2 font-mono text-sm text-gray-200 focus:border-purple-500 focus:outline-none">
+        </div>
+      </div>
+
+      <!-- zip panel -->
+      <div data-game-source-toggle-target="zipPanel" class="space-y-3" hidden>
+        <div>
+          <label class="block font-mono text-xs text-gray-500 mb-1">source archive (.zip, max <%= GameIngestionService::MAX_ZIP_BYTES / 1.megabyte %>MB)</label>
+          <%= f.file_field :source_archive, accept: ".zip,application/zip",
+                class: "block w-full text-xs font-mono text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-purple-600 file:text-white file:font-mono hover:file:bg-purple-500" %>
+          <% if game.source_archive.attached? %>
+            <p class="mt-1 text-xs font-mono text-gray-500">
+              current: <%= game.source_archive.filename %> (<%= number_to_human_size(game.source_archive.byte_size) %>)
+            </p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2 pt-3 border-t border-gray-800">
+        <div>
+          <label class="block font-mono text-xs text-gray-500 mb-1">make target (optional)</label>
+          <input type="text" name="game[_build][make_target]"
+                 value="<%= game.metadata.to_h['make_target'] %>"
+                 placeholder="leave blank for default 'make'"
+                 class="w-full rounded bg-black border border-gray-700 px-3 py-2 font-mono text-sm text-gray-200 focus:border-purple-500 focus:outline-none">
+          <p class="mt-1 text-xs font-mono text-gray-600">
+            e.g. <code>web</code> to run <code>make web</code>
+          </p>
+        </div>
+        <div>
+          <label class="block font-mono text-xs text-gray-500 mb-1">output directory</label>
+          <input type="text" name="game[_build][output_dir]"
+                 value="<%= game.metadata.to_h['output_dir'].presence || 'web' %>"
+                 placeholder="web"
+                 class="w-full rounded bg-black border border-gray-700 px-3 py-2 font-mono text-sm text-gray-200 focus:border-purple-500 focus:outline-none">
+          <p class="mt-1 text-xs font-mono text-gray-600">
+            where the Makefile puts .wasm / .js files
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-gray-800">
+        <label class="flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" name="game[_flags][keep_for_review_on_failure]" value="1"
+                 <%= "checked" if game.metadata.to_h["keep_for_review_on_failure"] %>
+                 class="mt-0.5 accent-purple-500">
+          <span class="font-mono text-xs text-gray-400">
+            if build fails, keep this submission for admin review instead of discarding it
+          </span>
+        </label>
+      </div>
+    </section>
+  <% end %>
+
+  <!-- scoring -->
+  <section class="rounded-lg border border-gray-800 bg-gray-900 p-5 space-y-4">
+    <h2 class="font-mono text-sm text-purple-400">◉ scoring</h2>
+
+    <% scoring = game.scoring_config %>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div>
+        <label class="block font-mono text-xs text-gray-500 mb-1">direction</label>
+        <select name="game[scoring][direction]"
+                class="w-full rounded bg-black border border-gray-700 px-3 py-2 font-mono text-sm text-gray-200 focus:border-purple-500 focus:outline-none">
+          <option value="high" <%= "selected" if scoring["direction"] == "high" %>>higher is better (points)</option>
+          <option value="low"  <%= "selected" if scoring["direction"] == "low"  %>>lower is better (time, strokes)</option>
+        </select>
+      </div>
+      <div>
+        <label class="block font-mono text-xs text-gray-500 mb-1">unit</label>
+        <input type="text" name="game[scoring][unit]" value="<%= scoring['unit'] %>"
+               class="w-full rounded bg-black border border-gray-700 px-3 py-2 font-mono text-sm text-gray-200 focus:border-purple-500 focus:outline-none">
+      </div>
+      <div>
+        <label class="block font-mono text-xs text-gray-500 mb-1">max value (sanity cap)</label>
+        <input type="number" name="game[scoring][max]" value="<%= scoring['max'] %>"
+               class="w-full rounded bg-black border border-gray-700 px-3 py-2 font-mono text-sm text-gray-200 focus:border-purple-500 focus:outline-none">
+      </div>
+      <div class="flex items-end">
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="hidden" name="game[scoring][monotonic]" value="0">
+          <input type="checkbox" name="game[scoring][monotonic]" value="1"
+                 <%= "checked" if scoring["monotonic"] %>
+                 class="accent-purple-500">
+          <span class="font-mono text-xs text-gray-400">monotonic (reject regressions within a session)</span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <div class="flex items-center justify-between">
+    <%= link_to "cancel", cancel_path,
+          class: "font-mono text-xs text-gray-500 hover:text-gray-300" %>
+
+    <%= f.submit submit_label,
+          class: "font-mono text-sm px-4 py-2 rounded bg-purple-600 text-white hover:bg-purple-500 transition-colors" %>
+  </div>
+<% end %>

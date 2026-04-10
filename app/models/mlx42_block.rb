@@ -5,6 +5,11 @@ class Mlx42Block < Block
   has_one_attached :thumbnail
   has_many_attached :assets
 
+  # For game-owned blocks: all output files from the build's output directory
+  # (html, js, wasm, css, data, etc.). Served via a proxy controller at a
+  # consistent URL so relative references between them work.
+  has_many_attached :game_artifacts
+
   # Legacy support for single text field (for backward compatibility during transition)
   def text
     data.to_h["text"]
@@ -61,7 +66,7 @@ class Mlx42Block < Block
   end
 
   def compiled?
-    wasm_file.attached? && js_file.attached?
+    (wasm_file.attached? && js_file.attached?) || game_artifacts.any?
   end
 
   def compilation_error

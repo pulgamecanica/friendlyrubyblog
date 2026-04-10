@@ -59,6 +59,13 @@ end
 gem "pg_search", "~> 2.3"
 
 gem "devise", "~> 4.9"
+
+# Plain OAuth2 client — used by the arcade 42 intra sign-in flow. We don't
+# pull in OmniAuth because 42 doesn't have a maintained strategy gem and
+# the flow is trivial enough to hand-roll (~40 lines in one controller).
+# Everything is gated behind INTRA_UID / INTRA_SECRET env vars so the app
+# boots fine in development without any credentials configured.
+gem "oauth2", "~> 2.0"
 gem "rspec-rails", "~> 8.0"
 gem "simplecov", "~> 0.22.0", require: false, group: :test
 gem "paper_trail", "~> 16.0"

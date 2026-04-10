@@ -1,0 +1,86 @@
+<% content_for :title, "My Games — Arcade" %>
+
+<div class="mb-6 flex items-start justify-between gap-4">
+  <div>
+    <h1 class="font-mono text-2xl text-purple-400">◉ my games</h1>
+    <p class="font-mono text-xs text-gray-500 mt-1">
+      playing as <%= current_player.name %>
+    </p>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <%= link_to new_arcade_game_path,
+          class: "font-mono text-xs px-3 py-2 rounded bg-purple-600 text-white hover:bg-purple-500 transition-colors whitespace-nowrap" do %>
+      + submit a game
+    <% end %>
+    <% if current_player.anonymous? && intra_configured? %>
+      <%= link_to arcade_auth_intra_path,
+            class: "font-mono text-xs px-3 py-2 rounded border border-purple-600 text-purple-400 hover:bg-purple-600 hover:text-white transition-colors whitespace-nowrap" do %>
+        sign in with 42
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<% if @games.any? %>
+  <div class="space-y-4">
+    <% @games.each do |game| %>
+      <% s = @stats[game.id] %>
+      <section class="rounded-lg border border-gray-800 bg-gray-900 p-5">
+        <div class="flex items-start justify-between">
+          <div>
+            <h2 class="font-mono text-lg text-purple-400">
+              <%= link_to game.title, arcade_game_path(game), class: "hover:text-purple-300" %>
+            </h2>
+            <p class="font-mono text-xs text-gray-500 mt-1">
+              status: <span class="text-gray-300"><%= game.status %></span>
+            </p>
+          </div>
+          <span class="font-mono text-xs px-2 py-1 rounded border border-gray-700 text-gray-400">
+            <%= game.scoring_config["direction"] %> · <%= game.scoring_config["unit"] %>
+          </span>
+        </div>
+
+        <dl class="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
+          <div class="rounded bg-black/40 border border-gray-800 p-3">
+            <dt class="text-gray-600">plays</dt>
+            <dd class="text-xl text-purple-400 mt-1"><%= s[:plays] %></dd>
+          </div>
+          <div class="rounded bg-black/40 border border-gray-800 p-3">
+            <dt class="text-gray-600">unique players</dt>
+            <dd class="text-xl text-purple-400 mt-1"><%= s[:unique_players] %></dd>
+          </div>
+          <div class="rounded bg-black/40 border border-gray-800 p-3">
+            <dt class="text-gray-600">total playtime</dt>
+            <dd class="text-xl text-purple-400 mt-1">
+              <%= (s[:total_time_ms].to_i / 1000.0 / 60).round(1) %>m
+            </dd>
+          </div>
+          <div class="rounded bg-black/40 border border-gray-800 p-3">
+            <dt class="text-gray-600">completions</dt>
+            <dd class="text-xl text-purple-400 mt-1"><%= s[:completed] %></dd>
+          </div>
+        </dl>
+
+        <% if s[:top_scores].any? %>
+          <div class="mt-4">
+            <h3 class="font-mono text-xs text-gray-600 mb-2">top scores</h3>
+            <ol class="space-y-1 text-xs font-mono">
+              <% s[:top_scores].each_with_index do |score, i| %>
+                <li class="flex justify-between text-gray-300">
+                  <span class="text-gray-600"><%= format('%02d', i + 1) %>.</span>
+                  <span class="flex-1 mx-2 truncate"><%= score.player.name %></span>
+                  <span class="text-purple-400"><%= number_with_delimiter(score.value) %></span>
+                </li>
+              <% end %>
+            </ol>
+          </div>
+        <% end %>
+      </section>
+    <% end %>
+  </div>
+<% else %>
+  <div class="rounded-lg border border-dashed border-gray-800 p-12 text-center font-mono text-gray-600">
+    you haven't submitted any games yet.
+  </div>
+<% end %>
