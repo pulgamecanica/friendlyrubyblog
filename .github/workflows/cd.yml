@@ -37,7 +37,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build \
+          docker build --no-cache \
             -t ghcr.io/pulgamecanica/friendlyrubyblog:latest \
             -t ghcr.io/pulgamecanica/friendlyrubyblog:${{ github.sha }} \
             -t ${{ secrets.DOCKERHUB_USERNAME }}/friendlyrubyblog:latest \
