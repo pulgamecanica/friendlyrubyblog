@@ -1,0 +1,81 @@
+<% content_for :title, "#{@game.title} — Arcade" %>
+
+<div class="mb-6">
+  <%= link_to "← back to games", arcade_games_path, class: "font-mono text-xs text-gray-500 hover:text-purple-400" %>
+</div>
+
+<div class="mb-6 flex items-start justify-between gap-4">
+  <div>
+    <h1 class="font-mono text-2xl text-purple-400"><%= @game.title %></h1>
+    <p class="font-mono text-xs text-gray-500 mt-1">
+      by <%= @game.submitter&.name || "anon" %>
+      · status: <%= @game.status %>
+      · scoring: <%= @game.scoring_config["direction"] %> / <%= @game.scoring_config["unit"] %>
+    </p>
+    <% if @game.description.present? %>
+      <p class="font-mono text-sm text-gray-400 mt-3 whitespace-pre-wrap"><%= @game.description %></p>
+    <% end %>
+  </div>
+
+  <% if current_player&.id == @game.submitter_id %>
+    <%= link_to edit_arcade_game_path(@game),
+          class: "font-mono text-xs px-3 py-2 rounded border border-gray-700 text-gray-300 hover:border-purple-500 hover:text-purple-400 whitespace-nowrap" do %>
+      edit
+    <% end %>
+  <% end %>
+</div>
+
+<% if @game.review? || @game.discarded? %>
+  <div class="mb-6 rounded-lg border border-yellow-900/50 bg-yellow-950/20 p-4 font-mono text-xs">
+    <p class="text-yellow-400">this game did not compile.</p>
+    <% if @game.metadata.to_h["compile_error"] || @game.metadata.to_h["ingestion_error"] %>
+      <details class="mt-2">
+        <summary class="cursor-pointer text-yellow-500 hover:text-yellow-300">show error</summary>
+        <pre class="mt-2 whitespace-pre-wrap text-yellow-200/80 text-[11px]"><%= @game.metadata.to_h["compile_error"] || @game.metadata.to_h["ingestion_error"] %></pre>
+      </details>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="grid gap-6 lg:grid-cols-3">
+  <div class="lg:col-span-2">
+    <% if @block&.compiled? %>
+      <%
+        entry = @block.data.to_h["entry_html"].presence || "index.html"
+        iframe_url = arcade_game_play_artifact_path(@game, filename: entry)
+      %>
+      <div class="rounded-lg border border-gray-800 bg-black overflow-hidden"
+           data-controller="arcade-bridge"
+           data-arcade-bridge-game-slug-value="<%= @game.slug %>"
+           data-arcade-bridge-csrf-token-value="<%= form_authenticity_token %>">
+        <iframe src="<%= iframe_url %>"
+                class="w-full aspect-video"
+                allow="autoplay; gamepad"
+                sandbox="allow-scripts allow-same-origin"
+                title="<%= @game.title %>"></iframe>
+      </div>
+    <% else %>
+      <div class="rounded-lg border border-dashed border-gray-800 p-12 text-center font-mono text-gray-600">
+        this game is not compiled yet (<%= @game.status %>).
+      </div>
+    <% end %>
+  </div>
+
+  <aside class="rounded-lg border border-gray-800 bg-gray-900 p-4">
+    <h2 class="font-mono text-sm text-purple-400 mb-3">◉ top 10</h2>
+    <% top = Score.leaderboard_for(@game, limit: 10) %>
+    <% if top.any? %>
+      <ol class="space-y-1 text-xs font-mono">
+        <% top.each_with_index do |s, i| %>
+          <li class="flex justify-between text-gray-300">
+            <span class="text-gray-600"><%= format('%02d', i + 1) %>.</span>
+            <span class="flex-1 mx-2 truncate"><%= s.player.name %></span>
+            <span class="text-purple-400"><%= number_with_delimiter(s.value) %></span>
+          </li>
+        <% end %>
+      </ol>
+    <% else %>
+      <p class="text-xs font-mono text-gray-600">no scores yet. be the first.</p>
+    <% end %>
+  </aside>
+</div>

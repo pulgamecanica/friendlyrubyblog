@@ -1,0 +1,17 @@
+<% content_for :title, "Submit a Game — Arcade" %>
+
+<div class="mb-6">
+  <%= link_to "← back", arcade_games_path, class: "font-mono text-xs text-gray-500 hover:text-purple-400" %>
+  <h1 class="mt-2 font-mono text-2xl text-purple-400">◉ submit a game</h1>
+  <p class="mt-1 font-mono text-xs text-gray-500">
+    we'll clone or unpack your source, compile it with MLX42/emcc, and publish it to the arcade when it builds.
+  </p>
+</div>
+
+<%= render "form",
+      game: @game,
+      form_url: arcade_games_path,
+      form_method: :post,
+      source_editable: true,
+      cancel_path: arcade_games_path,
+      submit_label: "submit game" %>

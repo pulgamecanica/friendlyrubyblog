@@ -29,6 +29,24 @@ class Mlx42CompilationJob < ApplicationJob
       block.save!
     end
 
+    # If this block belongs to a Game (arcade submission), reflect the
+    # compile outcome in the Game's lifecycle state. Blog blocks (owned by
+    # a Document) are unaffected — their status is only tracked in
+    # block.data["compilation_status"].
+    if block.owner.is_a?(Game)
+      game = block.owner
+      if result[:success]
+        game.update!(status: :playable)
+      else
+        keep_for_review = game.metadata.to_h["keep_for_review_on_failure"]
+        next_status     = keep_for_review ? :review : :discarded
+        game.update!(
+          status:   next_status,
+          metadata: game.metadata.to_h.merge("compile_error" => result[:error].to_s)
+        )
+      end
+    end
+
     # Broadcast update via Turbo Stream
     broadcast_compilation_result(block, result)
   rescue => e

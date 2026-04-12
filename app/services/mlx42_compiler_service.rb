@@ -34,6 +34,11 @@ class Mlx42CompilerService
 
   MLX42_LIB_PATH = ENV.fetch("MLX42_LIB_PATH", "/home/pulgamecanica/friendlyrubyblog/app/assets/libmlx42_web.a")
 
+  # Arcade C SDK — auto-linked whenever the block is owned by a Game so
+  # submissions get the `arcade_*` functions for free via `#include <arcade.h>`.
+  ARCADE_SDK_DIR = Rails.root.join("vendor", "arcade_sdk").to_s
+  ARCADE_SDK_SOURCE = File.join(ARCADE_SDK_DIR, "arcade.c")
+
   def initialize(block)
     @block = block
   end
@@ -64,6 +69,7 @@ class Mlx42CompilerService
           content = file_data["content"]
           file_path = File.join(dir, filename)
 
+          FileUtils.mkdir_p(File.dirname(file_path))
           File.write(file_path, content)
 
           # Track .c files for compilation
@@ -81,9 +87,12 @@ class Mlx42CompilerService
       File.write(wrapper_file, wrapper_code)
 
       # Compile with emcc (pass all .c files)
-      compile_command = build_compile_command(wrapper_file, user_c_files, output_base, dir)
+      compile_argv = build_compile_argv(wrapper_file, user_c_files, output_base, dir)
 
-      stdout, stderr, status = Open3.capture3(compile_command)
+      # NOTE: pass argv, not a joined string. Open3.capture3 with an array
+      # bypasses the shell entirely, so any game-supplied compiler_args can
+      # never be interpreted as shell metacharacters.
+      stdout, stderr, status = Open3.capture3(*compile_argv)
 
       if status.success?
         attach_compiled_files(output_base)
@@ -106,17 +115,32 @@ class Mlx42CompilerService
 
   private
 
-  def build_compile_command(wrapper_file, user_c_files, output_base, working_dir)
-    base_args = [
+  def build_compile_argv(wrapper_file, user_c_files, output_base, working_dir)
+    argv = [
       "emcc",
       "-DWEB",
       "-O3",
       "-I", "/usr/local/include",
       "-I", Rails.root.join("MLX42_headers").to_s,
-      "-I", working_dir,  # Include working directory for local headers
+      "-I", working_dir   # include working dir for local headers
+    ]
+
+    # When the block is owned by a Game, auto-expose the Arcade SDK and
+    # link arcade.c. Blog blocks never see arcade.h — keeping the two
+    # worlds cleanly separated even at the compile layer.
+    if arcade_mode?
+      argv += [ "-I", ARCADE_SDK_DIR ]
+    end
+
+    argv += [
       "-pthread",
       wrapper_file,
-      *user_c_files,  # Splat operator to include all .c files
+      *user_c_files
+    ]
+
+    argv << ARCADE_SDK_SOURCE if arcade_mode?
+
+    argv += [
       "-o", "#{output_base}.js",
       MLX42_LIB_PATH,
       "-s", "USE_GLFW=3",
@@ -124,29 +148,30 @@ class Mlx42CompilerService
       "-s", "FULL_ES3=1",
       "-s", "WASM=1",
       "-s", "NO_EXIT_RUNTIME=1",
-      "-s", "EXPORTED_RUNTIME_METHODS='[\"ccall\", \"cwrap\"]'",
+      "-s", 'EXPORTED_RUNTIME_METHODS=["ccall","cwrap","UTF8ToString","stringToUTF8","lengthBytesUTF8"]',
+      "-s", "EXPORTED_FUNCTIONS=[\"_main\",\"_malloc\",\"_free\"]",
       "-s", "ALLOW_MEMORY_GROWTH",
       "-s", "MODULARIZE=1",
-      "-s", "EXPORT_NAME='createMlx42Module'"
+      "-s", "EXPORT_NAME=createMlx42Module"
     ]
 
-    # Add preload-file for assets if they exist
     if @block.assets.attached?
-      base_args += [ "--preload-file", "#{working_dir}/assets" ]
-      puts "*"*42
-      puts "\n"*5
-      puts "User C files: #{user_c_files.join(', ')}"
-      puts "Wrapper file: #{wrapper_file}"
-      puts "Assets Loaded: [#{working_dir}/assets]"
-      Dir.new("#{working_dir}/assets").each do |f|
-        puts "\t-> #{f}"
-      end
-      puts "*"*42
+      argv += [ "--preload-file", "#{working_dir}/assets" ]
     end
 
-    # Add custom compiler args if present
-    custom_args = @block.compiler_args.to_s.strip.split(/\s+/)
-    (base_args + custom_args).join(" ")
+    # Custom compiler_args: still accepted for blog blocks (your own code),
+    # but explicitly ignored for arcade submissions — we don't want a game
+    # submitter to disable optimizations or swap linker flags.
+    unless arcade_mode?
+      custom_args = @block.compiler_args.to_s.strip.split(/\s+/).reject(&:empty?)
+      argv += custom_args
+    end
+
+    argv
+  end
+
+  def arcade_mode?
+    @block.owner.is_a?(Game)
   end
 
   def attach_compiled_files(output_base)

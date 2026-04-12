@@ -53,6 +53,40 @@ Rails.application.routes.draw do
     end
   end
 
+  # Arcade: mlx42 games submitted by 42 students. Deliberately separate from
+  # the blog (`public/`) and from the blog admin (`author/`). Shares only the
+  # underlying Mlx42Block compile pipeline — everything else (auth, layout,
+  # validations, policies) is independent.
+  namespace :arcade do
+    root "games#index"
+
+    # 42 intra OAuth2 sign-in (no-op if INTRA_UID/INTRA_SECRET aren't set)
+    get    "auth/intra",          to: "sessions#new",      as: :auth_intra
+    get    "auth/intra/callback", to: "sessions#callback", as: :auth_intra_callback
+    delete "sign_out",            to: "sessions#destroy",  as: :sign_out
+
+    get "dashboard", to: "dashboard#index", as: :dashboard
+
+    resources :games do
+      member do
+        post :resubmit
+      end
+
+      # Serves the game's build artifacts (html/js/wasm/css) from a
+      # consistent path so relative references between them work.
+      get "play/:filename", to: "play#show", as: :play_artifact,
+          constraints: { filename: /[^\/]+/ }
+
+      resources :play_sessions, only: [ :create, :update ] do
+        member do
+          post :close  # sendBeacon can only POST, not PATCH
+        end
+      end
+      resources :scores,        only: [ :create ]
+      resource  :state,         only: [ :show, :update ], controller: "states"
+    end
+  end
+
   namespace :author do
     root "dashboard#index"
 

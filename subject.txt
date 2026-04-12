@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+the vec is expected to ouput the same as:
+
+std::cout << "VECTOR" << v << std::endl;
+
+this must correspond to:
+
+std::cout << "{ " << v[0] << "," << v[1] << "}" << std::endl;
+-----------------------------------------------------------------
+
+
+ostream operator<<(ostream) {
+ os << "{ " << v[0] << "," << v[1] << "}" << std::endl;
+}
+
+
+v = Vec(2,5);
+std::cout << v;
+std::cout << "{ " << v[0] << "," << v[1] << "}" << std::endl;
+
+----
+
+std::cout << v << std::endl;
+std::cout << "{ " << v[0] << "," << v[1] << "}" << std::endl << std::end;
+--------------------------------
+
+
+std::cout << "VECTOR:" << "{ " << v[0] << "," << v[1] << "}" << std::endl;
+
+std::cout << v ;
+
+
+v = print(v)
+
+std::cout << v << std::endl << std::endl;

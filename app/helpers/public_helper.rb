@@ -41,7 +41,7 @@ module PublicHelper
   def render_code_block(block)
     filename = block.data["filename"] || nil
     lang = block.data["language"].presence || "text"
-    ext = block.language.extension || lang
+    ext = block.language&.extension || lang
     code = block.data["code"].to_s
     is_interactive = block.interactive
     execution_result = block.execution_result
