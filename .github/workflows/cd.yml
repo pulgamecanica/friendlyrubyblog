@@ -29,8 +29,21 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build and push Docker image
         run: |
-          docker build -t ghcr.io/pulgamecanica/friendlyrubyblog:latest -t ghcr.io/pulgamecanica/friendlyrubyblog:${{ github.sha }} .
+          docker build \
+            -t ghcr.io/pulgamecanica/friendlyrubyblog:latest \
+            -t ghcr.io/pulgamecanica/friendlyrubyblog:${{ github.sha }} \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/friendlyrubyblog:latest \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/friendlyrubyblog:${{ github.sha }} \
+            .
           docker push ghcr.io/pulgamecanica/friendlyrubyblog:latest
           docker push ghcr.io/pulgamecanica/friendlyrubyblog:${{ github.sha }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/friendlyrubyblog:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/friendlyrubyblog:${{ github.sha }}
