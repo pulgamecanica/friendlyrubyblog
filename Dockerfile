@@ -25,6 +25,30 @@ ENV RAILS_ENV="production" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development"
 
+# Emscripten SDK build stage — produces emcc toolchain + MLX42 wasm lib
+FROM base AS emsdk
+
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y git cmake python3 build-essential xz-utils curl && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+ARG EMSDK_VERSION=3.1.51
+RUN git clone https://github.com/emscripten-core/emsdk.git /opt/emsdk && \
+    cd /opt/emsdk && \
+    ./emsdk install $EMSDK_VERSION && \
+    ./emsdk activate $EMSDK_VERSION
+
+# Build libmlx42_web.a
+RUN . /opt/emsdk/emsdk_env.sh && \
+    git clone https://github.com/codam-coding-college/MLX42.git /tmp/MLX42 && \
+    cd /tmp/MLX42 && mkdir build && cd build && \
+    emcmake cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-pthread" -DMLX_BUILD_TESTS=OFF && \
+    emmake make -j"$(nproc)" && \
+    mkdir -p /opt/mlx42 /opt/mlx42/headers/MLX42 && \
+    cp libmlx42.a /opt/mlx42/libmlx42_web.a && \
+    cp /tmp/MLX42/include/MLX42/MLX42.h /opt/mlx42/headers/MLX42/MLX42.h && \
+    rm -rf /tmp/MLX42
+
 # Throw-away build stage to reduce size of final image
 FROM base AS build
 
@@ -54,9 +78,27 @@ RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 # Final stage for app image
 FROM base
 
+# Install runtime packages needed for compilation (git, make, cmake for game ingestion)
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y git make cmake python3 xz-utils && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
 # Copy built artifacts: gems, application
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --from=build /rails /rails
+
+# Copy Emscripten SDK and MLX42
+COPY --from=emsdk /opt/emsdk /opt/emsdk
+COPY --from=emsdk /opt/mlx42 /opt/mlx42
+
+# Make emsdk available in PATH
+ENV PATH="/opt/emsdk:/opt/emsdk/upstream/emscripten:${PATH}" \
+    EMSDK="/opt/emsdk" \
+    EM_CONFIG="/opt/emsdk/.emscripten" \
+    MLX42_LIB_PATH="/opt/mlx42/libmlx42_web.a"
+
+# Symlink MLX42 headers to where the compiler service expects them
+RUN ln -s /opt/mlx42/headers /rails/MLX42_headers
 
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \

@@ -49,3 +49,4 @@ coverage/
 CLAUDE.md
 
 /config/credentials/production.key
+bin/once-deploy
