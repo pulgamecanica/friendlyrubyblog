@@ -38,9 +38,12 @@ RUN git clone https://github.com/emscripten-core/emsdk.git /opt/emsdk && \
     ./emsdk install $EMSDK_VERSION && \
     ./emsdk activate $EMSDK_VERSION
 
+ENV PATH="/opt/emsdk:/opt/emsdk/upstream/emscripten:/opt/emsdk/upstream/bin:${PATH}" \
+    EMSDK="/opt/emsdk" \
+    EM_CONFIG="/opt/emsdk/.emscripten"
+
 # Build libmlx42_web.a
-RUN . /opt/emsdk/emsdk_env.sh && \
-    git clone https://github.com/codam-coding-college/MLX42.git /tmp/MLX42 && \
+RUN git clone https://github.com/codam-coding-college/MLX42.git /tmp/MLX42 && \
     cd /tmp/MLX42 && mkdir build && cd build && \
     emcmake cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-pthread" -DMLX_BUILD_TESTS=OFF && \
     emmake make -j"$(nproc)" && \
