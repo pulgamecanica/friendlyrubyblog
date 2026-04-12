@@ -30,12 +30,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: |
-            ghcr.io/pulgamecanica/friendlyrubyblog:latest
-            ghcr.io/pulgamecanica/friendlyrubyblog:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+        run: |
+          docker build -t ghcr.io/pulgamecanica/friendlyrubyblog:latest -t ghcr.io/pulgamecanica/friendlyrubyblog:${{ github.sha }} .
+          docker push ghcr.io/pulgamecanica/friendlyrubyblog:latest
+          docker push ghcr.io/pulgamecanica/friendlyrubyblog:${{ github.sha }}
