@@ -31,7 +31,7 @@ class Arcade::PlaySessionsController < Arcade::BaseController
 
     session.close!(
       completed: ActiveModel::Type::Boolean.new.cast(params[:completed]),
-      meta:      params[:meta]&.permit!&.to_h || {}
+      meta:      params[:meta].present? ? params[:meta].permit(params[:meta].keys).to_h : {}
     )
 
     render json: { ok: true, duration_ms: session.duration_ms }

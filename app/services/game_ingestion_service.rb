@@ -59,10 +59,10 @@ class GameIngestionService
 
     Dir.mktmpdir("arcade_ingest_") do |work_dir|
       src_dir = case @game.source["kind"]
-                when "git" then fetch_from_git!(work_dir)
-                when "zip" then extract_zip!(work_dir)
-                else raise Error, "unknown source kind: #{@game.source['kind'].inspect}"
-                end
+      when "git" then fetch_from_git!(work_dir)
+      when "zip" then extract_zip!(work_dir)
+      else raise Error, "unknown source kind: #{@game.source['kind'].inspect}"
+      end
 
       run_make!(src_dir)
       attach_artifacts!(src_dir)

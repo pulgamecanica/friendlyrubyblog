@@ -43,5 +43,7 @@ class Arcade::PlayController < ApplicationController
               filename:    filename,
               type:        artifact.content_type,
               disposition: :inline
+  rescue ActiveStorage::FileNotFoundError
+    head :not_found
   end
 end
