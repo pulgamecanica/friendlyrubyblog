@@ -83,7 +83,7 @@ FROM base
 
 # Install runtime packages needed for compilation (git, make, cmake for game ingestion)
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y git make cmake python3 xz-utils && \
+    apt-get install --no-install-recommends -y git make cmake python3 xz-utils build-essential && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copy built artifacts: gems, application
