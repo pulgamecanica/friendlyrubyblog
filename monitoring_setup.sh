@@ -41,10 +41,10 @@ tail -n 1000 "$LOG_FILE" > "$LOG_FILE.tmp" && mv "$LOG_FILE.tmp" "$LOG_FILE"
 EOF
 
 echo "Uploading health check script to server..."
-scp /tmp/health_check.sh friendlyrubyblogt@165.232.74.204:/tmp/health_check.sh
+scp /tmp/health_check.sh friendlyrubyblog@165.232.74.204:/tmp/health_check.sh
 
 echo "Installing health check on server..."
-ssh friendlyrubyblogt@165.232.74.204 bash << 'REMOTE_SCRIPT'
+ssh friendlyrubyblog@165.232.74.204 bash << 'REMOTE_SCRIPT'
 set -e
 
 # Move health check script to proper location
@@ -71,7 +71,7 @@ echo "Monitoring Setup Complete!"
 echo "========================================="
 echo ""
 echo "Health checks will run every 5 minutes"
-echo "View logs: ssh friendlyrubyblogt@165.232.74.204 'tail -f /var/log/friendlyrubyblog_health.log'"
+echo "View logs: ssh friendlyrubyblog@165.232.74.204 'tail -f /var/log/friendlyrubyblog_health.log'"
 echo ""
 echo "Useful monitoring commands:"
 echo "  kamal app logs           # View application logs"
