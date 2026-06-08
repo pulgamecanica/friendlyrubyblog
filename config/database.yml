@@ -78,11 +78,10 @@ test:
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
 #
+# Single database deployment: Solid Cache, Cable and Queue all share the
+# primary database (their tables are defined in db/schema.rb). This keeps the
+# deploy to one DATABASE_URL / one Postgres instance.
 production:
   primary:
     <<: *default
     url: <%= ENV["DATABASE_URL"] %>
-  queue:
-    <<: *default
-    url: <%= ENV["DATABASE_URL"] %>
-    migrations_paths: db/queue_migrate
