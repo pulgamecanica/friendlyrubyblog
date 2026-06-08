@@ -7,7 +7,7 @@ image: ghcr.io/pulgamecanica/friendlyrubyblog
 # Deploy to these servers.
 servers:
   web:
-    - 148.71.60.228
+    - 165.232.74.204
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -19,7 +19,7 @@ servers:
 # Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
 proxy:
   ssl: true
-  host: evil-penguin.com
+  host: blog.pulgamecanica.com
 
 # Credentials for your image host.
 registry:
@@ -98,13 +98,19 @@ ssh:
 accessories:
   db:
     image: postgres:16-alpine
-    host: 148.71.60.228
-    port: "127.0.0.1:5432:5432"
+    host: 165.232.74.204
+    # No host port published on purpose: this server hosts multiple Rails apps,
+    # each with its own Postgres accessory. The app reaches this DB by the
+    # container name "friendlyrubyblog-db" over the shared "kamal" docker network
+    # (see DATABASE_URL), so nothing binds host :5432 and apps never collide.
+    # If you need host-side access (e.g. backups), publish a UNIQUE port per app,
+    # e.g. port: "127.0.0.1:5433:5432".
     env:
       clear:
         POSTGRES_USER: friendlyrubyblog
         POSTGRES_DB: friendlyrubyblog_production
       secret:
         - POSTGRES_PASSWORD
+    # App-namespaced host path so two apps never share a data directory.
     directories:
-      - data:/var/lib/postgresql/data
+      - /var/lib/friendlyrubyblog/postgres:/var/lib/postgresql/data
