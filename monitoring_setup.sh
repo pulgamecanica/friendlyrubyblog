@@ -13,7 +13,7 @@ cat > /tmp/health_check.sh << 'EOF'
 # Health check script for Friendly Ruby Blog
 # Run this via cron every 5 minutes
 
-DOMAIN="https://evil-penguin.com"
+DOMAIN="https://165.232.74.204"
 LOG_FILE="/var/log/friendlyrubyblog_health.log"
 TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 
@@ -41,10 +41,10 @@ tail -n 1000 "$LOG_FILE" > "$LOG_FILE.tmp" && mv "$LOG_FILE.tmp" "$LOG_FILE"
 EOF
 
 echo "Uploading health check script to server..."
-scp /tmp/health_check.sh pulgamecanica-serv-pt@evil-penguin.com:/tmp/health_check.sh
+scp /tmp/health_check.sh friendlyrubyblogt@165.232.74.204:/tmp/health_check.sh
 
 echo "Installing health check on server..."
-ssh pulgamecanica-serv-pt@evil-penguin.com bash << 'REMOTE_SCRIPT'
+ssh friendlyrubyblogt@165.232.74.204 bash << 'REMOTE_SCRIPT'
 set -e
 
 # Move health check script to proper location
@@ -71,7 +71,7 @@ echo "Monitoring Setup Complete!"
 echo "========================================="
 echo ""
 echo "Health checks will run every 5 minutes"
-echo "View logs: ssh pulgamecanica-serv-pt@evil-penguin.com 'tail -f /var/log/friendlyrubyblog_health.log'"
+echo "View logs: ssh friendlyrubyblogt@165.232.74.204 'tail -f /var/log/friendlyrubyblog_health.log'"
 echo ""
 echo "Useful monitoring commands:"
 echo "  kamal app logs           # View application logs"

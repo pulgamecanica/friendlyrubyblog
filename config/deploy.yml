@@ -92,7 +92,7 @@ builder:
 
 # Use a different ssh user than root
 ssh:
-  user: pulgamecanica-serv-pt
+  user: friendlyrubyblog
 
 # Use accessory services (secrets come from .kamal/secrets).
 accessories:
