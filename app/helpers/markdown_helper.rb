@@ -6,7 +6,16 @@ module MarkdownHelper
 
     Commonmarker.to_html(
       str,
-      options: { render: { unsafe: true } },
+      options: {
+        render: { unsafe: true },
+        # GFM extensions — without `table` enabled, pipe tables render as plain text.
+        extension: {
+          table: true,
+          strikethrough: true,
+          autolink: true,
+          tasklist: true
+        }
+      },
       plugins: { syntax_highlighter: { theme: "base16-ocean.light" } }
     )
   end
@@ -26,8 +35,10 @@ module MarkdownHelper
 
   def safe_html(html)
     sanitize(html.to_s,
-      tags: %w[p br hr a strong em code pre ul ol li h1 h2 h3 h4 h5 h6 blockquote img span div],
-      attributes: %w[href style title rel target src alt width height class]
+      tags: %w[p br hr a strong em del s code pre ul ol li h1 h2 h3 h4 h5 h6 blockquote img span div
+               table thead tbody tfoot tr th td input],
+      attributes: %w[href style title rel target src alt width height class align colspan rowspan
+                     type checked disabled]
     )
   end
 end

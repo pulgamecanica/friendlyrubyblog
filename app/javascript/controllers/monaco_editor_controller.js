@@ -294,9 +294,14 @@ export default class extends Controller {
         this.fullscreenButtonTarget.title = "Exit Fullscreen (ESC)"
       }
 
-      // Show floating preview if it's markdown and preview is enabled
-      if (this.languageValue === "markdown" && this.showPreviewValue) {
-        this.createFloatingPreview()
+      // Show floating preview if it's markdown and preview is enabled.
+      // Re-read the preference so a Hide/Show toggle made in inline mode
+      // (which only updates localStorage) is respected here too.
+      if (this.languageValue === "markdown") {
+        this.loadPreviewPreference()
+        if (this.showPreviewValue) {
+          this.createFloatingPreview()
+        }
       }
     } else {
       // Exit fullscreen
@@ -689,23 +694,33 @@ export default class extends Controller {
   }
 
   loadPreviewPosition() {
-    const saved = localStorage.getItem('monaco_floating_preview_position')
-
-    if (saved) {
-      try {
-        return JSON.parse(saved)
-      } catch (e) {
-        console.error('Failed to load preview position:', e)
-      }
-    }
-
     // Default position: bottom right
-    return {
+    const defaults = {
       top: window.innerHeight - 420,
       left: window.innerWidth - 520,
       width: 500,
       height: 400
     }
+
+    let pos = defaults
+    const saved = localStorage.getItem('monaco_floating_preview_position')
+    if (saved) {
+      try {
+        pos = { ...defaults, ...JSON.parse(saved) }
+      } catch (e) {
+        console.error('Failed to load preview position:', e)
+      }
+    }
+
+    // Clamp size and position to the current viewport so a stale saved
+    // position (e.g. after the window was resized smaller) can never spawn
+    // the preview off-screen, where it would look like it "disappeared".
+    const width = Math.min(Math.max(pos.width, 300), window.innerWidth - 20)
+    const height = Math.min(Math.max(pos.height, 200), window.innerHeight - 20)
+    const left = Math.min(Math.max(pos.left, 10), window.innerWidth - width - 10)
+    const top = Math.min(Math.max(pos.top, 10), window.innerHeight - height - 10)
+
+    return { top, left, width, height }
   }
 
   savePreviewPosition() {
