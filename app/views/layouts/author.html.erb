@@ -25,8 +25,6 @@
   </head>
 
   <body class="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors" data-controller="theme" data-theme-default-value="dark">
-    <!-- Toast container for turbo stream appends -->
-    <div id="toast_container" class="toast-container"></div>
 
     <header class="bg-white dark:bg-gray-800 border-b dark:border-gray-700 transition-colors">
       <div class="mx-auto max-w-7xl px-6 flex items-center justify-between py-4">
@@ -46,7 +44,7 @@
             </svg>
           </button>
 
-          <%= link_to "Logout", destroy_author_session_path, method: :delete, class: "text-red-600 dark:text-red-400 hover:underline" %>
+          <%= button_to "Logout", destroy_author_session_path, method: :delete, class: "text-red-600 dark:text-red-400 hover:underline" %>
         </nav>
       </div>
     </header>
@@ -64,6 +62,8 @@
     </noscript>
 
     <main class="">
+       <!-- Toast container for turbo stream appends -->
+      <div id="toast_container" class="toast-container"></div>
       <%= yield %>
     </main>
   </body>

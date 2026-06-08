@@ -127,23 +127,19 @@
     <!-- Flash -->
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <% if notice.present? %>
-        <div class="mt-4 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 text-green-800 px-6 py-4 text-sm shadow-sm">
-          <div class="flex items-center gap-2">
-            <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <%= notice %>
-          </div>
+        <div class="mt-4 flex items-center gap-2 rounded-lg border border-green-200 dark:border-green-500/30 bg-green-50 dark:bg-green-500/10 text-green-800 dark:text-green-300 px-4 py-3 text-sm font-mono shadow-sm">
+          <svg class="h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <%= notice %>
         </div>
       <% end %>
       <% if alert.present? %>
-        <div class="mt-4 rounded-xl bg-gradient-to-r from-red-50 to-rose-50 border border-red-200 text-red-800 px-6 py-4 text-sm shadow-sm">
-          <div class="flex items-center gap-2">
-            <svg class="h-5 w-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <%= alert %>
-          </div>
+        <div class="mt-4 flex items-center gap-2 rounded-lg border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 text-red-800 dark:text-red-300 px-4 py-3 text-sm font-mono shadow-sm">
+          <svg class="h-4 w-4 flex-shrink-0 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <%= alert %>
         </div>
       <% end %>
     </div>
